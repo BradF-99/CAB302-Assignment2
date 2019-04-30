@@ -1,7 +1,7 @@
 
 ## TravisCI Config for JDK11
 ## Written by Brad Fuller
-## v1.1 2019-04-30
+## v1.2 2019-04-30
 
 language: java
 jdk:
@@ -11,4 +11,4 @@ jdk:
 #  - cd java
 
 script:
-  - ant test
+  - ant -buildfile "cab302-assignment2.xml"
