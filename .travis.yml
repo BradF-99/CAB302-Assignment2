@@ -1,0 +1,14 @@
+
+## TravisCI Config for JDK11
+## Written by Brad Fuller
+## v1.0 2019-04-30
+
+language: java
+jdk:
+  - oraclejdk11
+
+before_install:
+  - cd java
+
+script:
+  - ant test
