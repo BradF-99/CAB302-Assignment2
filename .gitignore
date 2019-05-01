@@ -1,7 +1,7 @@
 
 ## Gitignore for Java / Maven / IntelliJ
 ## Written by Brad Fuller
-## v1.0 2019-04-30
+## v1.1 2019-05-01
 
 ### Java
 *.class
@@ -64,3 +64,7 @@ crashlytics-build.properties
 fabric.properties
 .idea/httpRequests
 .idea/**/contentModel.xml
+
+## REQUIRED FOR TRAVISCI DO NOT REMOVE
+!lib/ant/*
+lib/ant/.DS_Store
