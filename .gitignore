@@ -64,7 +64,3 @@ crashlytics-build.properties
 fabric.properties
 .idea/httpRequests
 .idea/**/contentModel.xml
-
-## REQUIRED FOR TRAVISCI DO NOT REMOVE
-!lib/ant/*
-lib/ant/.DS_Store
