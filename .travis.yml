@@ -1,7 +1,9 @@
 
 ## TravisCI Config for JDK11
 ## Written by Brad Fuller
-## v1.4 2019-05-01
+## v1.5 2019-05-01
+
+## TO DO: Deploy to GitHub Releases on successful build from master.
 
 language: java
 jdk:
@@ -9,7 +11,7 @@ jdk:
 
 before_install:
   - wget --no-check-certificate https://www.apache.org/dist/ant/binaries/apache-ant-1.10.5-bin.tar.gz
-  - tar -xzvf apache-ant-1.10.5-bin.tar.gz
+  - tar -xzf apache-ant-1.10.5-bin.tar.gz
   - export PATH=`pwd`/apache-ant-1.10.5/bin:$PATH
   - echo $(ant -version)
 
