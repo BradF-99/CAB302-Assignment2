@@ -1,7 +1,7 @@
 
 ## TravisCI Config for JDK11
 ## Written by Brad Fuller
-## v1.6 2019-05-01
+## v1.7 2019-05-01
 
 ## TO DO: Deploy to GitHub Releases on successful build from master - will add when framework is complete.
 
@@ -21,7 +21,7 @@ before_install:
   - wget --no-check-certificate https://search.maven.org/remotecontent?filepath=org/opentest4j/opentest4j/1.1.1/opentest4j-1.1.1.jar
 
   # Download Apache Ant 1.10.5 for build.
-  - cd BradF-99/CAB302-Assignment2
+  - cd ../.. # build will fail without
   - wget --no-check-certificate https://www.apache.org/dist/ant/binaries/apache-ant-1.10.5-bin.tar.gz
   - tar -xzf apache-ant-1.10.5-bin.tar.gz
   - export PATH=`pwd`/apache-ant-1.10.5/bin:$PATH
