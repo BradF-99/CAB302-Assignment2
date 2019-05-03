@@ -12,26 +12,29 @@ import javax.swing.*;
 
 public class MainWindow {
     JFrame frame;
+    private java.awt.Point startPoint;
     /**
      * This is just an example thread-safe GUI based off the example from the lecture.
      */
     private void buildGUI() {
         frame = new JFrame("Hello World");
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-
-        JLabel label = new JLabel(main.java.Main.exampleFunc(true),SwingConstants.LEFT);
-        frame.getContentPane().add(label);
         LineComponent lineComp = new LineComponent();
-        frame.getContentPane().add(lineComp, BorderLayout.CENTER);
+        frame.getContentPane().add(lineComp);
         frame.getContentPane().addMouseListener(new MouseAdapter(){
-            private java.awt.Point startPoint;
             public void mousePressed(MouseEvent e) {
-                System.out.println(e.getPoint());
                 startPoint = e.getPoint();
             }
+
             public void mouseReleased(MouseEvent e) {
-                System.out.println(e.getPoint());
-                lineComp.addNewLine(startPoint.x,startPoint.y,e.getPoint().x,e.getPoint().y);
+               lineComp.addNewLine(startPoint.x,startPoint.y,e.getPoint().x,e.getPoint().y);
+            }
+        });
+
+        frame.getContentPane().addMouseMotionListener(new MouseAdapter() {
+            public void mouseDragged(MouseEvent e) {
+                lineComp.clearDrawLines();
+                lineComp.addDrawNewLine(startPoint.x,startPoint.y,e.getPoint().x,e.getPoint().y);
             }
         });
 
