@@ -1,21 +1,39 @@
 package main.java.gui;
 
-import java.awt.Dimension;
-import java.awt.Point;
+import org.w3c.dom.css.ElementCSSInlineStyle;
+
+import java.awt.*;
+import java.awt.Graphics;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 
 import javax.swing.*;
 
 
 public class MainWindow {
+    JFrame frame;
     /**
      * This is just an example thread-safe GUI based off the example from the lecture.
      */
-    private static void buildGUI() {
-        JFrame frame = new JFrame("Hello World");
+    private void buildGUI() {
+        frame = new JFrame("Hello World");
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
-        JLabel label = new JLabel(main.java.Main.exampleFunc(true),SwingConstants.CENTER);
+        JLabel label = new JLabel(main.java.Main.exampleFunc(true),SwingConstants.LEFT);
         frame.getContentPane().add(label);
+        LineComponent lineComp = new LineComponent();
+        frame.getContentPane().add(lineComp, BorderLayout.CENTER);
+        frame.getContentPane().addMouseListener(new MouseAdapter(){
+            private java.awt.Point startPoint;
+            public void mousePressed(MouseEvent e) {
+                System.out.println(e.getPoint());
+                startPoint = e.getPoint();
+            }
+            public void mouseReleased(MouseEvent e) {
+                System.out.println(e.getPoint());
+                lineComp.addNewLine(startPoint.x,startPoint.y,e.getPoint().x,e.getPoint().y);
+            }
+        });
 
         frame.setPreferredSize(new Dimension(500, 250));
         frame.setLocation(new Point(200, 200));
@@ -23,9 +41,12 @@ public class MainWindow {
         frame.setVisible(true);
     }
 
-    public static void showGUI() {
+
+    public void showGUI() {
         javax.swing.SwingUtilities.invokeLater(() -> {
             buildGUI();
         });
     }
 }
+
+
