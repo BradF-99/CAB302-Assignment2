@@ -23,7 +23,7 @@ public class MainWindow {
         frame.getContentPane().add(label);
         LineComponent lineComp = new LineComponent();
         frame.getContentPane().add(lineComp, BorderLayout.CENTER);
-        frame.addMouseListener(new MouseAdapter(){
+        frame.getContentPane().addMouseListener(new MouseAdapter(){
             private java.awt.Point startPoint;
             public void mousePressed(MouseEvent e) {
                 System.out.println(e.getPoint());
