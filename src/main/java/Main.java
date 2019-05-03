@@ -1,4 +1,5 @@
 package main.java;
+import main.java.GUI.*;
 
 public class Main {
     public static String exampleFunc(boolean result) {
@@ -9,7 +10,7 @@ public class Main {
         }
     }
     public static void main(String[] args){
-        System.out.println(exampleFunc(true));
-        System.out.println(exampleFunc(false));
+        MainWindow mainWindow = new main.java.GUI.MainWindow();
+        mainWindow.showGUI();
     }
 }

@@ -1,7 +1,7 @@
 
 ## TravisCI Config for JDK11
 ## Written by Brad Fuller
-## v1.7.1 2019-05-01
+## v1.7.1 2019-05-03
 
 ## TO DO: Deploy to GitHub Releases on successful build from master - will add when framework is complete.
 
