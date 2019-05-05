@@ -1,9 +1,8 @@
 package main.java.gui;
 
-import org.w3c.dom.css.ElementCSSInlineStyle;
+import main.java.components.LineComponent;
 
 import java.awt.*;
-import java.awt.Graphics;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 
@@ -27,14 +26,14 @@ public class MainWindow {
             }
 
             public void mouseReleased(MouseEvent e) {
-               lineComp.addNewLine(startPoint.x,startPoint.y,e.getPoint().x,e.getPoint().y);
+               lineComp.addNewObject(startPoint.x,startPoint.y,e.getPoint().x,e.getPoint().y);
             }
         });
 
         frame.getContentPane().addMouseMotionListener(new MouseAdapter() {
             public void mouseDragged(MouseEvent e) {
-                lineComp.clearDrawLines();
-                lineComp.addDrawNewLine(startPoint.x,startPoint.y,e.getPoint().x,e.getPoint().y);
+                lineComp.clearDrawObject();
+                lineComp.addDrawObject(startPoint.x,startPoint.y,e.getPoint().x,e.getPoint().y);
             }
         });
 

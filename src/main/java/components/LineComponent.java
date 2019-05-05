@@ -1,11 +1,11 @@
-package main.java.gui;
+package main.java.components;
 
 import javax.swing.*;
 import java.awt.*;
 import java.util.LinkedList;
 
 //create a Jcomponent line class this will be expanded later to be for other types
-public class LineComponent extends JComponent {
+public class LineComponent extends JComponent implements ComponentInterface {
 
     //Line class
     private static class Line{
@@ -27,23 +27,23 @@ public class LineComponent extends JComponent {
     //LinkedList for the visual line whilst mouse is pressed
     private final LinkedList<Line> drawnLines = new LinkedList<Line>();
 
-    public void addNewLine(int x1, int y1, int x2, int y2){
+    public void addNewObject(int x1, int y1, int x2, int y2){
         this.lines.add(new Line(x1,y1,x2,y2));
         repaint();
     }
 
-    public void clearLines(){
+    public void clearOjects(){
         this.lines.clear();
         repaint();
     }
 
 
-    public void addDrawNewLine(int x1, int y1, int x2, int y2){
+    public void addDrawObject(int x1, int y1, int x2, int y2){
         this.drawnLines.add(new Line(x1,y1,x2,y2));
         repaint();
     }
 
-    public void clearDrawLines(){
+    public void clearDrawObject(){
         this.drawnLines.clear();
         repaint();
     }
