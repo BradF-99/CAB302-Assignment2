@@ -24,9 +24,9 @@ public class LineComponent extends JComponent implements ComponentInterface {
     }
 
     //create a LinkedList of Lines to store all the lines
-    private final LinkedList<Line> lines = new LinkedList<Line>();
+    private final LinkedList<Line> lines = new LinkedList<>();
     //LinkedList for the visual line whilst mouse is pressed
-    private final LinkedList<Line> drawnLines = new LinkedList<Line>();
+    private final LinkedList<Line> drawnLines = new LinkedList<>();
 
     public void addNewObject(int x1, int y1, int x2, int y2){
         this.lines.add(new Line(x1,y1,x2,y2));
