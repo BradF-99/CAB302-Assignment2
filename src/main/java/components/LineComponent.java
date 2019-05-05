@@ -32,7 +32,7 @@ public class LineComponent extends JComponent implements ComponentInterface {
         repaint();
     }
 
-    public void clearOjects(){
+    public void clearObjects(){
         this.lines.clear();
         repaint();
     }
