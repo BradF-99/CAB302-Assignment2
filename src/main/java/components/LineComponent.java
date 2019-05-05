@@ -4,15 +4,14 @@ import javax.swing.*;
 import java.awt.*;
 import java.util.LinkedList;
 
-//create a Jcomponent line class this will be expanded later to be for other types
 public class LineComponent extends JComponent implements ComponentInterface {
 
     //Line class
-    private static class Line{
-        private int x1;
-        private int y1;
-        private int x2;
-        private int y2;
+    public static class Line{
+        public int x1;
+        public int y1;
+        public int x2;
+        public int y2;
 
         //constructor for the line class
         public Line(int x1, int y1, int x2, int y2) {
