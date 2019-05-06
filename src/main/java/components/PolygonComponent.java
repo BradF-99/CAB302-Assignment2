@@ -14,7 +14,11 @@ public class PolygonComponent extends JComponent{
     //LinkedList for visual of polygon
     private final LinkedList<LineComponent.Line> drawnLines = new LinkedList<>();
 
-    //adds new polygon to the linked list
+    /**
+     * Adds new polygon to the List of polygons
+     *
+     * @param pointArray array of points in the polygon
+     */
     public void addNewObject(Object[] pointArray){
         Polygon newPolygon = new Polygon();
         for (int i = 0; i < pointArray.length; i++) {
@@ -25,17 +29,30 @@ public class PolygonComponent extends JComponent{
         repaint();
     }
 
-    //clear all polygons
+    /**
+     * Clears the list of polygons
+     */
     public void clearObjects(){
         this.polygon.clear();
         repaint();
     }
 
-    //gets the start point
+    /**
+     * Sets start point
+     *
+     * @param point sets startPoint
+     */
     public void getStart(Point point){
         startPoint = point;
     }
 
+    /**
+     * Adds a line to the drawnLines linked list based on the position of the last point or start point
+     * to the location of the point given.
+     *
+     * @param x1 x position of the point
+     * @param y1 y position of the point
+     */
     public void addDrawObject(int x1, int y1){
         //if it last point is null there has not been a previous line so use start point
         if(lastPoint == null){
@@ -47,7 +64,9 @@ public class PolygonComponent extends JComponent{
         repaint();
     }
 
-    //clears the visually drawn polygon and sets last point to null
+    /**
+    *clears the visually drawn polygon and sets last point to null
+     */
     public void clearDrawObject(){
         this.drawnLines.clear();
         this.lastPoint = null;
@@ -67,7 +86,15 @@ public class PolygonComponent extends JComponent{
         }
     }
 
-    //checks if the point is within 5 pixels of the start point
+    /**
+     * Determines if the point specified in x1,y1 is close enough to the start position to end the polygon.
+     *
+     * @param startx x co-ordinate of the start Point
+     * @param starty y-co-ordinate of the start Point
+     * @param x1 x- co-ordinate of the point that is to be checked against
+     * @param y1 y- co-ordinate of the point that is to be checked against
+     * @return
+     */
     public boolean checkPoly(int startx, int starty, int x1, int y1){
         if((startx - x1 <= 5 && startx - x1 >= -5) && (starty - y1 <= 5 && starty - y1 >= -5)){
             return true;
