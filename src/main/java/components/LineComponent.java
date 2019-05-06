@@ -27,22 +27,44 @@ public class LineComponent extends JComponent implements ComponentInterface {
     //LinkedList for the visual line whilst mouse is pressed
     private final LinkedList<Line> drawnLines = new LinkedList<>();
 
+    /**
+     * Adds new ellipse to the list of lines
+     *
+     * @param x1 x-coordinate of first point
+     * @param y1 y-coordinate of first point
+     * @param x2 x-coordinate of second point
+     * @param y2 y-coordinate of second point
+     */
+
     public void addNewObject(int x1, int y1, int x2, int y2){
         this.lines.add(new Line(x1,y1,x2,y2));
         repaint();
     }
 
+    /**
+     * clears the list of ellipses
+     */
     public void clearObjects(){
         this.lines.clear();
         repaint();
     }
 
-
+    /**
+     * Adds new ellipse to the drawnlist of lines
+     *
+     * @param x1 x-coordinate of first point
+     * @param y1 y-coordinate of first point
+     * @param x2 x-coordinate of second point
+     * @param y2 y-coordinate of second point
+     */
     public void addDrawObject(int x1, int y1, int x2, int y2){
         this.drawnLines.add(new Line(x1,y1,x2,y2));
         repaint();
     }
 
+    /**
+     * clears the list of drawn lines
+     */
     public void clearDrawObject(){
         this.drawnLines.clear();
         repaint();
