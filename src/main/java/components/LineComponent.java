@@ -4,7 +4,7 @@ import javax.swing.*;
 import java.awt.*;
 import java.util.LinkedList;
 
-public class LineComponent extends JComponent implements ComponentInterface {
+public class LineComponent implements ComponentInterface {
 
     //Line class
     public static class Line{
@@ -23,9 +23,9 @@ public class LineComponent extends JComponent implements ComponentInterface {
     }
 
     //create a LinkedList of Lines to store all the lines
-    private final LinkedList<Line> lines = new LinkedList<>();
+    public final LinkedList<Line> lines = new LinkedList<>();
     //LinkedList for the visual line whilst mouse is pressed
-    private final LinkedList<Line> drawnLines = new LinkedList<>();
+    public final LinkedList<Line> drawnLines = new LinkedList<>();
 
     /**
      * Adds new ellipse to the list of lines
@@ -38,7 +38,6 @@ public class LineComponent extends JComponent implements ComponentInterface {
 
     public void addNewObject(int x1, int y1, int x2, int y2){
         this.lines.add(new Line(x1,y1,x2,y2));
-        repaint();
     }
 
     /**
@@ -46,7 +45,6 @@ public class LineComponent extends JComponent implements ComponentInterface {
      */
     public void clearObjects(){
         this.lines.clear();
-        repaint();
     }
 
     /**
@@ -59,7 +57,6 @@ public class LineComponent extends JComponent implements ComponentInterface {
      */
     public void addDrawObject(int x1, int y1, int x2, int y2){
         this.drawnLines.add(new Line(x1,y1,x2,y2));
-        repaint();
     }
 
     /**
@@ -67,18 +64,5 @@ public class LineComponent extends JComponent implements ComponentInterface {
      */
     public void clearDrawObject(){
         this.drawnLines.clear();
-        repaint();
-    }
-
-    @Override
-    protected void paintComponent(Graphics g) {
-        super.paintComponent(g);
-        //loop through all the lines in the LinkedList
-        for (Line line : this.lines) {
-            g.drawLine(line.x1, line.y1, line.x2, line.y2);
-        }
-        for (Line line : this.drawnLines) {
-            g.drawLine(line.x1, line.y1, line.x2, line.y2);
-        }
     }
 }

@@ -1,9 +1,6 @@
 package main.java.gui;
 
-import main.java.components.EllipseComponent;
-import main.java.components.LineComponent;
-import main.java.components.PolygonComponent;
-import main.java.components.RectangleComponent;
+import main.java.components.*;
 import org.w3c.dom.css.Rect;
 
 import java.awt.*;
@@ -18,10 +15,7 @@ import javax.swing.border.Border;
 
 public class MainWindow {
     private JFrame frame;
-    private LineComponent lineComp = new LineComponent();
-    private EllipseComponent ellComp = new EllipseComponent();
-    private RectangleComponent rectComp = new RectangleComponent();
-    private PolygonComponent polyComp = new PolygonComponent();
+    ComponentsClass comp = new ComponentsClass();
     private java.awt.Point startPoint;
     /**
      * This is just an example thread-safe GUI based off the example from the lecture.
@@ -29,7 +23,7 @@ public class MainWindow {
     private void buildGUI() {
         frame = new JFrame("Hello World");
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        frame.getContentPane().add(polyComp);
+        frame.getContentPane().add(comp);
         frame.getContentPane().addMouseListener(new MyMouseAdapter());
         frame.getContentPane().addMouseMotionListener(new MyMouseAdapter());
         frame.setPreferredSize(new Dimension(500, 250));
@@ -38,7 +32,10 @@ public class MainWindow {
         frame.setVisible(true);
     }
 
-    //inner class to handle mouse events
+    /**
+     * Inner class for handling mouse events,
+     * must call comp.repaint() to ensure that all the components are drawn correctly.
+     */
     class MyMouseAdapter extends MouseAdapter {
         private boolean started = false;
         private LinkedList<Point> polyPoints = new LinkedList<>();
@@ -48,17 +45,19 @@ public class MainWindow {
                 startPoint = e.getPoint();
                 started = true;
                 polyPoints.add(e.getPoint());
-                polyComp.getStart(e.getPoint());
-            }else if(polyComp.checkPoly(startPoint.x,startPoint.y,e.getPoint().x,e.getPoint().y)){
+                comp.polyComp.getStart(e.getPoint());
+            }else if(comp.polyComp.checkPoly(startPoint.x,startPoint.y,e.getPoint().x,e.getPoint().y)){
                 polyPoints.add(e.getPoint());
                 Object[] array = polyPoints.toArray();
-                polyComp.addNewObject(array);
+                comp.polyComp.addNewObject(array);
                 polyPoints.clear();
-                polyComp.clearDrawObject();
+                comp.polyComp.clearDrawObject();
                 started = false;
+                comp.repaint();
             }else{
-                polyComp.addDrawObject(e.getPoint().x,e.getPoint().y);
+                comp.polyComp.addDrawObject(e.getPoint().x,e.getPoint().y);
                 polyPoints.add(e.getPoint());
+                comp.repaint();
             }
         }
 
