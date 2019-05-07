@@ -4,15 +4,15 @@ import javax.swing.*;
 import java.awt.*;
 import java.util.LinkedList;
 
-public class PolygonComponent extends JComponent{
+public class PolygonComponent{
 
     //list of polygons
-    private final LinkedList<Polygon> polygon = new LinkedList<>();
+    public final LinkedList<Polygon> polygon = new LinkedList<>();
     //points for polygon visual
     private Point startPoint = null;
     private Point lastPoint = null;
     //LinkedList for visual of polygon
-    private final LinkedList<LineComponent.Line> drawnLines = new LinkedList<>();
+    public final LinkedList<LineComponent.Line> drawnLines = new LinkedList<>();
 
     /**
      * Adds new polygon to the List of polygons
@@ -26,7 +26,6 @@ public class PolygonComponent extends JComponent{
             newPolygon.addPoint(point.x, point.y);
         }
         polygon.add(newPolygon);
-        repaint();
     }
 
     /**
@@ -34,7 +33,6 @@ public class PolygonComponent extends JComponent{
      */
     public void clearObjects(){
         this.polygon.clear();
-        repaint();
     }
 
     /**
@@ -61,7 +59,6 @@ public class PolygonComponent extends JComponent{
             this.drawnLines.add(new LineComponent.Line(lastPoint.x, lastPoint.y, x1, y1));
         }
         lastPoint = new Point(x1,y1);
-        repaint();
     }
 
     /**
@@ -70,20 +67,6 @@ public class PolygonComponent extends JComponent{
     public void clearDrawObject(){
         this.drawnLines.clear();
         this.lastPoint = null;
-        repaint();
-    }
-
-    @Override
-    protected void paintComponent(Graphics g) {
-        super.paintComponent(g);
-        //loop through all the polygons in the LinkedList
-        for (Polygon poly : this.polygon) {
-            g.drawPolygon(poly);
-        }
-        //loop through the lines to create a visual polygon
-        for(LineComponent.Line line : this.drawnLines) {
-            g.drawLine(line.x1, line.y1, line.x2, line.y2);
-        }
     }
 
     /**
