@@ -17,13 +17,14 @@ public class MainWindow {
     private JFrame frame;
     ComponentsClass comp = new ComponentsClass();
     private java.awt.Point startPoint;
+    private String currentShape = "polygon";
     /**
      * This is just an example thread-safe GUI based off the example from the lecture.
      */
     private void buildGUI() {
         frame = new JFrame("Hello World");
+        frame.add(comp);
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        frame.getContentPane().add(comp);
         frame.getContentPane().addMouseListener(new MyMouseAdapter());
         frame.getContentPane().addMouseMotionListener(new MyMouseAdapter());
         frame.setPreferredSize(new Dimension(500, 250));
@@ -41,34 +42,55 @@ public class MainWindow {
         private LinkedList<Point> polyPoints = new LinkedList<>();
         @Override
         public void mousePressed(MouseEvent e) {
-            if(!started) {
-                startPoint = e.getPoint();
-                started = true;
-                polyPoints.add(e.getPoint());
-                comp.polyComp.getStart(e.getPoint());
-            }else if(comp.polyComp.checkPoly(startPoint.x,startPoint.y,e.getPoint().x,e.getPoint().y)){
-                polyPoints.add(e.getPoint());
-                Object[] array = polyPoints.toArray();
-                comp.polyComp.addNewObject(array);
-                polyPoints.clear();
-                comp.polyComp.clearDrawObject();
-                started = false;
-                comp.repaint();
+            if(currentShape == "polygon") {
+                if (!started) {
+                    startPoint = e.getPoint();
+                    started = true;
+                    polyPoints.add(e.getPoint());
+                    comp.polyComp.getStart(e.getPoint());
+                } else if (comp.polyComp.checkPoly(startPoint.x, startPoint.y, e.getPoint().x, e.getPoint().y)) {
+                    polyPoints.add(e.getPoint());
+                    Object[] array = polyPoints.toArray();
+                    comp.polyComp.addNewObject(array);
+                    polyPoints.clear();
+                    comp.polyComp.clearDrawObject();
+                    started = false;
+                } else {
+                    comp.polyComp.addDrawObject(e.getPoint().x, e.getPoint().y);
+                    polyPoints.add(e.getPoint());
+                }
             }else{
-                comp.polyComp.addDrawObject(e.getPoint().x,e.getPoint().y);
-                polyPoints.add(e.getPoint());
-                comp.repaint();
+                //everything besides the polygon will only have two points so the start point doesnt change.
+                startPoint = e.getPoint();
             }
+            comp.repaint();
         }
 
         @Override
         public void mouseReleased(MouseEvent e) {
-
+            if(currentShape == "line"){
+                comp.lineComp.addNewObject(startPoint.x,startPoint.y,e.getPoint().x,e.getPoint().y);
+            }else if(currentShape == "rectangle"){
+                comp.rectComp.addNewObject(startPoint.x,startPoint.y,e.getPoint().x,e.getPoint().y);
+            }else if(currentShape == "ellipse"){
+                comp.ellComp.addNewObject(startPoint.x,startPoint.y,e.getPoint().x,e.getPoint().y);
+            }
+            comp.repaint();
         }
 
         @Override
         public void mouseDragged(MouseEvent e) {
-
+            if(currentShape == "line"){
+                comp.lineComp.clearDrawObject();
+                comp.lineComp.addDrawObject(startPoint.x,startPoint.y,e.getPoint().x,e.getPoint().y);
+            } else if(currentShape == "rectangle"){
+                comp.rectComp.clearDrawObject();
+                comp.rectComp.addDrawObject(startPoint.x,startPoint.y,e.getPoint().x,e.getPoint().y);
+            } else if (currentShape == "ellipse"){
+                comp.ellComp.clearDrawObject();
+                comp.ellComp.addDrawObject(startPoint.x,startPoint.y,e.getPoint().x,e.getPoint().y);
+            }
+            comp.repaint();
         }
     }
 
