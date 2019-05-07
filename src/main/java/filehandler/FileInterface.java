@@ -2,7 +2,7 @@ package main.java.filehandler;
 
 public interface FileInterface {
 
-    void readFile();
+    void readFile(String path);
     void writeFile();
 
 }
