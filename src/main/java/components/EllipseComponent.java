@@ -11,6 +11,7 @@ public class EllipseComponent implements ComponentInterface {
         public int y;
         public int width;
         public int height;
+        public Color color;
 
         /**
          * Constructor for the Ellipse class
@@ -23,8 +24,9 @@ public class EllipseComponent implements ComponentInterface {
          * @param y1 y-coordinate of first point
          * @param x2 x-coordinate of second point
          * @param y2 y-coordinate of second point
+         * @param color Color of the object
          */
-        public Ellipse(int x1, int y1, int x2, int y2) {
+        public Ellipse(int x1, int y1, int x2, int y2, Color color) {
             /*
             If the mouse is moved above or to the left of the starting position nothing would be drawn,
             if the mouse is above or left the Ellipse is now drawn from the current mouse position to the start position,
@@ -34,6 +36,7 @@ public class EllipseComponent implements ComponentInterface {
             this.y = y2 < y1 ? y2 : y1;
             this.width = x1-x2 < 0 ? x2-x1 : x1-x2;
             this.height = y1-y2 < 0 ? y2-y1 : y1-y2;
+            this.color = color;
         }
     }
 
@@ -49,9 +52,10 @@ public class EllipseComponent implements ComponentInterface {
      * @param y1 y-coordinate of first point
      * @param x2 x-coordinate of second point
      * @param y2 y-coordinate of second point
+     * @param color Color of the object
      */
-    public void addNewObject(int x1, int y1, int x2, int y2){
-        this.ellipses.add(new Ellipse(x1,y1,x2,y2));
+    public void addNewObject(int x1, int y1, int x2, int y2, Color color){
+        this.ellipses.add(new Ellipse(x1,y1,x2,y2,color));
     }
 
 
@@ -69,9 +73,10 @@ public class EllipseComponent implements ComponentInterface {
      * @param y1 y-coordinate of first point
      * @param x2 x-coordinate of second point
      * @param y2 y-coordinate of second point
+     * @param color Color of the object
      */
-    public void addDrawObject(int x1, int y1, int x2, int y2){
-        this.drawnEllipses.add(new Ellipse(x1,y1,x2,y2));
+    public void addDrawObject(int x1, int y1, int x2, int y2, Color color){
+        this.drawnEllipses.add(new Ellipse(x1,y1,x2,y2,color));
     }
 
     /**
