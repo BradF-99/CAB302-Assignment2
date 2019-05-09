@@ -31,13 +31,13 @@ public class Tests {
     @Test
     public void testListSize() {
         LineComponent line = new LineComponent();
-        line.addNewObject(1,2,3,4);
+        line.addNewObject(1,2,3,4,Color.BLACK);
             assertEquals(1, line.lines.size());
     }
     @Test
     public void testListClear() {
         LineComponent line = new LineComponent();
-        line.addNewObject(1,2,3,4);
+        line.addNewObject(1,2,3,4,Color.BLACK);
         line.clearObjects();
         assertEquals(0,line.lines.size());
     }
@@ -52,7 +52,7 @@ public class Tests {
             poly.addPoint(point.x,point.y);
         }
         Object[] array = polyPoints.toArray();
-        polyComp.addNewObject(array);
+        polyComp.addNewObject(array, Color.BLACK);
         Polygon testPoly = ((Polygon) polyComp.polygon.getLast());
         //test that the number of the points is the same and the array of x and y points are the same
         assertEquals(testPoly.npoints, poly.npoints);
@@ -62,24 +62,37 @@ public class Tests {
     @Test
     public void testLine() {
         LineComponent line = new LineComponent();
-        line.addNewObject(1,2,3,4);
+        line.addNewObject(1,2,3,4,Color.BLACK);
         assertEquals(1,line.lines.getLast().x1);
         assertEquals(2,line.lines.getLast().y1);
     }
     @Test
     public void testEllipse() {
         EllipseComponent ellipse = new EllipseComponent();
-        ellipse.addNewObject(1,2,3,4);
+        ellipse.addNewObject(1,2,3,4,Color.BLACK);
         assertEquals(1,ellipse.ellipses.getLast().x);
         assertEquals(2,ellipse.ellipses.getLast().y);
     }
     @Test
     public void testRectangle() {
         RectangleComponent rect = new RectangleComponent();
-        rect.addNewObject(1,2,3,4);
+        rect.addNewObject(1,2,3,4,Color.BLACK);
         assertEquals(1,rect.rectangles.getLast().x);
         assertEquals(2,rect.rectangles.getLast().y);
     }
-
-
+    @Test
+    public void testLineColour() {
+        LineComponent line = new LineComponent();
+        line.addNewObject(1,2,3,4,Color.RED);
+        assertEquals(Color.RED, line.lines.getLast().color);
+    }
+    @Test
+    public void testPolygonColour() {
+        PolygonComponent polyComp = new PolygonComponent();
+        LinkedList<Point> polyPoints = new LinkedList<>();
+        polyPoints.add(new Point(100,100));
+        Object[] array = polyPoints.toArray();
+        polyComp.addNewObject(array, Color.YELLOW);
+        assertEquals(Color.YELLOW, polyComp.polyColour.getLast());
+    }
 }

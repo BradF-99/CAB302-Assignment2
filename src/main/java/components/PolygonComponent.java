@@ -8,6 +8,7 @@ public class PolygonComponent{
 
     //list of polygons
     public final LinkedList<Polygon> polygon = new LinkedList<>();
+    public final LinkedList<Color> polyColour = new LinkedList<>();
     //points for polygon visual
     private Point startPoint = null;
     private Point lastPoint = null;
@@ -19,12 +20,13 @@ public class PolygonComponent{
      *
      * @param pointArray array of points in the polygon
      */
-    public void addNewObject(Object[] pointArray){
+    public void addNewObject(Object[] pointArray,Color color){
         Polygon newPolygon = new Polygon();
         for (int i = 0; i < pointArray.length; i++) {
             Point point = ((Point) pointArray[i]);
             newPolygon.addPoint(point.x, point.y);
         }
+        polyColour.add(color);
         polygon.add(newPolygon);
     }
 
@@ -51,12 +53,12 @@ public class PolygonComponent{
      * @param x1 x position of the point
      * @param y1 y position of the point
      */
-    public void addDrawObject(int x1, int y1){
+    public void addDrawObject(int x1, int y1,Color color){
         //if it last point is null there has not been a previous line so use start point
         if(lastPoint == null){
-            this.drawnLines.add(new LineComponent.Line(startPoint.x,startPoint.y, x1, y1));
+            this.drawnLines.add(new LineComponent.Line(startPoint.x,startPoint.y, x1, y1,color));
         }else {
-            this.drawnLines.add(new LineComponent.Line(lastPoint.x, lastPoint.y, x1, y1));
+            this.drawnLines.add(new LineComponent.Line(lastPoint.x, lastPoint.y, x1, y1,color));
         }
         lastPoint = new Point(x1,y1);
     }

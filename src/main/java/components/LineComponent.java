@@ -12,13 +12,15 @@ public class LineComponent implements ComponentInterface {
         public int y1;
         public int x2;
         public int y2;
+        public Color color;
 
         //constructor for the line class
-        public Line(int x1, int y1, int x2, int y2) {
+        public Line(int x1, int y1, int x2, int y2, Color color) {
             this.x1 = x1;
             this.y1 = y1;
             this.x2 = x2;
             this.y2 = y2;
+            this.color = color;
         }
     }
 
@@ -36,8 +38,8 @@ public class LineComponent implements ComponentInterface {
      * @param y2 y-coordinate of second point
      */
 
-    public void addNewObject(int x1, int y1, int x2, int y2){
-        this.lines.add(new Line(x1,y1,x2,y2));
+    public void addNewObject(int x1, int y1, int x2, int y2, Color color){
+        this.lines.add(new Line(x1,y1,x2,y2,color));
     }
 
     /**
@@ -55,8 +57,8 @@ public class LineComponent implements ComponentInterface {
      * @param x2 x-coordinate of second point
      * @param y2 y-coordinate of second point
      */
-    public void addDrawObject(int x1, int y1, int x2, int y2){
-        this.drawnLines.add(new Line(x1,y1,x2,y2));
+    public void addDrawObject(int x1, int y1, int x2, int y2,Color color){
+        this.drawnLines.add(new Line(x1,y1,x2,y2,color));
     }
 
     /**

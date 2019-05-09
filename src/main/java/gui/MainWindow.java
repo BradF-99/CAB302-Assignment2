@@ -18,6 +18,7 @@ public class MainWindow {
     ComponentsClass comp = new ComponentsClass();
     private java.awt.Point startPoint;
     private String currentShape = "polygon";
+    private Color selectedColor = Color.RED;
     /**
      * This is just an example thread-safe GUI based off the example from the lecture.
      */
@@ -51,12 +52,12 @@ public class MainWindow {
                 } else if (comp.polyComp.checkPoly(startPoint.x, startPoint.y, e.getPoint().x, e.getPoint().y)) {
                     polyPoints.add(e.getPoint());
                     Object[] array = polyPoints.toArray();
-                    comp.polyComp.addNewObject(array);
+                    comp.polyComp.addNewObject(array,selectedColor);
                     polyPoints.clear();
                     comp.polyComp.clearDrawObject();
                     started = false;
                 } else {
-                    comp.polyComp.addDrawObject(e.getPoint().x, e.getPoint().y);
+                    comp.polyComp.addDrawObject(e.getPoint().x, e.getPoint().y,selectedColor);
                     polyPoints.add(e.getPoint());
                 }
             }else{
@@ -69,11 +70,11 @@ public class MainWindow {
         @Override
         public void mouseReleased(MouseEvent e) {
             if(currentShape == "line"){
-                comp.lineComp.addNewObject(startPoint.x,startPoint.y,e.getPoint().x,e.getPoint().y);
+                comp.lineComp.addNewObject(startPoint.x,startPoint.y,e.getPoint().x,e.getPoint().y,selectedColor);
             }else if(currentShape == "rectangle"){
-                comp.rectComp.addNewObject(startPoint.x,startPoint.y,e.getPoint().x,e.getPoint().y);
+                comp.rectComp.addNewObject(startPoint.x,startPoint.y,e.getPoint().x,e.getPoint().y,selectedColor);
             }else if(currentShape == "ellipse"){
-                comp.ellComp.addNewObject(startPoint.x,startPoint.y,e.getPoint().x,e.getPoint().y);
+                comp.ellComp.addNewObject(startPoint.x,startPoint.y,e.getPoint().x,e.getPoint().y,selectedColor);
             }
             comp.repaint();
         }
@@ -82,13 +83,13 @@ public class MainWindow {
         public void mouseDragged(MouseEvent e) {
             if(currentShape == "line"){
                 comp.lineComp.clearDrawObject();
-                comp.lineComp.addDrawObject(startPoint.x,startPoint.y,e.getPoint().x,e.getPoint().y);
+                comp.lineComp.addDrawObject(startPoint.x,startPoint.y,e.getPoint().x,e.getPoint().y,selectedColor);
             } else if(currentShape == "rectangle"){
                 comp.rectComp.clearDrawObject();
-                comp.rectComp.addDrawObject(startPoint.x,startPoint.y,e.getPoint().x,e.getPoint().y);
+                comp.rectComp.addDrawObject(startPoint.x,startPoint.y,e.getPoint().x,e.getPoint().y,selectedColor);
             } else if (currentShape == "ellipse"){
                 comp.ellComp.clearDrawObject();
-                comp.ellComp.addDrawObject(startPoint.x,startPoint.y,e.getPoint().x,e.getPoint().y);
+                comp.ellComp.addDrawObject(startPoint.x,startPoint.y,e.getPoint().x,e.getPoint().y,selectedColor);
             }
             comp.repaint();
         }

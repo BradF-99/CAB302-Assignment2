@@ -1,4 +1,7 @@
 package main.java.components;
+
+import java.awt.*;
+
 public interface ComponentInterface {
 
     /**
@@ -9,7 +12,7 @@ public interface ComponentInterface {
      * @param x2 x-coordinate of second point
      * @param y2 y-coordinate of second point
      */
-    void addNewObject(int x1, int y1, int x2, int y2);
+    void addNewObject(int x1, int y1, int x2, int y2, Color color);
 
     /**
      * clears the list of objects
@@ -24,7 +27,7 @@ public interface ComponentInterface {
      * @param x2 x-coordinate of second point
      * @param y2 y-coordinate of second point
      */
-    void addDrawObject(int x1, int y1, int x2, int y2);
+    void addDrawObject(int x1, int y1, int x2, int y2, Color color);
 
     /**
      * clears the list of temporary drawn objects
