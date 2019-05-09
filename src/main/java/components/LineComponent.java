@@ -4,7 +4,7 @@ import javax.swing.*;
 import java.awt.*;
 import java.util.LinkedList;
 
-public class LineComponent implements ComponentInterface {
+public class LineComponent {
 
     //Line class
     public static class Line{

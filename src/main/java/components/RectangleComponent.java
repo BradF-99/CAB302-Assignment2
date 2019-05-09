@@ -11,7 +11,9 @@ public class RectangleComponent implements ComponentInterface {
         public int y;
         public int width;
         public int height;
-        public Color color;
+        public Color borderColor;
+        public boolean filled;
+        public Color fillColor;
 
         /**
          * Constructor for the Rectangle class
@@ -24,15 +26,19 @@ public class RectangleComponent implements ComponentInterface {
          * @param y1 y-coordinate of first point
          * @param x2 x-coordinate of second point
          * @param y2 y-coordinate of second point
-         * @param color Color of the object
+         * @param borderColor Color of the object border
+         * @param filled true if object is filled
+         * @param fillColor Color the object will be filled in
          */
         //constructor for the rectangle class
-        public Rectangle(int x1, int y1, int x2, int y2,Color color) {
+        public Rectangle(int x1, int y1, int x2, int y2,Color borderColor, boolean filled, Color fillColor) {
             this.x = x2 < x1 ? x2 : x1;
             this.y = y2 < y1 ? y2 : y1;
             this.width = x1-x2 < 0 ? x2-x1 : x1-x2;
             this.height = y1-y2 < 0 ? y2-y1 : y1-y2;
-            this.color = color;
+            this.borderColor = borderColor;
+            this.filled = filled;
+            this.fillColor = fillColor;
         }
     }
 
@@ -48,10 +54,12 @@ public class RectangleComponent implements ComponentInterface {
      * @param y1 y-coordinate of first point
      * @param x2 x-coordinate of second point
      * @param y2 y-coordinate of second point
-     * @param color Color of the object
+     * @param borderColor Color of the object border
+     * @param filled true if object is filled
+     * @param fillColor Color the object will be filled in
      */
-    public void addNewObject(int x1, int y1, int x2, int y2,Color color){
-        this.rectangles.add(new Rectangle(x1,y1,x2,y2,color));
+    public void addNewObject(int x1, int y1, int x2, int y2, Color borderColor, boolean filled, Color fillColor){
+        this.rectangles.add(new Rectangle(x1,y1,x2,y2,borderColor,filled,fillColor));
     }
 
     /**
@@ -68,10 +76,12 @@ public class RectangleComponent implements ComponentInterface {
      * @param y1 y-coordinate of first point
      * @param x2 x-coordinate of second point
      * @param y2 y-coordinate of second point
-     * @param color Color of the object
+     * @param borderColor Color of the object border
+     * @param filled true if object is filled
+     * @param fillColor Color the object will be filled in
      */
-    public void addDrawObject(int x1, int y1, int x2, int y2,Color color){
-        this.drawnRectangles.add(new Rectangle(x1,y1,x2,y2,color));
+    public void addDrawObject(int x1, int y1, int x2, int y2, Color borderColor, boolean filled, Color fillColor){
+        this.drawnRectangles.add(new Rectangle(x1,y1,x2,y2,borderColor,filled,fillColor));
     }
 
     /**

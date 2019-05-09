@@ -17,23 +17,37 @@ public class ComponentsClass extends JComponent {
     @Override
     protected void paintComponent(Graphics g) {
         super.paintComponent(g);
+        //polygons
         for (int i = 0; i < polyComp.polygon.size(); i++) {
-            g.setColor(polyComp.polyColour.get(i));
+            if(polyComp.polyHelpers.get(i).filled){
+                g.setColor(polyComp.polyHelpers.get(i).fillColor);
+                g.fillPolygon(polyComp.polygon.get(i));
+            }
+            g.setColor(polyComp.polyHelpers.get(i).borderColor);
             g.drawPolygon(polyComp.polygon.get(i));
         }
-
         for(LineComponent.Line line : polyComp.drawnLines) {
             g.setColor(line.color);
             g.drawLine(line.x1, line.y1, line.x2, line.y2);
         }
+        //rectangles
         for (RectangleComponent.Rectangle rect : rectComp.rectangles) {
-            g.setColor(rect.color);
+            if(rect.filled) {
+                g.setColor(rect.fillColor);
+                g.fillRect(rect.x,rect.y,rect.width, rect.height);
+            }
+            g.setColor(rect.borderColor);
             g.drawRect(rect.x, rect.y, rect.width, rect.height);
         }
         for (RectangleComponent.Rectangle rect : rectComp.drawnRectangles) {
-            g.setColor(rect.color);
+            if(rect.filled) {
+                g.setColor(rect.fillColor);
+                g.fillRect(rect.x,rect.y,rect.width, rect.height);
+            }
+            g.setColor(rect.borderColor);
             g.drawRect(rect.x, rect.y, rect.width, rect.height);
         }
+        //lines
         for (LineComponent.Line line : lineComp.lines) {
             g.setColor(line.color);
             g.drawLine(line.x1, line.y1, line.x2, line.y2);
@@ -42,14 +56,24 @@ public class ComponentsClass extends JComponent {
             g.setColor(line.color);
             g.drawLine(line.x1, line.y1, line.x2, line.y2);
         }
+        //ellipse
         for (EllipseComponent.Ellipse ellipse : ellComp.ellipses) {
-            g.setColor(ellipse.color);
+            if(ellipse.filled) {
+                g.setColor(ellipse.fillColor);
+                g.fillOval(ellipse.x,ellipse.y,ellipse.width, ellipse.height);
+            }
+            g.setColor(ellipse.borderColor);
             g.drawOval(ellipse.x, ellipse.y, ellipse.width, ellipse.height);
         }
         for (EllipseComponent.Ellipse ellipse : ellComp.drawnEllipses) {
-            g.setColor(ellipse.color);
+            if(ellipse.filled) {
+                g.setColor(ellipse.fillColor);
+                g.fillOval(ellipse.x,ellipse.y,ellipse.width, ellipse.height);
+            }
+            g.setColor(ellipse.borderColor);
             g.drawOval(ellipse.x, ellipse.y, ellipse.width, ellipse.height);
         }
+        //plot
         for (PlotComponent.Plot plot : plotComp.plots){
             g.setColor(plot.color);
             g.drawLine(plot.x,plot.y,plot.x,plot.y);

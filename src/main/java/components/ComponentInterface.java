@@ -11,8 +11,11 @@ public interface ComponentInterface {
      * @param y1 y-coordinate of first point
      * @param x2 x-coordinate of second point
      * @param y2 y-coordinate of second point
+     * @param filled true if object is filled
+     * @param borderColor Color of the object border
+     * @param fillColor Color the object will be filled in
      */
-    void addNewObject(int x1, int y1, int x2, int y2, Color color);
+    void addNewObject(int x1, int y1, int x2, int y2, Color borderColor, boolean filled, Color fillColor);
 
     /**
      * clears the list of objects
@@ -26,8 +29,11 @@ public interface ComponentInterface {
      * @param y1 y-coordinate of first point
      * @param x2 x-coordinate of second point
      * @param y2 y-coordinate of second point
+     * @param filled true if object is filled
+     * @param borderColor Color of the object border
+     * @param fillColor Color the object will be filled in
      */
-    void addDrawObject(int x1, int y1, int x2, int y2, Color color);
+    void addDrawObject(int x1, int y1, int x2, int y2, Color borderColor, boolean filled, Color fillColor);
 
     /**
      * clears the list of temporary drawn objects
