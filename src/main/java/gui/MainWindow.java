@@ -7,6 +7,7 @@ import java.awt.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.util.LinkedList;
+import java.util.Random;
 import java.util.concurrent.Flow;
 
 import javax.swing.*;
@@ -17,8 +18,10 @@ public class MainWindow {
     private JFrame frame;
     ComponentsClass comp = new ComponentsClass();
     private java.awt.Point startPoint;
-    private String currentShape = "polygon";
-    private Color selectedColor = Color.RED;
+    private String currentShape = "rectangle";
+    private Color selectedBorderColor = Color.RED;
+    private Color selectedFillColor = Color.BLACK;
+    private boolean filled = true;
     /**
      * This is just an example thread-safe GUI based off the example from the lecture.
      */
@@ -52,17 +55,20 @@ public class MainWindow {
                 } else if (comp.polyComp.checkPoly(startPoint.x, startPoint.y, e.getPoint().x, e.getPoint().y)) {
                     polyPoints.add(e.getPoint());
                     Object[] array = polyPoints.toArray();
-                    comp.polyComp.addNewObject(array,selectedColor);
+                    comp.polyComp.addNewObject(array,selectedBorderColor,filled,selectedFillColor);
                     polyPoints.clear();
                     comp.polyComp.clearDrawObject();
                     started = false;
                 } else {
-                    comp.polyComp.addDrawObject(e.getPoint().x, e.getPoint().y,selectedColor);
+                    comp.polyComp.addDrawObject(e.getPoint().x, e.getPoint().y,selectedBorderColor);
                     polyPoints.add(e.getPoint());
                 }
             }else{
                 //everything besides the polygon will only have two points so the start point doesnt change.
                 startPoint = e.getPoint();
+            }
+            if(currentShape == "plot") {
+                comp.plotComp.addNewObject(e.getPoint().x, e.getPoint().y, selectedBorderColor);
             }
             comp.repaint();
         }
@@ -70,11 +76,11 @@ public class MainWindow {
         @Override
         public void mouseReleased(MouseEvent e) {
             if(currentShape == "line"){
-                comp.lineComp.addNewObject(startPoint.x,startPoint.y,e.getPoint().x,e.getPoint().y,selectedColor);
+                comp.lineComp.addNewObject(startPoint.x,startPoint.y,e.getPoint().x,e.getPoint().y,selectedBorderColor);
             }else if(currentShape == "rectangle"){
-                comp.rectComp.addNewObject(startPoint.x,startPoint.y,e.getPoint().x,e.getPoint().y,selectedColor);
+                comp.rectComp.addNewObject(startPoint.x,startPoint.y,e.getPoint().x,e.getPoint().y,selectedBorderColor,filled,selectedFillColor);
             }else if(currentShape == "ellipse"){
-                comp.ellComp.addNewObject(startPoint.x,startPoint.y,e.getPoint().x,e.getPoint().y,selectedColor);
+                comp.ellComp.addNewObject(startPoint.x,startPoint.y,e.getPoint().x,e.getPoint().y,selectedBorderColor,filled,selectedFillColor);
             }
             comp.repaint();
         }
@@ -83,13 +89,13 @@ public class MainWindow {
         public void mouseDragged(MouseEvent e) {
             if(currentShape == "line"){
                 comp.lineComp.clearDrawObject();
-                comp.lineComp.addDrawObject(startPoint.x,startPoint.y,e.getPoint().x,e.getPoint().y,selectedColor);
+                comp.lineComp.addDrawObject(startPoint.x,startPoint.y,e.getPoint().x,e.getPoint().y,selectedBorderColor);
             } else if(currentShape == "rectangle"){
                 comp.rectComp.clearDrawObject();
-                comp.rectComp.addDrawObject(startPoint.x,startPoint.y,e.getPoint().x,e.getPoint().y,selectedColor);
+                comp.rectComp.addDrawObject(startPoint.x,startPoint.y,e.getPoint().x,e.getPoint().y,selectedBorderColor,filled,selectedFillColor);
             } else if (currentShape == "ellipse"){
                 comp.ellComp.clearDrawObject();
-                comp.ellComp.addDrawObject(startPoint.x,startPoint.y,e.getPoint().x,e.getPoint().y,selectedColor);
+                comp.ellComp.addDrawObject(startPoint.x,startPoint.y,e.getPoint().x,e.getPoint().y,selectedBorderColor,filled,selectedFillColor);
             }
             comp.repaint();
         }

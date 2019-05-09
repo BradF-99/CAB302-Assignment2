@@ -6,9 +6,31 @@ import java.util.LinkedList;
 
 public class PolygonComponent{
 
+    /**
+     * Helper class for the polygon list.
+     */
+    public static class PolyHelper{
+        public Color borderColor;
+        public boolean filled;
+        public Color fillColor;
+
+        /**
+         * Constructor for the Helper class
+         * @param borderColor Color of the object border
+         * @param filled true if object is filled
+         * @param fillColor Color the object will be filled in
+         */
+        public PolyHelper(Color borderColor, boolean filled, Color fillColor){
+            this.borderColor = borderColor;
+            this.filled = filled;
+            this.fillColor = fillColor;
+        }
+    }
+
     //list of polygons
     public final LinkedList<Polygon> polygon = new LinkedList<>();
-    public final LinkedList<Color> polyColour = new LinkedList<>();
+    //PolyHelper list is at the same index of the Polygon class and contains info about filled and colors
+    public final LinkedList<PolyHelper> polyHelpers = new LinkedList<>();
     //points for polygon visual
     private Point startPoint = null;
     private Point lastPoint = null;
@@ -19,15 +41,17 @@ public class PolygonComponent{
      * Adds new polygon to the List of polygons
      *
      * @param pointArray array of points in the polygon
-     * @param color Color of the object
+     * @param borderColor Color of the object border
+     * @param filled true if object is filled
+     * @param fillColor Color the object will be filled in
      */
-    public void addNewObject(Object[] pointArray,Color color){
+    public void addNewObject(Object[] pointArray,Color borderColor,boolean filled, Color fillColor){
         Polygon newPolygon = new Polygon();
         for (int i = 0; i < pointArray.length; i++) {
             Point point = ((Point) pointArray[i]);
             newPolygon.addPoint(point.x, point.y);
         }
-        polyColour.add(color);
+        polyHelpers.add(new PolyHelper(borderColor,filled,fillColor));
         polygon.add(newPolygon);
     }
 
@@ -53,14 +77,14 @@ public class PolygonComponent{
      *
      * @param x1 x position of the point
      * @param y1 y position of the point
-     * @param color Color of the object
+     * @param borderColor Color of the object border
      */
-    public void addDrawObject(int x1, int y1,Color color){
+    public void addDrawObject(int x1, int y1,Color borderColor){
         //if it last point is null there has not been a previous line so use start point
         if(lastPoint == null){
-            this.drawnLines.add(new LineComponent.Line(startPoint.x,startPoint.y, x1, y1,color));
+            this.drawnLines.add(new LineComponent.Line(startPoint.x,startPoint.y, x1, y1,borderColor));
         }else {
-            this.drawnLines.add(new LineComponent.Line(lastPoint.x, lastPoint.y, x1, y1,color));
+            this.drawnLines.add(new LineComponent.Line(lastPoint.x, lastPoint.y, x1, y1,borderColor));
         }
         lastPoint = new Point(x1,y1);
     }

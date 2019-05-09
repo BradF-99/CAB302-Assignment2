@@ -1,9 +1,6 @@
 package test.java;
 
-import main.java.components.EllipseComponent;
-import main.java.components.LineComponent;
-import main.java.components.PolygonComponent;
-import main.java.components.RectangleComponent;
+import main.java.components.*;
 import org.junit.jupiter.api.Test;
 
 import java.awt.*;
@@ -52,7 +49,7 @@ public class Tests {
             poly.addPoint(point.x,point.y);
         }
         Object[] array = polyPoints.toArray();
-        polyComp.addNewObject(array, Color.BLACK);
+        polyComp.addNewObject(array, Color.BLACK,true,Color.BLACK);
         Polygon testPoly = ((Polygon) polyComp.polygon.getLast());
         //test that the number of the points is the same and the array of x and y points are the same
         assertEquals(testPoly.npoints, poly.npoints);
@@ -69,16 +66,23 @@ public class Tests {
     @Test
     public void testEllipse() {
         EllipseComponent ellipse = new EllipseComponent();
-        ellipse.addNewObject(1,2,3,4,Color.BLACK);
+        ellipse.addNewObject(1,2,3,4,Color.BLACK,true,Color.BLACK);
         assertEquals(1,ellipse.ellipses.getLast().x);
         assertEquals(2,ellipse.ellipses.getLast().y);
     }
     @Test
     public void testRectangle() {
         RectangleComponent rect = new RectangleComponent();
-        rect.addNewObject(1,2,3,4,Color.BLACK);
+        rect.addNewObject(1,2,3,4,Color.BLACK,true,Color.BLACK);
         assertEquals(1,rect.rectangles.getLast().x);
         assertEquals(2,rect.rectangles.getLast().y);
+    }
+    @Test
+    public void testPlot() {
+        PlotComponent plot = new PlotComponent();
+        plot.addNewObject(1,2,Color.BLACK);
+        assertEquals(1,plot.plots.getLast().x);
+        assertEquals(2,plot.plots.getLast().y);
     }
     @Test
     public void testLineColour() {
@@ -87,12 +91,22 @@ public class Tests {
         assertEquals(Color.RED, line.lines.getLast().color);
     }
     @Test
-    public void testPolygonColour() {
+    public void testFilledRect() {
+        RectangleComponent rect = new RectangleComponent();
+        rect.addNewObject(1,2,3,4,Color.BLACK,false,Color.BLACK);
+        assertEquals(Color.BLACK, rect.rectangles.getLast().fillColor);
+        assertEquals(false, rect.rectangles.getLast().filled);
+    }
+    @Test
+    public void testFilledPolyComp() {
         PolygonComponent polyComp = new PolygonComponent();
         LinkedList<Point> polyPoints = new LinkedList<>();
         polyPoints.add(new Point(100,100));
         Object[] array = polyPoints.toArray();
-        polyComp.addNewObject(array, Color.YELLOW);
-        assertEquals(Color.YELLOW, polyComp.polyColour.getLast());
+        polyComp.addNewObject(array, Color.YELLOW,true,Color.RED);
+        assertEquals(Color.YELLOW, polyComp.polyHelpers.getLast().borderColor);
+        assertEquals(Color.RED, polyComp.polyHelpers.getLast().fillColor);
+        assertEquals(true, polyComp.polyHelpers.getLast().filled);
+
     }
 }
