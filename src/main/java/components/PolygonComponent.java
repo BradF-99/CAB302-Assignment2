@@ -19,6 +19,7 @@ public class PolygonComponent{
      * Adds new polygon to the List of polygons
      *
      * @param pointArray array of points in the polygon
+     * @param color Color of the object
      */
     public void addNewObject(Object[] pointArray,Color color){
         Polygon newPolygon = new Polygon();
@@ -52,6 +53,7 @@ public class PolygonComponent{
      *
      * @param x1 x position of the point
      * @param y1 y position of the point
+     * @param color Color of the object
      */
     public void addDrawObject(int x1, int y1,Color color){
         //if it last point is null there has not been a previous line so use start point

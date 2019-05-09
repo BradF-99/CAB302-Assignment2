@@ -24,6 +24,7 @@ public class EllipseComponent implements ComponentInterface {
          * @param y1 y-coordinate of first point
          * @param x2 x-coordinate of second point
          * @param y2 y-coordinate of second point
+         * @param color Color of the object
          */
         public Ellipse(int x1, int y1, int x2, int y2, Color color) {
             /*
@@ -51,6 +52,7 @@ public class EllipseComponent implements ComponentInterface {
      * @param y1 y-coordinate of first point
      * @param x2 x-coordinate of second point
      * @param y2 y-coordinate of second point
+     * @param color Color of the object
      */
     public void addNewObject(int x1, int y1, int x2, int y2, Color color){
         this.ellipses.add(new Ellipse(x1,y1,x2,y2,color));
@@ -71,6 +73,7 @@ public class EllipseComponent implements ComponentInterface {
      * @param y1 y-coordinate of first point
      * @param x2 x-coordinate of second point
      * @param y2 y-coordinate of second point
+     * @param color Color of the object
      */
     public void addDrawObject(int x1, int y1, int x2, int y2, Color color){
         this.drawnEllipses.add(new Ellipse(x1,y1,x2,y2,color));
