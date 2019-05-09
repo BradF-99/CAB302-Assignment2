@@ -1,33 +1,17 @@
 package test.java;
 
-import main.java.components.EllipseComponent;
-import main.java.components.LineComponent;
-import main.java.components.PolygonComponent;
-import main.java.components.RectangleComponent;
-import org.junit.jupiter.api.Test;
+import main.java.*;
+import main.java.components.*;
 
 import java.awt.*;
 import java.util.LinkedList;
 import java.util.Random;
 
-import static org.junit.jupiter.api.Assertions.assertArrayEquals;
-import static org.junit.jupiter.api.Assertions.assertEquals;
+import org.junit.jupiter.api.Test;
+import static org.junit.jupiter.api.Assertions.*;
 
 public class Tests {
     Random rand = new Random();
-    @Test
-    public void testExample() {
-        int testSum = 3+6+9;
-        Assertions.assertEquals(18,testSum);
-    }
-    @Test
-    public void testMainExampleTrue (){
-        Assertions.assertEquals(Main.exampleFunc(true),"Hi!");
-    }
-    @Test
-    public void testMainExampleFalse (){
-        Assertions.assertEquals(Main.exampleFunc(false),"Hello!");
-    }
 
     /*
      * File Handling Tests
