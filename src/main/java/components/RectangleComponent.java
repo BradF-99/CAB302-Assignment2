@@ -4,13 +4,13 @@ import javax.swing.*;
 import java.awt.*;
 import java.util.LinkedList;
 
-public class RectangleComponent extends JComponent implements ComponentInterface {
+public class RectangleComponent implements ComponentInterface {
 
-    private static class Rectangle{
-        private int x;
-        private int y;
-        private int width;
-        private int height;
+    public static class Rectangle{
+        public int x;
+        public int y;
+        public int width;
+        public int height;
 
         //constructor for the rectangle class
         public Rectangle(int x1, int y1, int x2, int y2) {
@@ -27,40 +27,46 @@ public class RectangleComponent extends JComponent implements ComponentInterface
     }
 
     //create a LinkedList of Rectangles
-    private final LinkedList<Rectangle> rectangles = new LinkedList<>();
+    public final LinkedList<Rectangle> rectangles = new LinkedList<>();
     //LinkedList for the visual rectangle whilst mouse is pressed
-    private final LinkedList<Rectangle> drawnRectangles = new LinkedList<>();
+    public final LinkedList<Rectangle> drawnRectangles = new LinkedList<>();
 
+    /**
+     * Adds new ellipse to the list of rectangles
+     *
+     * @param x1 x-coordinate of first point
+     * @param y1 y-coordinate of first point
+     * @param x2 x-coordinate of second point
+     * @param y2 y-coordinate of second point
+     */
     public void addNewObject(int x1, int y1, int x2, int y2){
         this.rectangles.add(new Rectangle(x1,y1,x2,y2));
-        repaint();
     }
 
+    /**
+     * clears the list of rectangles
+     */
     public void clearObjects(){
         this.rectangles.clear();
-        repaint();
     }
 
-
+    /**
+     * Adds new ellipse to the drawnlist of rectangles
+     *
+     * @param x1 x-coordinate of first point
+     * @param y1 y-coordinate of first point
+     * @param x2 x-coordinate of second point
+     * @param y2 y-coordinate of second point
+     */
     public void addDrawObject(int x1, int y1, int x2, int y2){
         this.drawnRectangles.add(new Rectangle(x1,y1,x2,y2));
-        repaint();
     }
 
+    /**
+     * clears the list of drawn rectangles
+     */
     public void clearDrawObject(){
         this.drawnRectangles.clear();
-        repaint();
     }
 
-    @Override
-    protected void paintComponent(Graphics g) {
-        super.paintComponent(g);
-        //loop through all the rectangles in the LinkedList
-        for (Rectangle rect : this.rectangles) {
-            g.drawRect(rect.x, rect.y, rect.width, rect.height);
-        }
-        for (Rectangle rect : this.drawnRectangles) {
-            g.drawRect(rect.x, rect.y, rect.width, rect.height);
-        }
-    }
 }
