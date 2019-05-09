@@ -1,9 +1,6 @@
 package test.java;
 
-import main.java.components.EllipseComponent;
-import main.java.components.LineComponent;
-import main.java.components.PolygonComponent;
-import main.java.components.RectangleComponent;
+import main.java.components.*;
 import org.junit.jupiter.api.Test;
 
 import java.awt.*;
@@ -79,6 +76,13 @@ public class Tests {
         rect.addNewObject(1,2,3,4,Color.BLACK);
         assertEquals(1,rect.rectangles.getLast().x);
         assertEquals(2,rect.rectangles.getLast().y);
+    }
+    @Test
+    public void testPlot() {
+        PlotComponent plot = new PlotComponent();
+        plot.addNewObject(1,2,Color.BLACK);
+        assertEquals(1,plot.plots.getLast().x);
+        assertEquals(2,plot.plots.getLast().y);
     }
     @Test
     public void testLineColour() {

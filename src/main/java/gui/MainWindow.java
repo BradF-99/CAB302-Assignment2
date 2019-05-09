@@ -7,6 +7,7 @@ import java.awt.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.util.LinkedList;
+import java.util.Random;
 import java.util.concurrent.Flow;
 
 import javax.swing.*;
@@ -17,7 +18,7 @@ public class MainWindow {
     private JFrame frame;
     ComponentsClass comp = new ComponentsClass();
     private java.awt.Point startPoint;
-    private String currentShape = "polygon";
+    private String currentShape = "plot";
     private Color selectedColor = Color.RED;
     /**
      * This is just an example thread-safe GUI based off the example from the lecture.
@@ -63,6 +64,9 @@ public class MainWindow {
             }else{
                 //everything besides the polygon will only have two points so the start point doesnt change.
                 startPoint = e.getPoint();
+            }
+            if(currentShape == "plot") {
+                comp.plotComp.addNewObject(e.getPoint().x, e.getPoint().y, selectedColor);
             }
             comp.repaint();
         }

@@ -8,6 +8,7 @@ public class ComponentsClass extends JComponent {
     public EllipseComponent ellComp = new EllipseComponent();
     public RectangleComponent rectComp = new RectangleComponent();
     public PolygonComponent polyComp = new PolygonComponent();
+    public PlotComponent plotComp = new PlotComponent();
 
     /**
      * Loops through all the paintable components and draws them.
@@ -48,6 +49,10 @@ public class ComponentsClass extends JComponent {
         for (EllipseComponent.Ellipse ellipse : ellComp.drawnEllipses) {
             g.setColor(ellipse.color);
             g.drawOval(ellipse.x, ellipse.y, ellipse.width, ellipse.height);
+        }
+        for (PlotComponent.Plot plot : plotComp.plots){
+            g.setColor(plot.color);
+            g.drawLine(plot.x,plot.y,plot.x,plot.y);
         }
     }
 }
