@@ -11,7 +11,9 @@ public class EllipseComponent implements ComponentInterface {
         public int y;
         public int width;
         public int height;
-        public Color color;
+        public Color borderColor;
+        public boolean filled;
+        public Color fillColor;
 
         /**
          * Constructor for the Ellipse class
@@ -24,9 +26,11 @@ public class EllipseComponent implements ComponentInterface {
          * @param y1 y-coordinate of first point
          * @param x2 x-coordinate of second point
          * @param y2 y-coordinate of second point
-         * @param color Color of the object
+         * @param borderColor Color of the object border
+         * @param filled true if object is filled
+         * @param fillColor Color the object will be filled in
          */
-        public Ellipse(int x1, int y1, int x2, int y2, Color color) {
+        public Ellipse(int x1, int y1, int x2, int y2, Color borderColor, boolean filled, Color fillColor) {
             /*
             If the mouse is moved above or to the left of the starting position nothing would be drawn,
             if the mouse is above or left the Ellipse is now drawn from the current mouse position to the start position,
@@ -34,9 +38,11 @@ public class EllipseComponent implements ComponentInterface {
              */
             this.x = x2 < x1 ? x2 : x1;
             this.y = y2 < y1 ? y2 : y1;
-            this.width = x1-x2 < 0 ? x2-x1 : x1-x2;
-            this.height = y1-y2 < 0 ? y2-y1 : y1-y2;
-            this.color = color;
+            this.width = x1 - x2 < 0 ? x2 - x1 : x1 - x2;
+            this.height = y1 - y2 < 0 ? y2 - y1 : y1 - y2;
+            this.borderColor = borderColor;
+            this.filled = filled;
+            this.fillColor = fillColor;
         }
     }
 
@@ -52,10 +58,12 @@ public class EllipseComponent implements ComponentInterface {
      * @param y1 y-coordinate of first point
      * @param x2 x-coordinate of second point
      * @param y2 y-coordinate of second point
-     * @param color Color of the object
+     * @param borderColor Color of the object border
+     * @param filled true if object is filled
+     * @param fillColor Color the object will be filled in
      */
-    public void addNewObject(int x1, int y1, int x2, int y2, Color color){
-        this.ellipses.add(new Ellipse(x1,y1,x2,y2,color));
+    public void addNewObject(int x1, int y1, int x2, int y2, Color borderColor, boolean filled, Color fillColor){
+        this.ellipses.add(new Ellipse(x1,y1,x2,y2,borderColor, filled, fillColor));
     }
 
 
@@ -73,10 +81,12 @@ public class EllipseComponent implements ComponentInterface {
      * @param y1 y-coordinate of first point
      * @param x2 x-coordinate of second point
      * @param y2 y-coordinate of second point
-     * @param color Color of the object
+     * @param borderColor Color of the object border
+     * @param filled true if object is filled
+     * @param fillColor Color the object will be filled in
      */
-    public void addDrawObject(int x1, int y1, int x2, int y2, Color color){
-        this.drawnEllipses.add(new Ellipse(x1,y1,x2,y2,color));
+    public void addDrawObject(int x1, int y1, int x2, int y2, Color borderColor, boolean filled, Color fillColor){
+        this.drawnEllipses.add(new Ellipse(x1,y1,x2,y2,borderColor,filled,fillColor));
     }
 
     /**
