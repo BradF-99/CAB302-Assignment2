@@ -9,7 +9,8 @@ public class PolygonComponent{
     /**
      * Helper class for the polygon list.
      */
-    public static class PolyHelper{
+    public static class Polygon{
+        public java.awt.Polygon polygon;
         public Color borderColor;
         public boolean filled;
         public Color fillColor;
@@ -20,7 +21,8 @@ public class PolygonComponent{
          * @param filled true if object is filled
          * @param fillColor Color the object will be filled in
          */
-        public PolyHelper(Color borderColor, boolean filled, Color fillColor){
+        public Polygon(java.awt.Polygon polygon, Color borderColor, boolean filled, Color fillColor){
+            this.polygon = polygon;
             this.borderColor = borderColor;
             this.filled = filled;
             this.fillColor = fillColor;
@@ -28,9 +30,7 @@ public class PolygonComponent{
     }
 
     //list of polygons
-    public final LinkedList<Polygon> polygon = new LinkedList<>();
-    //PolyHelper list is at the same index of the Polygon class and contains info about filled and colors
-    public final LinkedList<PolyHelper> polyHelpers = new LinkedList<>();
+    public final LinkedList<PolygonComponent.Polygon> polygon = new LinkedList<>();
     //points for polygon visual
     private Point startPoint = null;
     private Point lastPoint = null;
@@ -46,13 +46,12 @@ public class PolygonComponent{
      * @param fillColor Color the object will be filled in
      */
     public void addNewObject(Object[] pointArray,Color borderColor,boolean filled, Color fillColor){
-        Polygon newPolygon = new Polygon();
+        java.awt.Polygon newPolygon = new java.awt.Polygon();
         for (int i = 0; i < pointArray.length; i++) {
             Point point = ((Point) pointArray[i]);
             newPolygon.addPoint(point.x, point.y);
         }
-        polyHelpers.add(new PolyHelper(borderColor,filled,fillColor));
-        polygon.add(newPolygon);
+        polygon.add(new Polygon(newPolygon, borderColor, filled, fillColor));
     }
 
     /**

@@ -18,7 +18,7 @@ public class MainWindow {
     private JFrame frame;
     ComponentsClass comp = new ComponentsClass();
     private java.awt.Point startPoint;
-    private String currentShape = "rectangle";
+    private String currentShape = "polygon";
     private Color selectedBorderColor = Color.RED;
     private Color selectedFillColor = Color.BLACK;
     private boolean filled = true;

@@ -50,7 +50,7 @@ public class Tests {
         }
         Object[] array = polyPoints.toArray();
         polyComp.addNewObject(array, Color.BLACK,true,Color.BLACK);
-        Polygon testPoly = ((Polygon) polyComp.polygon.getLast());
+        Polygon testPoly = ((Polygon) polyComp.polygon.getLast().polygon);
         //test that the number of the points is the same and the array of x and y points are the same
         assertEquals(testPoly.npoints, poly.npoints);
         assertArrayEquals(poly.xpoints, testPoly.xpoints);
@@ -104,9 +104,9 @@ public class Tests {
         polyPoints.add(new Point(100,100));
         Object[] array = polyPoints.toArray();
         polyComp.addNewObject(array, Color.YELLOW,true,Color.RED);
-        assertEquals(Color.YELLOW, polyComp.polyHelpers.getLast().borderColor);
-        assertEquals(Color.RED, polyComp.polyHelpers.getLast().fillColor);
-        assertEquals(true, polyComp.polyHelpers.getLast().filled);
+        assertEquals(Color.YELLOW, polyComp.polygon.getLast().borderColor);
+        assertEquals(Color.RED, polyComp.polygon.getLast().fillColor);
+        assertEquals(true, polyComp.polygon.getLast().filled);
 
     }
 }
