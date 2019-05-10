@@ -1,6 +1,5 @@
 package main.java.components;
 
-import javax.swing.*;
 import java.awt.*;
 import java.util.LinkedList;
 

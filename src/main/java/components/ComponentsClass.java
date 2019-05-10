@@ -1,5 +1,4 @@
 package main.java.components;
-
 import javax.swing.*;
 import java.awt.*;
 
@@ -9,7 +8,6 @@ public class ComponentsClass extends JComponent {
     public RectangleComponent rectComp = new RectangleComponent();
     public PolygonComponent polyComp = new PolygonComponent();
     public PlotComponent plotComp = new PlotComponent();
-
     /**
      * Loops through all the paintable components and draws them.
      * @param g Graphics
