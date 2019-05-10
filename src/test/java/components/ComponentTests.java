@@ -1,35 +1,21 @@
-package test.java;
+package test.java.components;
 
 import main.java.components.*;
-import org.junit.jupiter.api.Test;
 
 import java.awt.*;
 import java.util.LinkedList;
 import java.util.Random;
 
-import static org.junit.jupiter.api.Assertions.assertArrayEquals;
-import static org.junit.jupiter.api.Assertions.assertEquals;
+import org.junit.jupiter.api.Test;
+import static org.junit.jupiter.api.Assertions.*;
 
-public class Tests {
+public class ComponentTests {
     Random rand = new Random();
-    @Test
-    public void testExample() {
-        int testSum = 3+6+9;
-        assertEquals(18,testSum);
-    }
-    @Test
-    public void testMainExampleTrue (){
-        assertEquals(main.java.Main.exampleFunc(true),"Hi!");
-    }
-    @Test
-    public void testMainExampleFalse (){
-        assertEquals(main.java.Main.exampleFunc(false),"Hello!");
-    }
     @Test
     public void testListSize() {
         LineComponent line = new LineComponent();
         line.addNewObject(1,2,3,4,Color.BLACK);
-            assertEquals(1, line.lines.size());
+        assertEquals(1, line.lines.size());
     }
     @Test
     public void testListClear() {
