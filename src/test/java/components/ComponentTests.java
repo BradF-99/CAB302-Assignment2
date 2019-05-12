@@ -93,6 +93,25 @@ public class ComponentTests {
         assertEquals(Color.YELLOW, polyComp.polygon.getLast().borderColor);
         assertEquals(Color.RED, polyComp.polygon.getLast().fillColor);
         assertEquals(true, polyComp.polygon.getLast().filled);
+    }
 
+    @Test
+    public void testAddUndo() {
+        ComponentsClass comp = new ComponentsClass();
+        comp.rectComp.addNewObject(1,2,3,4,Color.BLACK,false,Color.BLACK);
+        comp.addUndo(comp.rectComp.rectangles.size() -1 , "rectangle");
+        assertEquals(1,comp.undoList.size());
+    }
+
+    @Test
+    public void testUndo() {
+        ComponentsClass comp = new ComponentsClass();
+        comp.rectComp.addNewObject(1,2,3,4,Color.BLACK,false,Color.BLACK);
+        comp.addUndo(comp.rectComp.rectangles.size() -1 , "rectangle");
+        comp.rectComp.addNewObject(3,3,3,4,Color.BLACK,false,Color.BLACK);
+        comp.addUndo(comp.rectComp.rectangles.size() -1 , "rectangle");
+        comp.Undo();
+        assertEquals(1, comp.undoList.size());
+        assertEquals(1,comp.rectComp.rectangles.size());
     }
 }

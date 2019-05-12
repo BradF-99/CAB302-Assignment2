@@ -2,8 +2,7 @@ package main.java.gui;
 
 import main.java.components.*;
 import java.awt.*;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
+import java.awt.event.*;
 import java.util.LinkedList;
 
 import javax.swing.*;
@@ -13,7 +12,7 @@ public class MainWindow {
     private JFrame frame;
     ComponentsClass comp = new ComponentsClass();
     private java.awt.Point startPoint;
-    private String currentShape = "polygon";
+    private String currentShape = "ellipse";
     private Color selectedBorderColor = Color.RED;
     private Color selectedFillColor = Color.BLACK;
     private boolean filled = true;
@@ -26,6 +25,7 @@ public class MainWindow {
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.getContentPane().addMouseListener(new MyMouseAdapter());
         frame.getContentPane().addMouseMotionListener(new MyMouseAdapter());
+        frame.addKeyListener(new MyKeyAdapter());
         frame.setPreferredSize(new Dimension(500, 250));
         frame.setLocation(new Point(200, 200));
         frame.pack();
@@ -53,6 +53,7 @@ public class MainWindow {
                     comp.polyComp.addNewObject(array,selectedBorderColor,filled,selectedFillColor);
                     polyPoints.clear();
                     comp.polyComp.clearDrawObject();
+                    comp.addUndo(comp.polyComp.polygon.size() - 1, "polygon");
                     started = false;
                 } else {
                     comp.polyComp.addDrawObject(e.getPoint().x, e.getPoint().y,selectedBorderColor);
@@ -64,6 +65,7 @@ public class MainWindow {
             }
             if(currentShape == "plot") {
                 comp.plotComp.addNewObject(e.getPoint().x, e.getPoint().y, selectedBorderColor);
+                comp.addUndo(comp.plotComp.plots.size() - 1, "plot");
             }
             comp.repaint();
         }
@@ -72,10 +74,16 @@ public class MainWindow {
         public void mouseReleased(MouseEvent e) {
             if(currentShape == "line"){
                 comp.lineComp.addNewObject(startPoint.x,startPoint.y,e.getPoint().x,e.getPoint().y,selectedBorderColor);
+                comp.lineComp.clearDrawObject();
+                comp.addUndo(comp.lineComp.lines.size() - 1, "line");
             }else if(currentShape == "rectangle"){
                 comp.rectComp.addNewObject(startPoint.x,startPoint.y,e.getPoint().x,e.getPoint().y,selectedBorderColor,filled,selectedFillColor);
+                comp.rectComp.clearDrawObject();
+                comp.addUndo(comp.rectComp.rectangles.size() - 1,"rectangle");
             }else if(currentShape == "ellipse"){
                 comp.ellComp.addNewObject(startPoint.x,startPoint.y,e.getPoint().x,e.getPoint().y,selectedBorderColor,filled,selectedFillColor);
+                comp.ellComp.clearDrawObject();
+                comp.addUndo(comp.ellComp.ellipses.size() - 1, "ellipse");
             }
             comp.repaint();
         }
@@ -91,6 +99,16 @@ public class MainWindow {
             } else if (currentShape == "ellipse"){
                 comp.ellComp.clearDrawObject();
                 comp.ellComp.addDrawObject(startPoint.x,startPoint.y,e.getPoint().x,e.getPoint().y,selectedBorderColor,filled,selectedFillColor);
+            }
+            comp.repaint();
+        }
+    }
+
+    class MyKeyAdapter extends KeyAdapter {
+        @Override
+        public void keyReleased(KeyEvent e) {
+            if(e.isControlDown() && e.getKeyCode() == KeyEvent.VK_Z){
+                comp.Undo();
             }
             comp.repaint();
         }

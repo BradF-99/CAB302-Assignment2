@@ -27,7 +27,7 @@ public class PlotComponent {
     //create a LinkedList of Plots to store all the lines
     public final LinkedList<Plot> plots = new LinkedList<>();
     /**
-     * Adds new plot to the list of lines
+     * Adds new plot to the list of plots
      *
      * @param x x-coordinate of first point
      * @param y y-coordinate of first point
@@ -38,9 +38,17 @@ public class PlotComponent {
     }
 
     /**
-     * clears the list of ellipses
+     * clears the list of plots
      */
     public void clearObjects(){
         this.plots.clear();
+    }
+
+    /**
+     * Clears a single entry in the list
+     * @param index index of the list to be removed
+     */
+    public void clearObject(int index){
+        this.plots.remove(index);
     }
 }
