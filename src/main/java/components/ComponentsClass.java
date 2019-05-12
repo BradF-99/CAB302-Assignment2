@@ -1,5 +1,4 @@
 package main.java.components;
-
 import javax.swing.*;
 import java.awt.*;
 
@@ -9,7 +8,6 @@ public class ComponentsClass extends JComponent {
     public RectangleComponent rectComp = new RectangleComponent();
     public PolygonComponent polyComp = new PolygonComponent();
     public PlotComponent plotComp = new PlotComponent();
-
     /**
      * Loops through all the paintable components and draws them.
      * @param g Graphics
@@ -19,12 +17,12 @@ public class ComponentsClass extends JComponent {
         super.paintComponent(g);
         //polygons
         for (int i = 0; i < polyComp.polygon.size(); i++) {
-            if(polyComp.polyHelpers.get(i).filled){
-                g.setColor(polyComp.polyHelpers.get(i).fillColor);
-                g.fillPolygon(polyComp.polygon.get(i));
+            if(polyComp.polygon.get(i).filled){
+                g.setColor(polyComp.polygon.get(i).fillColor);
+                g.fillPolygon(polyComp.polygon.get(i).polygon);
             }
-            g.setColor(polyComp.polyHelpers.get(i).borderColor);
-            g.drawPolygon(polyComp.polygon.get(i));
+            g.setColor(polyComp.polygon.get(i).borderColor);
+            g.drawPolygon(polyComp.polygon.get(i).polygon);
         }
         for(LineComponent.Line line : polyComp.drawnLines) {
             g.setColor(line.color);

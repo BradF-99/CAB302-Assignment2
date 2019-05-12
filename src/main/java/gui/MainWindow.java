@@ -1,24 +1,19 @@
 package main.java.gui;
 
 import main.java.components.*;
-import org.w3c.dom.css.Rect;
-
 import java.awt.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.util.LinkedList;
-import java.util.Random;
-import java.util.concurrent.Flow;
 
 import javax.swing.*;
-import javax.swing.border.Border;
 
 
 public class MainWindow {
     private JFrame frame;
     ComponentsClass comp = new ComponentsClass();
     private java.awt.Point startPoint;
-    private String currentShape = "rectangle";
+    private String currentShape = "polygon";
     private Color selectedBorderColor = Color.RED;
     private Color selectedFillColor = Color.BLACK;
     private boolean filled = true;
