@@ -57,6 +57,14 @@ public class LineComponent {
     }
 
     /**
+     * Clears a single entry in the list
+     * @param index index of the list to be removed
+     */
+    public void clearObject(int index){
+        this.lines.remove(index);
+    }
+
+    /**
      * Adds new ellipse to the drawnlist of lines
      *
      * @param x1 x-coordinate of first point

@@ -61,6 +61,15 @@ public class PolygonComponent{
     }
 
     /**
+     * Clears a single entry in the list
+     * @param index index of the list to be removed
+     */
+    public void clearObject(int index){
+        this.polygon.remove(index);
+    }
+
+
+    /**
      * Sets start point
      *
      * @param point sets startPoint

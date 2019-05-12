@@ -23,6 +23,12 @@ public interface ComponentInterface {
     void clearObjects();
 
     /**
+     * Clears a single entry in the list
+     * @param index index of the list to be removed
+     */
+    void clearObject(int index);
+
+    /**
      * Adds new object to the temporary draw list of objects
      *
      * @param x1 x-coordinate of first point

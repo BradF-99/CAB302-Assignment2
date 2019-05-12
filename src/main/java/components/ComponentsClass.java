@@ -1,6 +1,7 @@
 package main.java.components;
 import javax.swing.*;
 import java.awt.*;
+import java.util.LinkedList;
 
 public class ComponentsClass extends JComponent {
     public LineComponent lineComp = new LineComponent();
@@ -8,6 +9,45 @@ public class ComponentsClass extends JComponent {
     public RectangleComponent rectComp = new RectangleComponent();
     public PolygonComponent polyComp = new PolygonComponent();
     public PlotComponent plotComp = new PlotComponent();
+
+    public class undoListHelper {
+        public int index;
+        public String component;
+        public undoListHelper(int index, String component){
+            this.index = index;
+            this.component = component;
+        }
+    }
+
+    public void addUndo (int index, String component){
+        undoList.add(new undoListHelper(index, component));
+    }
+
+    public void Undo(){
+        if(undoList.size() != 0){
+            switch (undoList.getLast().component){
+                case "plot":
+                    plotComp.clearObject(undoList.getLast().index);
+                    break;
+                case "line":
+                    lineComp.clearObject(undoList.getLast().index);
+                    break;
+                case "rectangle":
+                    rectComp.clearObject(undoList.getLast().index);
+                    break;
+                case "ellipse":
+                    ellComp.clearObject(undoList.getLast().index);
+                    break;
+                case "polygon":
+                    polyComp.clearObject(undoList.getLast().index);
+                    break;
+            }
+            undoList.removeLast();
+        }
+    }
+
+    public LinkedList<undoListHelper> undoList = new LinkedList<>();
+
     /**
      * Loops through all the paintable components and draws them.
      * @param g Graphics
@@ -16,13 +56,13 @@ public class ComponentsClass extends JComponent {
     protected void paintComponent(Graphics g) {
         super.paintComponent(g);
         //polygons
-        for (int i = 0; i < polyComp.polygon.size(); i++) {
-            if(polyComp.polygon.get(i).filled){
-                g.setColor(polyComp.polygon.get(i).fillColor);
-                g.fillPolygon(polyComp.polygon.get(i).polygon);
+        for(PolygonComponent.Polygon poly : polyComp.polygon){
+            if(poly.filled){
+                g.setColor(poly.fillColor);
+                g.fillPolygon(poly.polygon);
             }
-            g.setColor(polyComp.polygon.get(i).borderColor);
-            g.drawPolygon(polyComp.polygon.get(i).polygon);
+            g.setColor(poly.borderColor);
+            g.drawPolygon(poly.polygon);
         }
         for(LineComponent.Line line : polyComp.drawnLines) {
             g.setColor(line.color);
