@@ -55,7 +55,7 @@ public class FileTests {
     public void testReadNonExistentVECFile() {
         FileRead fileReader = new FileRead();
         assertThrows(FileNotFoundException.class, () -> {
-            fileReader.readFile("src/test/resources/filehandler/Test3.vec");
+            fileReader.readFile("src/test/resources/filehandler/Test3.vec"); // DO NOT ADD THIS FILE TO RESOURCES
         });
     }
 
@@ -76,10 +76,26 @@ public class FileTests {
     }
 
     @Test
-    public void testReadPartiallyValidVECFile() {
+    public void testReadVECFileOverflowCoords() {
         FileRead fileReader = new FileRead();
         assertThrows(FileInvalidArgumentException.class, () -> {
             fileReader.readFile("src/test/resources/filehandler/Test6.vec");
+        },"Error occurred while reading file. Co-ordinates are invalid.");
+    }
+
+    @Test
+    public void testReadVECFileInvalidUnderflowCoords() {
+        FileRead fileReader = new FileRead();
+        assertThrows(FileInvalidArgumentException.class, () -> {
+            fileReader.readFile("src/test/resources/filehandler/Test7.vec");
+        },"Error occurred while reading file. Co-ordinates are invalid.");
+    }
+
+    @Test
+    public void testReadVECFileInvalidUnderflowCoords() {
+        FileRead fileReader = new FileRead();
+        assertThrows(FileInvalidArgumentException.class, () -> {
+            fileReader.readFile("src/test/resources/filehandler/Test7.vec");
         },"Error occurred while reading file. Co-ordinates are invalid.");
     }
 
