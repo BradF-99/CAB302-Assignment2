@@ -92,10 +92,18 @@ public class FileTests {
     }
 
     @Test
-    public void testReadVECFileInvalidUnderflowCoords() {
+    public void testReadVECFileUnspecifiedLineCoords() {
         FileRead fileReader = new FileRead();
         assertThrows(FileInvalidArgumentException.class, () -> {
-            fileReader.readFile("src/test/resources/filehandler/Test7.vec");
+            fileReader.readFile("src/test/resources/filehandler/Test8.vec");
+        },"Error occurred while reading file. Co-ordinates are invalid.");
+    }
+
+    @Test
+    public void testReadVECFileUnspecifiedRectangleCoords() {
+        FileRead fileReader = new FileRead();
+        assertThrows(FileInvalidArgumentException.class, () -> {
+            fileReader.readFile("src/test/resources/filehandler/Test10.vec");
         },"Error occurred while reading file. Co-ordinates are invalid.");
     }
 
