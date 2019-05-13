@@ -63,6 +63,11 @@ public class FileRead {
      * @return
      */
     private boolean validateLine(String line) throws FileInvalidArgumentException {
+
+        if(line.isEmpty() || line.isBlank()){ // don't read blank lines but don't throw an exception
+            return true;
+        }
+
         String[] lineSplit = Arrays.stream(line.split(" "))
                             .map(String::trim)
                             .map(String::toUpperCase)
@@ -97,21 +102,23 @@ public class FileRead {
                 default:
                     throw new FileInvalidArgumentException("Invalid argument in file.");
             }
-        } else if (Arrays.stream(colourArgs).anyMatch(lineSplit[0]::equals)){
+        } else if (Arrays.stream(colourArgs).anyMatch(lineSplit[0]::equals)) {
             switch (lineSplit[0]) {
                 case "PEN":
                 case "FILL":
                     regexMatcher = regexPattern.matcher(lineSplit[1]); // attempt to match hex colour to regex
-                    if(regexMatcher.find()){
+                    if (regexMatcher.find()) {
                         return true;
                     } else {
-                        throw new FileInvalidArgumentException("Invalid argument in file.");
+                        if (lineSplit[1].equals("OFF")) {
+                            return true;
+                        } else {
+                            throw new FileInvalidArgumentException("Invalid argument in file.");
+                        }
                     }
                 default:
                     throw new FileInvalidArgumentException("Invalid argument in file.");
             }
-        } else if (lineSplit.length == 1) {
-            return true; // technically a valid line if nothing is in it
         } else { // the argument is neither a shape or a colour
             throw new FileInvalidArgumentException("Invalid argument in file.");
         }
