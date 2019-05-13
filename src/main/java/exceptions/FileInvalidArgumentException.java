@@ -1,9 +1,6 @@
 package main.java.exceptions;
 
 public class FileInvalidArgumentException extends Exception {
-    public FileInvalidArgumentException(int line, Throwable err){
-        super("Error on line"+line, err);
-    }
     public FileInvalidArgumentException(String msg){
         super("Error occurred while reading file. "+msg);
     }
