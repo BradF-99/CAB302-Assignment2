@@ -12,12 +12,13 @@ public class FileRead {
     private final String[] shapeArgs = {"LINE","PLOT","RECTANGLE","ELLIPSE","POLYGON"};
     private final String[] colourArgs = {"PEN","FILL"};
 
+    // Hex Colour Validation
     private static final String colourRegex = "^#([A-Fa-f0-9]{6}|[A-Fa-f0-9]{3})$"; // regex magic
     private Pattern regexPattern;
     private Matcher regexMatcher;
 
     public FileRead(){
-        regexPattern = regexPattern.compile(colourRegex);
+        regexPattern = regexPattern.compile(colourRegex); // compile our regex (needed for colour validation)
     }
 
     public void readFile(String path) throws IOException, FileInvalidArgumentException {
@@ -30,7 +31,7 @@ public class FileRead {
 
         try {
             fileIn = new FileInputStream(path);
-            scanner = new Scanner(fileIn, "UTF-8"); // check for different charset?
+            scanner = new Scanner(fileIn, "UTF-8"); // turns out detecting char sets basically impossible
             while (scanner.hasNextLine()) {
                 String line = scanner.nextLine();
                 if (!validateLine(line)) {
@@ -41,7 +42,7 @@ public class FileRead {
                 }
 
             }
-            if (scanner.ioException() != null) { // scanner does not throw exceptions so we have to throw for it
+            if (scanner.ioException() != null) { // scanner does not throw exceptions so we have to check for it
                 throw scanner.ioException();
             }
         } catch (IOException err){
@@ -74,7 +75,7 @@ public class FileRead {
                 case "RECTANGLE":
                 case "ELLIPSE":
                     if(lineSplit.length == 5) {
-                        for(int i = 1; i < lineSplit.length; i++){
+                        for(int i = 1; i < lineSplit.length; i++){ // start from 1 because arg is at index 0
                             validateCoords(lineSplit,i);
                         }
                         return true;
@@ -82,13 +83,13 @@ public class FileRead {
                         throw new FileInvalidArgumentException("Co-ordinates are invalid.");
                     }
                 case "PLOT":
-                    if(lineSplit.length == 3) {
+                    if(lineSplit.length == 3) { // plot only has 3 args
                         return true;
                     } else {
                         throw new FileInvalidArgumentException("Co-ordinates are invalid.");
                     }
                 case "POLYGON":
-                    if(lineSplit.length >= 3) {
+                    if(lineSplit.length >= 3) { // polygon must have more than 3 args
                         return true;
                     } else {
                         throw new FileInvalidArgumentException("Co-ordinates are invalid.");
@@ -100,7 +101,7 @@ public class FileRead {
             switch (lineSplit[0]) {
                 case "PEN":
                 case "FILL":
-                    regexMatcher = regexPattern.matcher(lineSplit[1]);
+                    regexMatcher = regexPattern.matcher(lineSplit[1]); // attempt to match hex colour to regex
                     if(regexMatcher.find()){
                         return true;
                     } else {
@@ -119,20 +120,20 @@ public class FileRead {
     private void validateCoords(String[] line, int i) throws FileInvalidArgumentException {
         try {
             float coord = Float.parseFloat(line[i]);
-            if(coord > 1.0f || coord < 0.0f){
+            if(coord > 1.0f || coord < 0.0f){ // this will fail if the co-ord is over 1.0 or below 0.0
                 throw new FileInvalidArgumentException("Co-ordinates are invalid.");
             }
-        } catch (NumberFormatException err) {
+        } catch (NumberFormatException err) { // this will fail if the co-ord is not castable to float
             throw new FileInvalidArgumentException(err);
         }
     }
 
-    public boolean returnFileType(String path){
-        int index = path.lastIndexOf('.');
+    public boolean returnFileType(String path){ // check if the file is a VEC file
+        int index = path.lastIndexOf('.'); // last index due to file folders potentially having dots
         int pathIndex = Math.max(path.lastIndexOf('/'), path.lastIndexOf('\\'));
 
-        if (index > pathIndex && index < (path.length()-1)){
-           if (path.substring(index + 1).equals("vec")){
+        if (index > pathIndex && index < (path.length() - 1)){
+           if (path.substring(index + 1).equals("vec")){ // check for VEC file extension
                return true;
            } else {
                return false;
