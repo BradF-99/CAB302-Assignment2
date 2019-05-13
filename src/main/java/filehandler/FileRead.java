@@ -89,7 +89,7 @@ public class FileRead {
                         throw new FileInvalidArgumentException("Co-ordinates are invalid.");
                     }
                 case "POLYGON":
-                    if(lineSplit.length >= 3) { // polygon must have more than 3 args
+                    if(lineSplit.length >= 5) { // polygon must have more than 5 args (arg and 2 pairs of coords)
                         return true;
                     } else {
                         throw new FileInvalidArgumentException("Co-ordinates are invalid.");
