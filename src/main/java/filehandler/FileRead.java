@@ -1,9 +1,7 @@
 package main.java.filehandler;
 
 import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.util.Optional;
 import java.util.Scanner;
 import java.util.Arrays;
 import java.util.regex.*;
@@ -39,6 +37,7 @@ public class FileRead {
                     throw new FileInvalidArgumentException();
                 } else {
                     //System.out.println(line);
+                    // Do something with the input.
                 }
 
             }
@@ -124,8 +123,6 @@ public class FileRead {
                 throw new FileInvalidArgumentException("Co-ordinates are invalid.");
             }
         } catch (NumberFormatException err) {
-            throw new FileInvalidArgumentException(err);
-        } catch (NullPointerException err) {
             throw new FileInvalidArgumentException(err);
         }
     }
