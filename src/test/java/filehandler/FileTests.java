@@ -136,6 +136,37 @@ public class FileTests {
         FileRead fileReader = new FileRead();
         assertThrows(FileInvalidArgumentException.class, () -> {
             fileReader.readFile("src/test/resources/filehandler/Test13.vec");
-        },"Error occurred while reading file. Co-ordinates are invalid.");
+        },"Error occurred while reading file. Invalid argument in file.");
+    }
+
+    @Test
+    public void testReadVECFilePenValid() {
+        FileRead fileReader = new FileRead();
+        assertDoesNotThrow(() -> { // iq 200
+            fileReader.readFile("src/test/resources/filehandler/Test14.vec");
+        });
+    }
+    @Test
+    public void testReadVECFilePenOff() { // This should pass even though there is no colour.
+        FileRead fileReader = new FileRead();
+        assertDoesNotThrow(() -> { // iq 200
+            fileReader.readFile("src/test/resources/filehandler/Test15.vec");
+        });
+    }
+
+    @Test
+    public void testReadVECFileFillValid() {
+        FileRead fileReader = new FileRead();
+        assertDoesNotThrow(() -> { // iq 200
+            fileReader.readFile("src/test/resources/filehandler/Test16.vec");
+        });
+    }
+
+    @Test
+    public void testReadVECFileFillOff() {
+        FileRead fileReader = new FileRead();
+        assertDoesNotThrow(() -> { // iq 200
+            fileReader.readFile("src/test/resources/filehandler/Test17.vec");
+        });
     }
 }
