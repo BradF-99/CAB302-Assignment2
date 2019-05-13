@@ -146,6 +146,7 @@ public class FileTests {
             fileReader.readFile("src/test/resources/filehandler/Test14.vec");
         });
     }
+
     @Test
     public void testReadVECFilePenOff() { // This should pass even though there is no colour.
         FileRead fileReader = new FileRead();
@@ -168,5 +169,21 @@ public class FileTests {
         assertDoesNotThrow(() -> { // iq 200
             fileReader.readFile("src/test/resources/filehandler/Test17.vec");
         });
+    }
+
+    @Test
+    public void testReadVECFilePenInvalid() {
+        FileRead fileReader = new FileRead();
+        assertThrows(FileInvalidArgumentException.class, () -> {
+            fileReader.readFile("src/test/resources/filehandler/Test18.vec");
+        },"Error occurred while reading file. Invalid argument in file.");
+    }
+
+    @Test
+    public void testReadVECFileFillInvalid() {
+        FileRead fileReader = new FileRead();
+        assertThrows(FileInvalidArgumentException.class, () -> {
+            fileReader.readFile("src/test/resources/filehandler/Test19.vec");
+        },"Error occurred while reading file. Invalid argument in file.");
     }
 }
