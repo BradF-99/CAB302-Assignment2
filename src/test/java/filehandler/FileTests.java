@@ -17,7 +17,6 @@ public class FileTests {
      *
      * Things we need to test for during read:
      * - Testing read of a file that is partially valid (has some incorrect arguments)
-     * - Testing read of a non-VEC file
      * - Testing read of a file that has been deleted or has become inaccessible during processing
      * - Testing read of a file that we do not have permissions to open
      * - Testing read of a file that is wrongly encoded (eg. binary encoded instead of text based)
@@ -53,18 +52,10 @@ public class FileTests {
     }
 
     @Test
-    public void testReadPartiallyValidVECFile() {
-        FileRead fileReader = new FileRead();
-        assertThrows(FileInvalidArgumentException.class, () -> {
-            fileReader.readFile("src/test/resources/filehandler/Test3.vec");
-        },"Error occurred while reading file. Co-ordinates are invalid.");
-    }
-
-    @Test
     public void testReadNonExistentVECFile() {
         FileRead fileReader = new FileRead();
         assertThrows(FileNotFoundException.class, () -> {
-            fileReader.readFile("src/test/resources/filehandler/Test4.vec");
+            fileReader.readFile("src/test/resources/filehandler/Test3.vec");
         });
     }
 
@@ -72,7 +63,24 @@ public class FileTests {
     public void testReadNonVECFile() {
         FileRead fileReader = new FileRead();
         assertThrows(FileInvalidArgumentException.class, () -> {
-            fileReader.readFile("src/test/resources/filehandler/Test5.txt");
+            fileReader.readFile("src/test/resources/filehandler/Test4.txt");
         },"Error occurred while reading file. Invalid file type.");
     }
+
+    @Test
+    public void testReadBinaryNonVECFile() {
+        FileRead fileReader = new FileRead();
+        assertThrows(FileInvalidArgumentException.class, () -> {
+            fileReader.readFile("src/test/resources/filehandler/Test5.vec");
+        },"Error occurred while reading file. Invalid file type.");
+    }
+
+    @Test
+    public void testReadPartiallyValidVECFile() {
+        FileRead fileReader = new FileRead();
+        assertThrows(FileInvalidArgumentException.class, () -> {
+            fileReader.readFile("src/test/resources/filehandler/Test6.vec");
+        },"Error occurred while reading file. Co-ordinates are invalid.");
+    }
+
 }
