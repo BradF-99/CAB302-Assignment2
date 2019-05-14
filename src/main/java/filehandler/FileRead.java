@@ -135,7 +135,7 @@ public class FileRead {
         }
     }
 
-    public boolean returnFileType(String path){ // check if the file is a VEC file
+    private boolean returnFileType(String path){ // check if the file is a VEC file
         int index = path.lastIndexOf('.'); // last index due to file folders potentially having dots
         int pathIndex = Math.max(path.lastIndexOf('/'), path.lastIndexOf('\\'));
 
