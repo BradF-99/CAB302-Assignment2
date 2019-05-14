@@ -15,7 +15,7 @@ public interface ComponentInterface {
      * @param borderColor Color of the object border
      * @param fillColor Color the object will be filled in
      */
-    void addNewObject(int x1, int y1, int x2, int y2, Color borderColor, boolean filled, Color fillColor);
+    void addNewObject(Float x1, Float y1, Float x2, Float y2, Color borderColor, boolean filled, Color fillColor);
 
     /**
      * clears the list of objects
@@ -39,7 +39,7 @@ public interface ComponentInterface {
      * @param borderColor Color of the object border
      * @param fillColor Color the object will be filled in
      */
-    void addDrawObject(int x1, int y1, int x2, int y2, Color borderColor, boolean filled, Color fillColor);
+    void addDrawObject(Float x1, Float y1, Float x2, Float y2, Color borderColor, boolean filled, Color fillColor);
 
     /**
      * clears the list of temporary drawn objects
