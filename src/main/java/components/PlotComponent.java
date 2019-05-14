@@ -7,8 +7,8 @@ public class PlotComponent {
 
     //Line class
     public static class Plot{
-        public int x;
-        public int y;
+        public Float x;
+        public Float y;
         public Color color;
 
         /**
@@ -17,7 +17,7 @@ public class PlotComponent {
          * @param y y-coordinate of first point
          * @param color Color of the object
          */
-        public Plot(int x, int y, Color color) {
+        public Plot(Float x, Float y, Color color) {
             this.x = x;
             this.y = y;
             this.color = color;
@@ -33,7 +33,7 @@ public class PlotComponent {
      * @param y y-coordinate of first point
      * @param color Color of the object
      */
-    public void addNewObject(int x, int y, Color color){
+    public void addNewObject(Float x, Float y, Color color){
         this.plots.add(new Plot(x,y,color));
     }
 

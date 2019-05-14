@@ -1,6 +1,8 @@
 package main.java.components;
 
 import java.awt.*;
+import java.awt.geom.Path2D;
+import java.awt.geom.Point2D;
 import java.util.LinkedList;
 
 public class PolygonComponent{
@@ -9,19 +11,18 @@ public class PolygonComponent{
      * Helper class for the polygon list.
      */
     public static class Polygon{
-        public java.awt.Polygon polygon;
+        Object[] pointArray;
         public Color borderColor;
         public boolean filled;
         public Color fillColor;
-
         /**
          * Constructor for the Helper class
          * @param borderColor Color of the object border
          * @param filled true if object is filled
          * @param fillColor Color the object will be filled in
          */
-        public Polygon(java.awt.Polygon polygon, Color borderColor, boolean filled, Color fillColor){
-            this.polygon = polygon;
+        public Polygon(Object[] pointArray, Color borderColor, boolean filled, Color fillColor){
+            this.pointArray = pointArray;
             this.borderColor = borderColor;
             this.filled = filled;
             this.fillColor = fillColor;
@@ -31,8 +32,8 @@ public class PolygonComponent{
     //list of polygons
     public final LinkedList<PolygonComponent.Polygon> polygon = new LinkedList<>();
     //points for polygon visual
-    private Point startPoint = null;
-    private Point lastPoint = null;
+    private Point2D.Float startPoint = null;
+    private Point2D.Float lastPoint = null;
     //LinkedList for visual of polygon
     public final LinkedList<LineComponent.Line> drawnLines = new LinkedList<>();
 
@@ -45,14 +46,25 @@ public class PolygonComponent{
      * @param fillColor Color the object will be filled in
      */
     public void addNewObject(Object[] pointArray,Color borderColor,boolean filled, Color fillColor){
-        java.awt.Polygon newPolygon = new java.awt.Polygon();
-        for (int i = 0; i < pointArray.length; i++) {
-            Point point = ((Point) pointArray[i]);
-            newPolygon.addPoint(point.x, point.y);
-        }
-        polygon.add(new Polygon(newPolygon, borderColor, filled, fillColor));
+        polygon.add(new Polygon(pointArray,borderColor,filled,fillColor));
     }
 
+    public static Path2D.Float createScaledPolygon(Object[] pointArray, Dimension screenSize){
+        //create new Path2D.Float to simulate the polygon
+        Path2D.Float newPolygon = new Path2D.Float();
+        for (int i = 0; i < pointArray.length; i++) {
+            Point2D.Float point = ((Point2D.Float) pointArray[i]);
+            //first point
+            if(i == 0){
+                newPolygon.moveTo(point.x * screenSize.width, point.y * screenSize.height);
+            }else{ // all other points
+                newPolygon.lineTo(point.x * screenSize.width, point.y * screenSize.height);
+            }
+        }
+        //close path
+        newPolygon.closePath();
+        return newPolygon;
+    }
     /**
      * Clears the list of polygons
      */
@@ -74,7 +86,7 @@ public class PolygonComponent{
      *
      * @param point sets startPoint
      */
-    public void getStart(Point point){
+    public void getStart(Point2D.Float point){
         startPoint = point;
     }
 
@@ -86,14 +98,14 @@ public class PolygonComponent{
      * @param y1 y position of the point
      * @param borderColor Color of the object border
      */
-    public void addDrawObject(int x1, int y1,Color borderColor){
+    public void addDrawObject(Float x1, Float y1,Color borderColor){
         //if it last point is null there has not been a previous line so use start point
         if(lastPoint == null){
-            this.drawnLines.add(new LineComponent.Line(startPoint.x,startPoint.y, x1, y1,borderColor));
+            this.drawnLines.add(new LineComponent.Line((float) startPoint.x,(float) startPoint.y, x1, y1,borderColor));
         }else {
-            this.drawnLines.add(new LineComponent.Line(lastPoint.x, lastPoint.y, x1, y1,borderColor));
+            this.drawnLines.add(new LineComponent.Line(lastPoint.x, lastPoint.y, (float) x1, (float) y1,borderColor));
         }
-        lastPoint = new Point(x1,y1);
+        lastPoint = new Point.Float(x1,y1);
     }
 
     /**
