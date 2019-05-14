@@ -6,10 +6,10 @@ import java.util.LinkedList;
 public class EllipseComponent implements ComponentInterface {
 
     public static class Ellipse{
-        public int x;
-        public int y;
-        public int width;
-        public int height;
+        public Float x;
+        public Float y;
+        public Float width;
+        public Float height;
         public Color borderColor;
         public boolean filled;
         public Color fillColor;
@@ -29,7 +29,7 @@ public class EllipseComponent implements ComponentInterface {
          * @param filled true if object is filled
          * @param fillColor Color the object will be filled in
          */
-        public Ellipse(int x1, int y1, int x2, int y2, Color borderColor, boolean filled, Color fillColor) {
+        public Ellipse(Float x1, Float y1, Float x2, Float y2, Color borderColor, boolean filled, Color fillColor) {
             /*
             If the mouse is moved above or to the left of the starting position nothing would be drawn,
             if the mouse is above or left the Ellipse is now drawn from the current mouse position to the start position,
@@ -61,7 +61,7 @@ public class EllipseComponent implements ComponentInterface {
      * @param filled true if object is filled
      * @param fillColor Color the object will be filled in
      */
-    public void addNewObject(int x1, int y1, int x2, int y2, Color borderColor, boolean filled, Color fillColor){
+    public void addNewObject(Float x1, Float y1, Float x2, Float y2, Color borderColor, boolean filled, Color fillColor){
         this.ellipses.add(new Ellipse(x1,y1,x2,y2,borderColor, filled, fillColor));
     }
 
@@ -92,7 +92,7 @@ public class EllipseComponent implements ComponentInterface {
      * @param filled true if object is filled
      * @param fillColor Color the object will be filled in
      */
-    public void addDrawObject(int x1, int y1, int x2, int y2, Color borderColor, boolean filled, Color fillColor){
+    public void addDrawObject(Float x1, Float y1, Float x2, Float y2, Color borderColor, boolean filled, Color fillColor){
         this.drawnEllipses.add(new Ellipse(x1,y1,x2,y2,borderColor,filled,fillColor));
     }
 

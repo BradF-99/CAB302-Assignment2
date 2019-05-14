@@ -6,10 +6,10 @@ import java.util.LinkedList;
 public class RectangleComponent implements ComponentInterface {
 
     public static class Rectangle{
-        public int x;
-        public int y;
-        public int width;
-        public int height;
+        public float x;
+        public float y;
+        public float width;
+        public float height;
         public Color borderColor;
         public boolean filled;
         public Color fillColor;
@@ -30,7 +30,7 @@ public class RectangleComponent implements ComponentInterface {
          * @param fillColor Color the object will be filled in
          */
         //constructor for the rectangle class
-        public Rectangle(int x1, int y1, int x2, int y2,Color borderColor, boolean filled, Color fillColor) {
+        public Rectangle(Float x1, Float y1, Float x2, Float y2,Color borderColor, boolean filled, Color fillColor) {
             this.x = x2 < x1 ? x2 : x1;
             this.y = y2 < y1 ? y2 : y1;
             this.width = x1-x2 < 0 ? x2-x1 : x1-x2;
@@ -57,7 +57,7 @@ public class RectangleComponent implements ComponentInterface {
      * @param filled true if object is filled
      * @param fillColor Color the object will be filled in
      */
-    public void addNewObject(int x1, int y1, int x2, int y2, Color borderColor, boolean filled, Color fillColor){
+    public void addNewObject(Float x1, Float y1, Float x2, Float y2, Color borderColor, boolean filled, Color fillColor){
         this.rectangles.add(new Rectangle(x1,y1,x2,y2,borderColor,filled,fillColor));
     }
 
@@ -86,7 +86,7 @@ public class RectangleComponent implements ComponentInterface {
      * @param filled true if object is filled
      * @param fillColor Color the object will be filled in
      */
-    public void addDrawObject(int x1, int y1, int x2, int y2, Color borderColor, boolean filled, Color fillColor){
+    public void addDrawObject(Float x1, Float y1, Float x2, Float y2, Color borderColor, boolean filled, Color fillColor){
         this.drawnRectangles.add(new Rectangle(x1,y1,x2,y2,borderColor,filled,fillColor));
     }
 
