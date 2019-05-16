@@ -23,3 +23,4 @@ Built to Assignment Specification v1.0, current as of 2019-05-03.
 * When making changes, please create a new branch and then make a pull request when complete.
     * TravisCI will automatically complete unit tests.
     * All tests must pass before changes can be merged to master.
+* All changes to master will result in TravisCI automatically deploying the build to [GitHub Releases](https://github.com/BradF-99/CAB302-Assignment2/releases).
