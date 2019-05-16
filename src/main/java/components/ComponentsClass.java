@@ -6,8 +6,8 @@ import java.util.LinkedList;
 
 public class ComponentsClass extends JComponent {
     public LineComponent lineComp = new LineComponent();
-    public EllipseComponent ellComp = new EllipseComponent();
-    public RectangleComponent rectComp = new RectangleComponent();
+    public ShapeComponent ellComp = new ShapeComponent();
+    public ShapeComponent rectComp = new ShapeComponent();
     public PolygonComponent polyComp = new PolygonComponent();
     public PlotComponent plotComp = new PlotComponent();
     private Dimension frameSize;
@@ -109,7 +109,7 @@ public class ComponentsClass extends JComponent {
             g2d.drawLine(points[0],points[1],points[2],points[3]);
         }
         //rectangles
-        for (RectangleComponent.Rectangle rect : rectComp.rectangles) {
+        for (ShapeComponent.Shape rect : rectComp.drawnShapes) {
             int[] points = floatToPoint(rect.x, rect.y, rect.width, rect.height);
             if(rect.filled) {
                 g2d.setColor(rect.fillColor);
@@ -118,7 +118,7 @@ public class ComponentsClass extends JComponent {
             g2d.setColor(rect.borderColor);
             g2d.drawRect(points[0],points[1],points[2],points[3]);
         }
-        for (RectangleComponent.Rectangle rect : rectComp.drawnRectangles) {
+        for (ShapeComponent.Shape rect : rectComp.shapes) {
             int[] points = floatToPoint(rect.x, rect.y, rect.width, rect.height);
             if(rect.filled) {
                 g2d.setColor(rect.fillColor);
@@ -140,7 +140,7 @@ public class ComponentsClass extends JComponent {
             g2d.drawLine(points[0],points[1],points[2],points[3]);
         }
         //ellipse
-        for (EllipseComponent.Ellipse ellipse : ellComp.ellipses) {
+        for (ShapeComponent.Shape ellipse : ellComp.drawnShapes){
             int[] points = floatToPoint(ellipse.x, ellipse.y, ellipse.width, ellipse.height);
             if(ellipse.filled) {
                 g2d.setColor(ellipse.fillColor);
@@ -149,7 +149,7 @@ public class ComponentsClass extends JComponent {
             g2d.setColor(ellipse.borderColor);
             g2d.drawOval(points[0],points[1],points[2],points[3]);
         }
-        for (EllipseComponent.Ellipse ellipse : ellComp.drawnEllipses) {
+        for (ShapeComponent.Shape ellipse : ellComp.shapes) {
             int[] points = floatToPoint(ellipse.x, ellipse.y, ellipse.width, ellipse.height);
             if(ellipse.filled) {
                 g2d.setColor(ellipse.fillColor);
