@@ -140,7 +140,7 @@ public class ComponentsClass extends JComponent {
             g2d.drawLine(points[0],points[1],points[2],points[3]);
         }
         //ellipse
-        for (ShapeComponent.Shape ellipse : ellComp.drawnShapes){
+        for (ShapeComponent.Shape ellipse : ellComp.shapes){
             int[] points = floatToPoint(ellipse.x, ellipse.y, ellipse.width, ellipse.height);
             if(ellipse.filled) {
                 g2d.setColor(ellipse.fillColor);
@@ -149,7 +149,7 @@ public class ComponentsClass extends JComponent {
             g2d.setColor(ellipse.borderColor);
             g2d.drawOval(points[0],points[1],points[2],points[3]);
         }
-        for (ShapeComponent.Shape ellipse : ellComp.shapes) {
+        for (ShapeComponent.Shape ellipse : ellComp.drawnShapes) {
             int[] points = floatToPoint(ellipse.x, ellipse.y, ellipse.width, ellipse.height);
             if(ellipse.filled) {
                 g2d.setColor(ellipse.fillColor);
