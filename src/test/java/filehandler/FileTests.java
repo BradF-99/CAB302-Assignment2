@@ -19,7 +19,6 @@ public class FileTests {
      * - Testing read of a file that is partially valid (has some incorrect arguments)
      * - Testing read of a file that has been deleted or has become inaccessible during processing
      * - Testing read of a file that we do not have permissions to open
-     * - Testing read of a file that is wrongly encoded (eg. binary encoded instead of text based)
      *
      * Things we need to test for during write:
      * - Testing write of a VEC file
