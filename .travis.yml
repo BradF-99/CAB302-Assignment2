@@ -1,7 +1,7 @@
 
 ## TravisCI Config for JDK11
 ## Written by Brad Fuller
-## v1.8.0 2019-05-16
+## v1.8.4 2019-05-16
 
 language: java
 jdk:
@@ -30,11 +30,15 @@ before_deploy:
   - zip -r build.zip out
   - git config --local user.name "Brad Fuller"
   - git config --local user.email "b7.fuller@connect.qut.edu.au"
-  - export TRAVIS_TAG=${TRAVIS_TAG:-$(date +'%Y%m%d%H%M%S')-$(git log --format=%h -1)}
-  - git tag $TRAVIS_TAG
+  - export TRAVIS_TAG="1.$TRAVIS_BUILD_NUMBER"
+  - echo "$TRAVIS_TAG" "$TRAVIS_COMMIT"
+  - git tag "$TRAVIS_TAG" "$TRAVIS_COMMIT"
 
 deploy:
   provider: releases
+  tag_name: $TRAVIS_TAG
+  name: $TRAVIS_TAG
+  target_commitish: $TRAVIS_COMMIT
   api_key:
     secure: Armk8CI/tOtbMroC2ItVq6lZgUQXkBM33u0DyDCCDA4reH8WoQMzs3574ckpLqlJnXd+aeqNeiQkaOUKSVFR9bRowtEIaatTX7W2G+awgXzapRLu+qbk8DU/DFuBypx+KdhY9xZuwOLVwT1t9zgzdQHd53MUcn36DGQrfD9+9iTXC547NAYq12hJn9JHE5uXCR7KPs3r65GIhYxE/zDSZipQ3bkMiSqYgoYFIZjshDszqevYbd7S0Ex/dr7aKLFkV0FknSxTD7A0edkGI0jekvABZwNJtE8tQOOAc7mnMpXORxVSaNAOzvp1JRaLVkORW9veX4+YPTDmAk9DsHInDxk9X4MNaSwRGwY7v75MfKSJQlHcM/dgE7r5/DvwKzh7eRULxxiNkvvAtKCc+THunPZ/kB/22+XrgNtbBG536F4BIEy9bfEPOo71tVljIfST0W2dGaKdmajxE9bC9HPoJZGY7qfl7na3A2QMpfUubTHFNdq8+e3L7M7coWN89srGdqZ1L+h78SwIEN7wlPC1bJknq0qPr1mv2sUU5BQfqQFcptYJ8fL8MKVudZ/OM8ezK//fHhL0t9m3DXBSTWCcD3RdWKUCPKAdX7knILVTXlPh3BpMKW1As4GvEKnu1jdNIUCEsQM/Tiy6u8tJevkn1tXC9DLjKS9nYw8N0geNi0I=
   skip_cleanup: true
@@ -45,3 +49,8 @@ deploy:
 
 after_deploy:
   - ant clean
+
+notifications:
+  email:
+    on_success: never
+    on_failure: always
