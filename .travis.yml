@@ -52,7 +52,7 @@ deploy:
   on:
     repo: BradF-99/CAB302-Assignment2
     branch:
-      - "fix-cicd"
+      - "master"
 
 after_deploy:
   - cd ../..
