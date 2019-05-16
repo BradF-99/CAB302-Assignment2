@@ -13,7 +13,7 @@ public class MainWindow {
     private JFrame frame;
     ComponentsClass comp = new ComponentsClass(new Dimension(0,0));
     private java.awt.Point startPoint;
-    private ShapesEnum.Shapes currentShape = ShapesEnum.Shapes.POLYGON;
+    private ShapesEnum.Shapes currentShape = ShapesEnum.Shapes.ELLIPSE;
     private Color selectedBorderColor = Color.RED;
     private Color selectedFillColor = Color.BLACK;
     private boolean filled = true;
@@ -90,12 +90,12 @@ public class MainWindow {
                 comp.rectComp.addNewObject(comp.pointToFloat(startPoint.x,frame.getSize().width),comp.pointToFloat(startPoint.y,frame.getSize().height)
                         ,comp.pointToFloat(e.getPoint().x,frame.getSize().width),comp.pointToFloat(e.getPoint().y, frame.getSize().height),selectedBorderColor,filled,selectedFillColor);
                 comp.rectComp.clearDrawObject();
-                comp.addUndo(comp.rectComp.rectangles.size() - 1,ShapesEnum.Shapes.RECTANGLE);
+                comp.addUndo(comp.rectComp.shapes.size() - 1,ShapesEnum.Shapes.RECTANGLE);
             }else if(currentShape == ShapesEnum.Shapes.ELLIPSE){
                 comp.ellComp.addNewObject(comp.pointToFloat(startPoint.x,frame.getSize().width),comp.pointToFloat(startPoint.y,frame.getSize().height)
                         ,comp.pointToFloat(e.getPoint().x,frame.getSize().width),comp.pointToFloat(e.getPoint().y, frame.getSize().height),selectedBorderColor,filled,selectedFillColor);
                 comp.ellComp.clearDrawObject();
-                comp.addUndo(comp.ellComp.ellipses.size() - 1, ShapesEnum.Shapes.ELLIPSE);
+                comp.addUndo(comp.ellComp.shapes.size() - 1, ShapesEnum.Shapes.ELLIPSE);
             }
             comp.repaint();
         }

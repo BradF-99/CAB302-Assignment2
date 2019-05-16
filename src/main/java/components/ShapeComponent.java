@@ -3,23 +3,23 @@ package main.java.components;
 import java.awt.*;
 import java.util.LinkedList;
 
-public class EllipseComponent implements ComponentInterface {
+public class ShapeComponent implements ComponentInterface {
 
-    public static class Ellipse{
-        public Float x;
-        public Float y;
-        public Float width;
-        public Float height;
+    public static class Shape{
+        public float x;
+        public float y;
+        public float width;
+        public float height;
         public Color borderColor;
         public boolean filled;
         public Color fillColor;
 
         /**
-         * Constructor for the Ellipse class
+         * Constructor for the Rectangle class
          *
          * If the mouse is moved above or to the left of the starting position nothing would be drawn,
-         * if the mouse is above or left the Ellipse is now drawn from the current mouse position to the start position,
-         * if the mouse is below or right the Ellipse is drawn from the start position to the mouse.
+         * if the mouse is above or left the Rectangle is now drawn from the current mouse position to the start position,
+         * if the mouse is below or right the Rectangle is drawn from the start position to the mouse.
          *
          * @param x1 x-coordinate of first point
          * @param y1 y-coordinate of first point
@@ -29,29 +29,25 @@ public class EllipseComponent implements ComponentInterface {
          * @param filled true if object is filled
          * @param fillColor Color the object will be filled in
          */
-        public Ellipse(Float x1, Float y1, Float x2, Float y2, Color borderColor, boolean filled, Color fillColor) {
-            /*
-            If the mouse is moved above or to the left of the starting position nothing would be drawn,
-            if the mouse is above or left the Ellipse is now drawn from the current mouse position to the start position,
-            if the mouse is below or right the Ellipse is drawn from the start position to the mouse.
-             */
+        //constructor for the rectangle class
+        public Shape(Float x1, Float y1, Float x2, Float y2,Color borderColor, boolean filled, Color fillColor) {
             this.x = x2 < x1 ? x2 : x1;
             this.y = y2 < y1 ? y2 : y1;
-            this.width = x1 - x2 < 0 ? x2 - x1 : x1 - x2;
-            this.height = y1 - y2 < 0 ? y2 - y1 : y1 - y2;
+            this.width = x1-x2 < 0 ? x2-x1 : x1-x2;
+            this.height = y1-y2 < 0 ? y2-y1 : y1-y2;
             this.borderColor = borderColor;
             this.filled = filled;
             this.fillColor = fillColor;
         }
     }
 
-    //create a LinkedList of ellipses
-    public final LinkedList<Ellipse> ellipses = new LinkedList<>();
-    //LinkedList for the visual ellipses whilst mouse is pressed
-    public final LinkedList<Ellipse> drawnEllipses = new LinkedList<>();
+    //create a LinkedList of Rectangles
+    public final LinkedList<Shape> shapes = new LinkedList<>();
+    //LinkedList for the visual rectangle whilst mouse is pressed
+    public final LinkedList<Shape> drawnShapes = new LinkedList<>();
 
     /**
-     * Adds new ellipse to the list of ellipses
+     * Adds new ellipse to the list of rectangles
      *
      * @param x1 x-coordinate of first point
      * @param y1 y-coordinate of first point
@@ -62,15 +58,14 @@ public class EllipseComponent implements ComponentInterface {
      * @param fillColor Color the object will be filled in
      */
     public void addNewObject(Float x1, Float y1, Float x2, Float y2, Color borderColor, boolean filled, Color fillColor){
-        this.ellipses.add(new Ellipse(x1,y1,x2,y2,borderColor, filled, fillColor));
+        this.shapes.add(new Shape(x1,y1,x2,y2,borderColor,filled,fillColor));
     }
 
-
     /**
-     * clears the list of ellipses
+     * clears the list of rectangles
      */
     public void clearObjects(){
-        this.ellipses.clear();
+        this.shapes.clear();
     }
 
     /**
@@ -78,11 +73,10 @@ public class EllipseComponent implements ComponentInterface {
      * @param index index of the list to be removed
      */
     public void clearObject(int index){
-        this.ellipses.remove(index);
+        this.shapes.remove(index);
     }
-
     /**
-     * Adds new ellipse to the drawnlist of ellipses
+     * Adds new ellipse to the drawnlist of rectangles
      *
      * @param x1 x-coordinate of first point
      * @param y1 y-coordinate of first point
@@ -93,13 +87,14 @@ public class EllipseComponent implements ComponentInterface {
      * @param fillColor Color the object will be filled in
      */
     public void addDrawObject(Float x1, Float y1, Float x2, Float y2, Color borderColor, boolean filled, Color fillColor){
-        this.drawnEllipses.add(new Ellipse(x1,y1,x2,y2,borderColor,filled,fillColor));
+        this.drawnShapes.add(new Shape(x1,y1,x2,y2,borderColor,filled,fillColor));
     }
 
     /**
-     * clears the list of drawn ellipses
+     * clears the list of drawn rectangles
      */
     public void clearDrawObject(){
-        this.drawnEllipses.clear();
+        this.drawnShapes.clear();
     }
+
 }
