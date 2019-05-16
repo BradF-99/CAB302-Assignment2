@@ -1,28 +1,23 @@
 
 ## TravisCI Config for JDK11
 ## Written by Brad Fuller
-## v1.7.1 2019-05-03
-
-## TO DO: Deploy to GitHub Releases on successful build from master - will add when framework is complete.
+## v1.8.0 2019-05-16
 
 language: java
 jdk:
-  - openjdk11
   - oraclejdk11
 
 before_install:
-  # Download all required testing frameworks from Maven repository.
+  # Download all required testing frameworks from Maven repository, as well as Ant 1.10.5 for building.
   - mkdir lib && cd lib && mkdir ant && cd ant
   - wget --no-check-certificate https://search.maven.org/remotecontent?filepath=org/apiguardian/apiguardian-api/1.0.0/apiguardian-api-1.0.0.jar
-  - wget --no-check-certificate https://search.maven.org/remotecontent?filepath=org/junit/jupiter/junit-jupiter-api/5.4.2/junit-jupiter-api-5.4.2.jar
-  - wget --no-check-certificate https://search.maven.org/remotecontent?filepath=org/junit/jupiter/junit-jupiter-engine/5.4.2/junit-jupiter-engine-5.4.2.jar
-  - wget --no-check-certificate https://search.maven.org/remotecontent?filepath=org/junit/platform/junit-platform-commons/1.4.2/junit-platform-commons-1.4.2.jar
-  - wget --no-check-certificate https://search.maven.org/remotecontent?filepath=org/junit/platform/junit-platform-engine/1.4.2/junit-platform-engine-1.4.2.jar
-  - wget --no-check-certificate https://search.maven.org/remotecontent?filepath=org/junit/platform/junit-platform-launcher/1.4.2/junit-platform-launcher-1.4.2.jar
+  - wget --no-check-certificate https://search.maven.org/remotecontent?filepath=org/junit/jupiter/junit-jupiter-api/5.5.0-M1/junit-jupiter-api-5.5.0-M1.jar
+  - wget --no-check-certificate https://search.maven.org/remotecontent?filepath=org/junit/jupiter/junit-jupiter-engine/5.5.0-M1/junit-jupiter-engine-5.5.0-M1.jar
+  - wget --no-check-certificate https://search.maven.org/remotecontent?filepath=org/junit/platform/junit-platform-commons/1.5.0-M1/junit-platform-commons-1.5.0-M1.jar
+  - wget --no-check-certificate https://search.maven.org/remotecontent?filepath=org/junit/platform/junit-platform-engine/1.5.0-M1/junit-platform-engine-1.5.0-M1.jar
+  - wget --no-check-certificate https://search.maven.org/remotecontent?filepath=org/junit/platform/junit-platform-launcher/1.5.0-M1/junit-platform-launcher-1.5.0-M1.jar
   - wget --no-check-certificate https://search.maven.org/remotecontent?filepath=org/opentest4j/opentest4j/1.1.1/opentest4j-1.1.1.jar
-
-  # Download Apache Ant 1.10.5 for build.
-  - cd ../.. # build will fail without
+  - cd ../..
   - wget --no-check-certificate https://www.apache.org/dist/ant/binaries/apache-ant-1.10.5-bin.tar.gz
   - tar -xzf apache-ant-1.10.5-bin.tar.gz
   - export PATH=`pwd`/apache-ant-1.10.5/bin:$PATH
@@ -30,6 +25,22 @@ before_install:
 script:
   - ant test -lib ./lib/ant
 
-after_script:
-  - ant clean
+before_deploy:
   - rm -rf ./lib/
+  - zip -r build.zip out
+  - git config --local user.name "Brad Fuller"
+  - git config --local user.email "b7.fuller@connect.qut.edu.au"
+  - export TRAVIS_TAG=${TRAVIS_TAG:-$(date +'%Y%m%d%H%M%S')-$(git log --format=%h -1)}
+  - git tag $TRAVIS_TAG
+
+deploy:
+  provider: releases
+  api_key:
+    secure: Armk8CI/tOtbMroC2ItVq6lZgUQXkBM33u0DyDCCDA4reH8WoQMzs3574ckpLqlJnXd+aeqNeiQkaOUKSVFR9bRowtEIaatTX7W2G+awgXzapRLu+qbk8DU/DFuBypx+KdhY9xZuwOLVwT1t9zgzdQHd53MUcn36DGQrfD9+9iTXC547NAYq12hJn9JHE5uXCR7KPs3r65GIhYxE/zDSZipQ3bkMiSqYgoYFIZjshDszqevYbd7S0Ex/dr7aKLFkV0FknSxTD7A0edkGI0jekvABZwNJtE8tQOOAc7mnMpXORxVSaNAOzvp1JRaLVkORW9veX4+YPTDmAk9DsHInDxk9X4MNaSwRGwY7v75MfKSJQlHcM/dgE7r5/DvwKzh7eRULxxiNkvvAtKCc+THunPZ/kB/22+XrgNtbBG536F4BIEy9bfEPOo71tVljIfST0W2dGaKdmajxE9bC9HPoJZGY7qfl7na3A2QMpfUubTHFNdq8+e3L7M7coWN89srGdqZ1L+h78SwIEN7wlPC1bJknq0qPr1mv2sUU5BQfqQFcptYJ8fL8MKVudZ/OM8ezK//fHhL0t9m3DXBSTWCcD3RdWKUCPKAdX7knILVTXlPh3BpMKW1As4GvEKnu1jdNIUCEsQM/Tiy6u8tJevkn1tXC9DLjKS9nYw8N0geNi0I=
+  file: build.zip
+  on:
+    repo: BradF-99/CAB302-Assignment2
+    branch: master
+
+after_deploy:
+  - ant clean
