@@ -32,6 +32,11 @@
         <javac destdir="out/test" classpathref="test.classpath" srcdir="src/test/java" includeantruntime="false"/>
     </target>
 
+    <target name="dist" depends="compile">
+        <mkdir dir="bin/dist" />
+        <jar destfile="bin/dist/CAB302-Assignment2.jar" basedir="out/main" />
+    </target>
+
     <target name="test" depends="compile">
         <junitlauncher haltOnFailure="true" printSummary="true">
             <classpath refid="test.classpath"/>
