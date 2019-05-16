@@ -40,7 +40,7 @@ deploy:
   file: "~/build/BradF-99/CAB302-Assignment2/build.zip"
   on:
     repo: BradF-99/CAB302-Assignment2
-    #branch: master
-
+    all_branches: true
+    
 after_deploy:
   - ant clean
