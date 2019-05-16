@@ -36,7 +36,7 @@
         <mkdir dir="bin/dist" />
         <jar destfile="bin/dist/CAB302-Assignment2.jar" basedir="out/main">
             <manifest>
-                <attribute name="Main-Class" value="src.main.java.Main"/>
+                <attribute name="Main-Class" value="main.java.Main"/>
             </manifest>
         </jar>
 
