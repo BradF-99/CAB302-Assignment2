@@ -34,7 +34,12 @@
 
     <target name="dist" depends="compile">
         <mkdir dir="bin/dist" />
-        <jar destfile="bin/dist/CAB302-Assignment2.jar" basedir="out/main" />
+        <jar destfile="bin/dist/CAB302-Assignment2.jar" basedir="out/main">
+            <manifest>
+                <attribute name="Main-Class" value="src.main.java.Main"/>
+            </manifest>
+        </jar>
+
     </target>
 
     <target name="test" depends="compile">
