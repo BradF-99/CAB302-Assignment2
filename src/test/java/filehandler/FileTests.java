@@ -34,6 +34,7 @@ public class FileTests {
     public static void cleanup(){
         FileRead fileReader = new FileRead();
     }
+
     @Test
     public void testReadValidVECFile() {
         FileRead fileReader = new FileRead();
@@ -70,7 +71,7 @@ public class FileTests {
     public void testReadBinaryNonVECFile() {
         FileRead fileReader = new FileRead();
         assertThrows(FileInvalidArgumentException.class, () -> {
-            fileReader.readFile("src/test/resources/filehandler/Test5.vec");
+            fileReader.readFile("src/test/resources/filehandler/Test5.vec");  // This is a JPG image and should fail.
         },"Error occurred while reading file. Invalid file type.");
     }
 
@@ -184,5 +185,33 @@ public class FileTests {
         assertThrows(FileInvalidArgumentException.class, () -> {
             fileReader.readFile("src/test/resources/filehandler/Test19.vec");
         },"Error occurred while reading file. Invalid argument in file.");
+    }
+
+    /*
+      None of the next 3 tests should throw exception as they are valid examples.
+     */
+
+    @Test
+    public void testReadExample1VECFile() {
+        FileRead fileReader = new FileRead();
+        assertDoesNotThrow(() -> {
+            fileReader.readFile("src/test/resources/filehandler/example1.vec");
+        });
+    }
+
+    @Test
+    public void testReadExample2VECFile() {
+        FileRead fileReader = new FileRead();
+        assertDoesNotThrow(() -> {
+            fileReader.readFile("src/test/resources/filehandler/example2.vec");
+        });
+    }
+
+    @Test
+    public void testReadExample3VECFile() {
+        FileRead fileReader = new FileRead();
+        assertDoesNotThrow(() -> {
+            fileReader.readFile("src/test/resources/filehandler/example3.vec");
+        });
     }
 }
