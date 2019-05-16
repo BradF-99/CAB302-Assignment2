@@ -1,15 +1,15 @@
 
 ## TravisCI Config for JDK11
 ## Written by Brad Fuller
-## v1.8.4 2019-05-16
+## v1.8.9 2019-05-16
 
 language: java
 jdk:
   - oraclejdk11
 
 branches:
-  only:
-    - fix-cicd
+  except:
+    - /0\.[0-9]{3}/
 
 before_install:
   # Download all required testing frameworks from Maven repository, as well as Ant 1.10.5 for building.
@@ -55,4 +55,5 @@ deploy:
       - "fix-cicd"
 
 after_deploy:
+  - cd ../..
   - ant clean
