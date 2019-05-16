@@ -31,17 +31,17 @@ public class ComponentTests {
     }
     @Test
     public void testEllipse() {
-        EllipseComponent ellipse = new EllipseComponent();
+        ShapeComponent ellipse = new ShapeComponent();
         ellipse.addNewObject((float) 1.0,(float) 2.0,(float) 3.0,(float) 4.0,Color.BLACK,true,Color.BLACK);
-        assertEquals(1,ellipse.ellipses.getLast().x);
-        assertEquals(2,ellipse.ellipses.getLast().y);
+        assertEquals(1,ellipse.shapes.getLast().x);
+        assertEquals(2,ellipse.shapes.getLast().y);
     }
     @Test
     public void testRectangle() {
-        RectangleComponent rect = new RectangleComponent();
+        ShapeComponent rect = new ShapeComponent();
         rect.addNewObject((float) 1.0,(float) 2.0,(float) 3.0,(float) 4.0,Color.BLACK,false,Color.BLACK);
-        assertEquals(1,rect.rectangles.getLast().x);
-        assertEquals(2,rect.rectangles.getLast().y);
+        assertEquals(1,rect.shapes.getLast().x);
+        assertEquals(2,rect.shapes.getLast().y);
     }
     @Test
     public void testPlot() {
@@ -58,10 +58,10 @@ public class ComponentTests {
     }
     @Test
     public void testFilledRect() {
-        RectangleComponent rect = new RectangleComponent();
+        ShapeComponent rect = new ShapeComponent();
         rect.addNewObject((float) 1.0,(float) 2.0,(float) 3.0,(float) 4.0,Color.BLACK,false,Color.BLACK);
-        assertEquals(Color.BLACK, rect.rectangles.getLast().fillColor);
-        assertEquals(false, rect.rectangles.getLast().filled);
+        assertEquals(Color.BLACK, rect.shapes.getLast().fillColor);
+        assertEquals(false, rect.shapes.getLast().filled);
     }
     @Test
     public void testFilledPolyComp() {
@@ -79,7 +79,7 @@ public class ComponentTests {
     public void testAddUndo() {
         ComponentsClass comp = new ComponentsClass(new Dimension(250,250));
         comp.rectComp.addNewObject((float) 1.0,(float) 2.0,(float) 3.0,(float) 4.0,Color.BLACK,false,Color.BLACK);
-        comp.addUndo(comp.rectComp.rectangles.size() -1 , ShapesEnum.Shapes.RECTANGLE);
+        comp.addUndo(comp.rectComp.shapes.size() -1 , ShapesEnum.Shapes.RECTANGLE);
         assertEquals(1,comp.undoList.size());
     }
 
@@ -87,12 +87,12 @@ public class ComponentTests {
     public void testUndo() {
         ComponentsClass comp = new ComponentsClass(new Dimension(250,250));
         comp.rectComp.addNewObject((float) 1.0,(float) 2.0,(float) 3.0,(float) 4.0,Color.BLACK,false,Color.BLACK);
-        comp.addUndo(comp.rectComp.rectangles.size() -1 , ShapesEnum.Shapes.RECTANGLE);
+        comp.addUndo(comp.rectComp.shapes.size() -1 , ShapesEnum.Shapes.RECTANGLE);
         comp.rectComp.addNewObject((float) 1.0,(float) 2.0,(float) 3.0,(float) 4.0,Color.BLACK,false,Color.BLACK);
-        comp.addUndo(comp.rectComp.rectangles.size() -1 , ShapesEnum.Shapes.RECTANGLE);
+        comp.addUndo(comp.rectComp.shapes.size() -1 , ShapesEnum.Shapes.RECTANGLE);
         comp.Undo();
         assertEquals(1, comp.undoList.size());
-        assertEquals(1,comp.rectComp.rectangles.size());
+        assertEquals(1,comp.rectComp.shapes.size());
     }
 
     @Test
