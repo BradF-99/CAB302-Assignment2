@@ -1,7 +1,7 @@
 
 ## TravisCI Config for JDK11
 ## Written by Brad Fuller
-## v1.8.9 2019-05-16
+## v1.8.10 2019-05-16
 
 language: java
 jdk:
@@ -52,7 +52,7 @@ deploy:
   on:
     repo: BradF-99/CAB302-Assignment2
     branch:
-      - "fix-cicd"
+      - "master"
 
 after_deploy:
   - cd ../..
