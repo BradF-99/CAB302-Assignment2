@@ -37,6 +37,8 @@
         <jar destfile="bin/dist/CAB302-Assignment2.jar" basedir="out/main">
             <manifest>
                 <attribute name="Main-Class" value="main.java.Main"/>
+                <attribute name="Implementation-Title" value="CAB302 Assignment 2"/>
+                <attribute name="Implementation-Vendor" value="BradF-99"/>
             </manifest>
         </jar>
 
