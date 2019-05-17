@@ -37,4 +37,5 @@ Built to Assignment Specification v1.0, current as of 2019-05-03.
 * Assuming all testing passes, any changes to master will result in TravisCI automatically deploying the build to [GitHub Releases](https://github.com/BradF-99/CAB302-Assignment2/releases) and tagging the commit.
     * Releases before assignment due date will be denoted as 0.(TravisCI Build Number) - for example, 0.119.
     * Ideally, the final version before submitting the assignment will be version 1.0 - this will be manually set before submission.
-* Unfortunately, 
+* Unfortunately, due to limitations with Apache Ant 1.10.6 and JUnit Jupiter 5, we are unable to automatically calculate code coverage during CI/CD. 
+    * However, you can still do this yourself by running your tests using IntelliJ's coverage engine.
