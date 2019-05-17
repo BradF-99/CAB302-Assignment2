@@ -2,6 +2,7 @@
 
 [![Build Status](https://travis-ci.com/BradF-99/CAB302-Assignment2.svg?token=RmWc9zzyFjnuzmgBsmgB&branch=master)](https://travis-ci.com/BradF-99/CAB302-Assignment2)
 [![Codacy Badge](https://api.codacy.com/project/badge/Grade/e2cb98918a2f44cc9795e38a9c0f7bfb)](https://www.codacy.com?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=BradF-99/CAB302-Assignment2&amp;utm_campaign=Badge_Grade)
+[![Gitter](https://badges.gitter.im/CAB302-Group369/community.svg)](https://gitter.im/CAB302-Group369/community?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge)
 
 Assignment 2 (Vector Design Tool) for CAB302, Semester 1, 2019.   
 Built to Assignment Specification v1.0, current as of 2019-05-03.
