@@ -1,7 +1,7 @@
 
 ## TravisCI Config for JDK11
 ## Written by Brad Fuller
-## v1.9.1 2019-05-16
+## v1.9.3 2019-05-19
 
 language: java
 jdk:
@@ -64,7 +64,9 @@ after_deploy:
 notifications:
   webhooks:
     urls:
-      - https://webhooks.gitter.im/e/15fb3ff18877374dbd58
-    on_success: change  # options: [always|never|change] default: always
-    on_failure: always  # options: [always|never|change] default: always
-    on_start: never     # options: [always|never|change] default: always
+      - https://skyhook.glitch.me/api/webhooks/579576826679001088/l3sn5qO986Mc6GPh0fn5DDLB0gHlEm_dLSaEjXpgQBUqIDapRVyJj515qmONU_DNMeKI/travis
+    on_success: always # default: always
+    on_failure: always # default: always
+    on_start:   always # default: never
+    on_cancel:  always # default: always
+    on_error:   always # default: always
