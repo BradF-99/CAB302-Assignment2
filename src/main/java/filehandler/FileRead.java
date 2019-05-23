@@ -4,7 +4,7 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.util.Scanner;
 import java.util.Arrays;
-import java.util.regex.*;
+import java.util.regex.*; // used for hex colour validation
 
 import main.java.exceptions.*;
 
@@ -12,20 +12,41 @@ public class FileRead {
     private final String[] shapeArgs = {"LINE","PLOT","RECTANGLE","ELLIPSE","POLYGON"};
     private final String[] colourArgs = {"PEN","FILL"};
 
-    // Hex Colour Validation
-    private static final String colourRegex = "^#([A-Fa-f0-9]{6}|[A-Fa-f0-9]{3})$"; // regex magic
+    /**
+     * A note on Regex usage in this class
+     *
+     * This regex here validates the hexadecimal colour inputs for the PEN and FILL
+     * arguments. It does this by checking if there is 1 "#" character, followed by
+     * either 3 or 6 characters in hexadecimal range. It will fail if the string
+     * does not include the "#" character at the start, or if the characters are
+     * not in base 16.
+     */
+    private static final String colourRegex = "^#([A-Fa-f0-9]{6}|[A-Fa-f0-9]{3})$";
     private Pattern regexPattern;
     private Matcher regexMatcher;
 
+    /**
+     * Constructor for FileRead Class
+     * Only thing we use this for is compiling our regex (see above)
+     * No params needed
+     */
     public FileRead(){
         regexPattern = regexPattern.compile(colourRegex); // compile our regex (needed for colour validation)
     }
 
+    /**
+     * readFile - Main func for reading a file
+     * Call this func with the path for a file, and it reads and validates it. That's about it really.
+     *
+     * @param path path to the selected file to read
+     * @throws IOException only occurs if the Scanner fails during read - the Scanner doesn't throw so we have to
+     * @throws FileInvalidArgumentException will only occur here if the file extension is not VEC
+     */
     public void readFile(String path) throws IOException, FileInvalidArgumentException {
         FileInputStream fileIn = null;
         Scanner scanner = null;
 
-        if(!returnFileType(path)){
+        if(!checkFileType(path)){
             throw new FileInvalidArgumentException("Invalid file type.");
         }
 
@@ -52,15 +73,16 @@ public class FileRead {
                 fileIn.close(); // release file after we are done
             }
             if (scanner != null) {
-                scanner.close(); // close our scanner also
+                scanner.close(); // close our scanner also, garbage collection should clean this up for us (hopefully)
             }
         }
     }
 
     /**
-     *
-     * @param line
-     * @return
+     * validateLine - Checks that the line of the file is valid (e.g. valid argument, co-ords, colour etc)
+     * @param line is the string the scanner has passed to it from readFile()
+     * @return a boolean value of True if the line is valid.
+     * @throws FileInvalidArgumentException - only thrown if the file could be read but has invalid arguments, co-ords or colours etc.
      */
     private boolean validateLine(String line) throws FileInvalidArgumentException {
 
@@ -79,9 +101,11 @@ public class FileRead {
                 case "LINE":
                 case "RECTANGLE":
                 case "ELLIPSE":
-                    if(lineSplit.length == 5) {
+                    if(lineSplit.length == 5) { // there should be 4 co-ords
                         for(int i = 1; i < lineSplit.length; i++){ // start from 1 because arg is at index 0
-                            validateCoords(lineSplit,i);
+                            if(!validateCoords(lineSplit,i)){
+                                return false; // no point continuing if there is an invalid co-ord
+                            }
                         }
                         return true;
                     } else {
@@ -89,17 +113,27 @@ public class FileRead {
                     }
                 case "PLOT":
                     if(lineSplit.length == 3) { // plot only has 3 args
+                        for(int i = 1; i < lineSplit.length; i++){ // start from 1 because arg is at index 0
+                            if(!validateCoords(lineSplit,i)){
+                                return false; // no point continuing if there is an invalid co-ord
+                            }
+                        }
                         return true;
                     } else {
                         throw new FileInvalidArgumentException("Co-ordinates are invalid.");
                     }
                 case "POLYGON":
                     if(lineSplit.length >= 5) { // polygon must have more than 5 args (arg and 2 pairs of coords)
+                        for(int i = 1; i < lineSplit.length; i++){ // start from 1 because arg is at index 0
+                            if(!validateCoords(lineSplit,i)){
+                                return false; // no point continuing if there is an invalid co-ord
+                            }
+                        }
                         return true;
                     } else {
                         throw new FileInvalidArgumentException("Co-ordinates are invalid.");
                     }
-                default:
+                default: // we shouldn't get here but just in case!
                     throw new FileInvalidArgumentException("Invalid argument in file.");
             }
         } else if (Arrays.stream(colourArgs).anyMatch(lineSplit[0]::equals)) {
@@ -113,10 +147,10 @@ public class FileRead {
                         if (lineSplit[1].equals("OFF")) {
                             return true;
                         } else {
-                            throw new FileInvalidArgumentException("Invalid argument in file.");
+                            throw new FileInvalidArgumentException("Invalid colour in file.");
                         }
                     }
-                default:
+                default: // again we shouldn't get here but just in case
                     throw new FileInvalidArgumentException("Invalid argument in file.");
             }
         } else { // the argument is neither a shape or a colour
@@ -124,18 +158,32 @@ public class FileRead {
         }
     }
 
-    private void validateCoords(String[] line, int i) throws FileInvalidArgumentException {
+    /**
+     * validateCoords - checks if the co-ordinates are castable to float, and are between 0.0f and 1.0f.
+     * @param line accepts the split line (array of strings) from validateLine func.
+     * @param i is the index of the array which we need to check.
+     *          We do it this way so we don't have any odd casting issues or exceptions we didn't account for.
+     * @return a boolean value which is True if the co-ordinate is valid.
+     * @throws FileInvalidArgumentException if the co-ordinate is invalid.
+     */
+    private boolean validateCoords(String[] line, int i) throws FileInvalidArgumentException {
         try {
             float coord = Float.parseFloat(line[i]);
             if(coord > 1.0f || coord < 0.0f){ // this will fail if the co-ord is over 1.0 or below 0.0
                 throw new FileInvalidArgumentException("Co-ordinates are invalid.");
             }
+            return true;
         } catch (NumberFormatException err) { // this will fail if the co-ord is not castable to float
             throw new FileInvalidArgumentException(err);
         }
     }
 
-    private boolean returnFileType(String path){ // check if the file is a VEC file
+    /**
+     * checkFileType - a func that checks if the file ends in .vec
+     * @param path - the path to the file
+     * @return a boolean value that is valid if the file has the correct extension.
+     */
+    private boolean checkFileType(String path){ // check if the file is a VEC file
         int index = path.lastIndexOf('.'); // last index due to file folders potentially having dots
         int pathIndex = Math.max(path.lastIndexOf('/'), path.lastIndexOf('\\'));
 
