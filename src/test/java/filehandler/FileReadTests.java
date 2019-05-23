@@ -11,14 +11,12 @@ import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.*;
 
 
-public class FileTests {
+public class FileReadTests {
     /*
      * File Handling Tests
      *
      * Things we need to test for during read:
      * - Testing read of a file that is partially valid (has some incorrect arguments)
-     * - Testing read of a file that has been deleted or has become inaccessible during processing
-     * - Testing read of a file that we do not have permissions to open
      *
      * Things we need to test for during write:
      * - Testing write of a VEC file
@@ -142,7 +140,7 @@ public class FileTests {
     @Test
     public void testReadVECFilePenValid() {
         FileRead fileReader = new FileRead();
-        assertDoesNotThrow(() -> { // iq 200
+        assertDoesNotThrow(() -> {
             fileReader.readFile("src/test/resources/filehandler/Test14.vec");
         });
     }
@@ -150,7 +148,7 @@ public class FileTests {
     @Test
     public void testReadVECFilePenOff() { // This should pass even though there is no colour.
         FileRead fileReader = new FileRead();
-        assertDoesNotThrow(() -> { // iq 200
+        assertDoesNotThrow(() -> {
             fileReader.readFile("src/test/resources/filehandler/Test15.vec");
         });
     }
@@ -158,7 +156,7 @@ public class FileTests {
     @Test
     public void testReadVECFileFillValid() {
         FileRead fileReader = new FileRead();
-        assertDoesNotThrow(() -> { // iq 200
+        assertDoesNotThrow(() -> {
             fileReader.readFile("src/test/resources/filehandler/Test16.vec");
         });
     }
@@ -166,7 +164,7 @@ public class FileTests {
     @Test
     public void testReadVECFileFillOff() {
         FileRead fileReader = new FileRead();
-        assertDoesNotThrow(() -> { // iq 200
+        assertDoesNotThrow(() -> {
             fileReader.readFile("src/test/resources/filehandler/Test17.vec");
         });
     }
