@@ -30,10 +30,12 @@ public class MainWindow {
     private FileWrite fileWriter = new FileWrite();
 
     /**
-     * This is just an example thread-safe GUI based off the example from the lecture.
+     * buildGUI()
+     * Does what it says on the tin!
      */
+
     private void buildGUI() {
-        frame = new JFrame("Hello World");
+        frame = new JFrame("Vector Plotting Tool");
         frame.add(comp);
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.getContentPane().addMouseListener(new MyMouseAdapter());
