@@ -1,43 +1,91 @@
 package main.java.gui;
 
+import javafx.embed.swing.JFXPanel;
 import main.java.components.*;
 import java.awt.*;
 import java.awt.event.*;
 import java.awt.geom.Point2D;
+import java.util.ArrayList;
 import java.util.LinkedList;
+import java.util.Map;
 
 import javax.swing.*;
 
 
 public class MainWindow {
     private JFrame frame;
-    ComponentsClass comp = new ComponentsClass(new Dimension(0,0));
+    private JMenuBar mainMenu;
+    private JSplitPane mainDisplay;
+    private JPanel sideBar;
+    private JPanel drawingBoard;
+    ComponentsClass comp;
     private java.awt.Point startPoint;
     private ShapesEnum.Shapes currentShape = ShapesEnum.Shapes.ELLIPSE;
     private Color selectedBorderColor = Color.RED;
     private Color selectedFillColor = Color.BLACK;
     private boolean filled = true;
+
+
     /**
      * This is just an example thread-safe GUI based off the example from the lecture.
      */
     private void buildGUI() {
+        //Create Core GUI Components
         frame = new JFrame("Hello World");
-        frame.add(comp);
-        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        frame.getContentPane().addMouseListener(new MyMouseAdapter());
-        frame.getContentPane().addMouseMotionListener(new MyMouseAdapter());
-        frame.getContentPane().addComponentListener(new ComponentAdapter() {
-            @Override
-                public void componentResized(ComponentEvent e) {
-                    comp.setFrameSize(frame.getSize());
-            }
-        });
+        mainMenu = new JMenuBar();
+        mainDisplay = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT);
+        sideBar = new JPanel();
+        drawingBoard = new JPanel();
+        comp = new ComponentsClass(new Dimension(0,0));
+
+        //Create menu components
+        JMenu fileDropdown = new JMenu("File Options"); //dropdown title
+        JMenu additionalDropdown = new JMenu("Additional Commands");
+        String[] fileCmds = {"Save file", "Open file"}; //List of options in dropdown
+        String[] additionalCmds = {"Undo", "Export BMP"};
+        for (String cmd : fileCmds){
+            fileDropdown.add(cmd);
+        }
+        for(String cmd : additionalCmds){
+            additionalDropdown.add(cmd);
+        }
+        mainMenu.add(fileDropdown);
+        mainMenu.add(additionalDropdown);
+
+        //Create sideBar components
+        mainDisplay.setLeftComponent(sideBar);
+        sideBar.setLayout(new BoxLayout(sideBar, BoxLayout.PAGE_AXIS));
+        String[] sideBarBtns = {"Plot", "Line", "Rectangle", "Ellipse", "Polygon", "Fill Colour", "Pen Colour"};
+        for (String btn : sideBarBtns){
+            sideBar.add(new JButton(btn));
+        }
+
+        //Create drawingBoard components
+        mainDisplay.setRightComponent(drawingBoard);
+        drawingBoard.setLayout(new BoxLayout(drawingBoard, BoxLayout.PAGE_AXIS));
+        drawingBoard.add(comp);
+        comp.setFrameSize(drawingBoard.getSize());
+
+        //Add event handlers
+        fileDropdown.getMenuComponent(0).addMouseListener(new MyMenuMouseAdapter());
+        fileDropdown.getMenuComponent(1).addMouseListener(new MyMenuMouseAdapter());
+        additionalDropdown.getMenuComponent(0).addMouseListener(new MyMenuMouseAdapter());
+        sideBar.getComponents()[0].addMouseListener(new MyMenuMouseAdapter());
+        sideBar.getComponents()[1].addMouseListener(new MyMenuMouseAdapter());
+        sideBar.getComponents()[2].addMouseListener(new MyMenuMouseAdapter());
+        sideBar.getComponents()[3].addMouseListener(new MyMenuMouseAdapter());
+        sideBar.getComponents()[4].addMouseListener(new MyMenuMouseAdapter());
+        frame.addComponentListener(new MyWindowListener()); //needed to set the divider by % of screen
+        sideBar.addComponentListener(new MySideBarListener());
+        drawingBoard.addMouseListener(new MyMouseAdapter());
         frame.addKeyListener(new MyKeyAdapter());
-        frame.setPreferredSize(new Dimension(500, 250));
-        frame.setLocation(new Point(200, 200));
-        frame.pack();
+
+        //add frame settings
+        frame.setJMenuBar(mainMenu);
+        frame.add(mainDisplay);
+        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        frame.setSize(700, 600);
         frame.setVisible(true);
-        comp.setFrameSize(frame.getSize());
     }
 
     /**
@@ -119,6 +167,54 @@ public class MainWindow {
         }
     }
 
+    /**
+     * MyMenuMouseAdapter handles all mouse presses corresponding to the menu & options commands
+     */
+
+    class MyMenuMouseAdapter extends MouseAdapter{
+        /**
+         * This override of mousePressed checks
+         * the menu pressed, and then takes appropriate action.
+         * @param e the MouseEvent, used to check what component was pressed
+         */
+        @Override
+        public void mousePressed(MouseEvent e){
+            Component pressedComp = e.getComponent();
+            JMenu fileOpt = mainMenu.getMenu(0);
+            JMenu additionalOpt = mainMenu.getMenu(1);
+            Component[] sideBarButtons = sideBar.getComponents();
+            if (pressedComp == additionalOpt.getMenuComponent(0)){
+                comp.Undo();
+                comp.repaint();
+            }
+            else if (pressedComp == fileOpt.getMenuComponent(0)){
+                JFileChooser fileChooser = new JFileChooser();
+                fileChooser.showSaveDialog(frame);
+            }
+            else if (pressedComp == fileOpt.getMenuComponent(1)){
+                JFileChooser fileChooser = new JFileChooser();
+                fileChooser.showOpenDialog(frame);
+            }
+            else if (pressedComp == sideBarButtons[0]){
+                currentShape = ShapesEnum.Shapes.PLOT;
+            }
+            else if (pressedComp == sideBarButtons[1]){
+                currentShape = ShapesEnum.Shapes.LINE;
+            }
+            else if (pressedComp == sideBarButtons[2]){
+                currentShape = ShapesEnum.Shapes.RECTANGLE;
+            }
+            else if (pressedComp == sideBarButtons[3]){
+                currentShape = ShapesEnum.Shapes.ELLIPSE;
+            }
+            else if (pressedComp == sideBarButtons[4]){
+                currentShape = ShapesEnum.Shapes.POLYGON;
+            }
+
+
+        }
+    }
+
     class MyKeyAdapter extends KeyAdapter {
         @Override
         public void keyReleased(KeyEvent e) {
@@ -126,6 +222,53 @@ public class MainWindow {
                 comp.Undo();
             }
             comp.repaint();
+            System.out.println(111);
+        }
+    }
+
+    /**
+     * MyWindowListener sets the position of the divider dynamically based on % of current
+     * screen size. ComponentAdapter is extended as it already provides the componentResized method to be overloaded
+     */
+    class MyWindowListener extends ComponentAdapter{
+        @Override
+        public void componentResized(ComponentEvent e){
+            windowChangeActions();
+        }
+
+        @Override
+        public void componentShown(ComponentEvent e){
+            windowChangeActions();
+        }
+
+        public void windowChangeActions(){
+            mainDisplay.setDividerLocation(0.14);
+            comp.setFrameSize(drawingBoard.getSize());
+        }
+    }
+
+    /**
+     * MySideBarListener checks the width of the sidebar, and sets the buttons to that width.
+     * ComponentAdapter is extended as it already provides the componentResized method to be overloaded
+     */
+    class MySideBarListener extends ComponentAdapter {
+        @Override
+        public void componentResized(ComponentEvent e) {
+            windowChangeActions();
+        }
+
+        @Override
+        public void componentShown(ComponentEvent e) {
+            windowChangeActions();
+        }
+
+        public void windowChangeActions() {
+            int newWidth = sideBar.getWidth();
+            for (Component button : sideBar.getComponents()) {
+                int currentHeight = button.getHeight();
+                button.setSize(newWidth, currentHeight);
+            }
+            comp.setFrameSize(drawingBoard.getSize());
         }
     }
 
