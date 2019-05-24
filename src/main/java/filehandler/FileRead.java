@@ -24,6 +24,9 @@ public class FileRead {
      * either 3 or 6 characters in hexadecimal range. It will fail if the string
      * does not include the "#" character at the start, or if the characters are
      * not in base 16.
+     *
+     * I also didn't realise that AWT throws an exception if the colour is invalid
+     * until I integrated this class in to the GUI, so this is pretty much useless.
      */
     private static final String colourRegex = "^#([A-Fa-f0-9]{6}|[A-Fa-f0-9]{3})$";
     private Pattern regexPattern;
@@ -46,7 +49,8 @@ public class FileRead {
      * @param path to the selected file to read
      * @return a List of arguments for the GUI to parse
      * @throws IOException  only occurs if the Scanner fails during read - the Scanner doesn't throw so we have to
-     * @throws FileInvalidArgumentException FileInvalidArgumentException will only occur here if the file extension is not VEC
+     * @throws FileInvalidArgumentException FileInvalidArgumentException will only occur here if the file extension
+     * is not VEC
      */
     public List<String[]> readFile(String path) throws IOException, FileInvalidArgumentException {
         FileInputStream fileIn = null;
@@ -62,7 +66,7 @@ public class FileRead {
             while (scanner.hasNextLine()) {
                 String line = scanner.nextLine();
                 if (!validateLine(line)) {
-                    throw new FileInvalidArgumentException(); // we shouldn't make it to here but just in case something goes massively wrong here we are
+                    throw new FileInvalidArgumentException(); // just in case something goes massively wrong
                 }
             }
             if (scanner.ioException() != null) { // scanner does not throw exceptions so we have to check for it
@@ -85,7 +89,8 @@ public class FileRead {
      * validateLine - Checks that the line of the file is valid (e.g. valid argument, co-ords, colour etc)
      * @param line is the string the scanner has passed to it from readFile()
      * @return a boolean value of True if the line is valid.
-     * @throws FileInvalidArgumentException - only thrown if the file could be read but has invalid arguments, co-ords or colours etc.
+     * @throws FileInvalidArgumentException - only thrown if the file could be read but has invalid arguments, co-ords
+     * or colours etc.
      */
     private boolean validateLine(String line) throws FileInvalidArgumentException {
 
