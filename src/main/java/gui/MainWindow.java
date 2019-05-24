@@ -1,11 +1,11 @@
 package main.java.gui;
 
+import javafx.scene.input.KeyCode;
 import main.java.components.*;
 import java.awt.*;
 import java.awt.event.*;
 import java.awt.geom.Point2D;
 import java.util.LinkedList;
-
 import javax.swing.*;
 
 
@@ -38,8 +38,8 @@ public class MainWindow {
         //Create menu components
         JMenu fileDropdown = new JMenu("File Options"); //dropdown title
         JMenu additionalDropdown = new JMenu("Additional Commands");
-        String[] fileCmds = {"Save file", "Open file"}; //List of options in dropdown
-        String[] additionalCmds = {"Undo", "Export BMP"};
+        String[] fileCmds = {"Save file (ctrl+s)", "Open file (ctrl+o)"}; //List of options in dropdown
+        String[] additionalCmds = {"Undo (ctrl+r)", "Export BMP"};
         for (String cmd : fileCmds){
             fileDropdown.add(cmd);
         }
@@ -56,6 +56,7 @@ public class MainWindow {
         for (String btn : sideBarBtns){
             sideBar.add(new JButton(btn));
         }
+
 
         //Create drawingBoard components
         mainDisplay.setRightComponent(drawingBoard);
@@ -76,7 +77,7 @@ public class MainWindow {
         sideBar.addComponentListener(new MySideBarListener());
         drawingBoard.addMouseListener(new MyMouseAdapter());
         drawingBoard.addMouseMotionListener(new MyMouseAdapter());
-        drawingBoard.addKeyListener(new MyKeyAdapter());
+        frame.addKeyListener(new MyKeyAdapter());
         frame.addComponentListener(new MyWindowListener());
 
         //add frame and mainDisplay settings
@@ -84,6 +85,7 @@ public class MainWindow {
         frame.add(mainDisplay);
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.setSize(700, 600);
+        frame.setFocusable(true);
         frame.setVisible(true);
         mainDisplay.setEnabled(false); //Lock the divider from user input
     }
@@ -187,42 +189,54 @@ public class MainWindow {
             JMenu additionalOpt = mainMenu.getMenu(1);
             Component[] sideBarButtons = sideBar.getComponents();
             if (pressedComp == additionalOpt.getMenuComponent(0)){
-                comp.Undo();
-                comp.repaint();
+                MenuCommands.undo(comp);
             }
             else if (pressedComp == fileOpt.getMenuComponent(0)){
-                JFileChooser fileChooser = new JFileChooser();
-                fileChooser.showSaveDialog(frame);
+                MenuCommands.saveFile(frame);
             }
             else if (pressedComp == fileOpt.getMenuComponent(1)){
-                JFileChooser fileChooser = new JFileChooser();
-                fileChooser.showOpenDialog(frame);
+                MenuCommands.openFile(frame);
             }
             else if (pressedComp == sideBarButtons[0]){
-                currentShape = ShapesEnum.Shapes.PLOT;
+                currentShape = MenuCommands.changeShape(ShapesEnum.Shapes.PLOT);
             }
             else if (pressedComp == sideBarButtons[1]){
-                currentShape = ShapesEnum.Shapes.LINE;
+                currentShape = MenuCommands.changeShape(ShapesEnum.Shapes.LINE);
             }
             else if (pressedComp == sideBarButtons[2]){
-                currentShape = ShapesEnum.Shapes.RECTANGLE;
+                currentShape = MenuCommands.changeShape(ShapesEnum.Shapes.RECTANGLE);
             }
             else if (pressedComp == sideBarButtons[3]){
-                currentShape = ShapesEnum.Shapes.ELLIPSE;
+                currentShape = MenuCommands.changeShape(ShapesEnum.Shapes.ELLIPSE);
             }
             else if (pressedComp == sideBarButtons[4]){
+                currentShape = MenuCommands.changeShape(ShapesEnum.Shapes.POLYGON);
+            }
+            else if (pressedComp == sideBarButtons[5]){
+                MenuCommands.changeColor(frame);
+            }
+            else if (pressedComp == sideBarButtons[6]){
                 currentShape = ShapesEnum.Shapes.POLYGON;
             }
-
-
         }
     }
 
     class MyKeyAdapter extends KeyAdapter {
         @Override
-        public void keyReleased(KeyEvent e) {
+        public void keyPressed(KeyEvent e) {
+           int pressedKey = e.getKeyCode();
            System.out.println(e.getKeyChar());
-
+           if (e.isControlDown()){
+               if (pressedKey == KeyEvent.VK_Z){
+                   MenuCommands.undo(comp);
+               }
+               else if (pressedKey == KeyEvent.VK_S){
+                   MenuCommands.saveFile(frame);
+               }
+               else if (pressedKey == KeyEvent.VK_O){
+                   MenuCommands.openFile(frame);
+               }
+           }
         }
     }
 
@@ -270,6 +284,8 @@ public class MainWindow {
             }
         }
     }
+
+
 
     public void showGUI() {
         javax.swing.SwingUtilities.invokeLater(() -> {
