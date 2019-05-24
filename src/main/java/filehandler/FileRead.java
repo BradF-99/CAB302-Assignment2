@@ -62,12 +62,8 @@ public class FileRead {
             while (scanner.hasNextLine()) {
                 String line = scanner.nextLine();
                 if (!validateLine(line)) {
-                    throw new FileInvalidArgumentException();
-                } else {
-                    //System.out.println(line);
-                    // Do something with the input.
+                    throw new FileInvalidArgumentException(); // we shouldn't make it to here but just in case something goes massively wrong here we are
                 }
-
             }
             if (scanner.ioException() != null) { // scanner does not throw exceptions so we have to check for it
                 throw scanner.ioException();
