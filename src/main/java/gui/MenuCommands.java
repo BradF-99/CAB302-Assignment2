@@ -7,6 +7,10 @@ import java.awt.geom.Point2D;
 import java.util.LinkedList;
 import javax.swing.*;
 
+/**
+ * MenuCommands is a utility class which contains the actions corresponding to keyboard or graphical commands
+ * such as selecting a different fill colour
+ */
 public final class MenuCommands {
     public static void undo(ComponentsClass comp){
         comp.Undo();
@@ -23,9 +27,9 @@ public final class MenuCommands {
     public static ShapesEnum.Shapes changeShape(ShapesEnum.Shapes newShape){
         return newShape;
     }
-    public static Color changeColor(JFrame frame){
-        JOptionPane colorWindow = new JOptionPane();
-        return Color.red;
+    public static Color changeColor(JFrame frame, Color currentColor){
+        Color color = JColorChooser.showDialog(frame,"Select a color", currentColor);
+        return color;
     }
 
 

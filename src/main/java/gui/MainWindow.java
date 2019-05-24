@@ -175,11 +175,10 @@ public class MainWindow {
     /**
      * MyMenuMouseAdapter handles all mouse presses corresponding to the menu & options commands
      */
-
     class MyMenuMouseAdapter extends MouseAdapter{
         /**
-         * This override of mousePressed checks
-         * the menu pressed, and then takes appropriate action.
+         * This eventListener checks for what button is pressed, and then calls
+         * the appropriate static method from MenuCommands (e.g. Undo will call MenuCommands.undo()
          * @param e the MouseEvent, used to check what component was pressed
          */
         @Override
@@ -213,15 +212,23 @@ public class MainWindow {
                 currentShape = MenuCommands.changeShape(ShapesEnum.Shapes.POLYGON);
             }
             else if (pressedComp == sideBarButtons[5]){
-                MenuCommands.changeColor(frame);
+                selectedFillColor = MenuCommands.changeColor(frame, selectedFillColor);
             }
             else if (pressedComp == sideBarButtons[6]){
-                currentShape = ShapesEnum.Shapes.POLYGON;
+                selectedBorderColor = MenuCommands.changeColor(frame, selectedBorderColor);
             }
         }
     }
 
+    /**
+     * MyKeyAdapter handles all shortcuts relating to the menu bar and side bar controls
+     */
     class MyKeyAdapter extends KeyAdapter {
+        /**
+         * This eventListener checks key strokes, and takes action by calling the relevant
+         * method from MenuCommands.
+         * @param e the KeyEvent variable, used to check the keycode from pressed key
+         */
         @Override
         public void keyPressed(KeyEvent e) {
            int pressedKey = e.getKeyCode();
