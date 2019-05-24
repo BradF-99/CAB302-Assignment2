@@ -168,16 +168,16 @@ public class MainWindow {
             } catch (IndexOutOfBoundsException err){
                 // fail silently - probably a plot
             }
-
             switch(argument[0].toUpperCase()){
+
                 case "LINE":
                     currentShape = ShapesEnum.Shapes.LINE;
-                    comp.lineComp.addDrawObject(x1, y1, x2, y2, selectedBorderColor );
+                    comp.lineComp.addNewObject(x1, y1, x2, y2, selectedBorderColor );
                     comp.addUndo(comp.lineComp.lines.size() - 1, ShapesEnum.Shapes.LINE);
                     break;
                 case "RECTANGLE":
                     currentShape = ShapesEnum.Shapes.RECTANGLE;
-                    comp.rectComp.addDrawObject(x1, y1, x2, y2, selectedBorderColor,fill,selectedFillColor);
+                    comp.rectComp.addNewObject(x1, y1, x2, y2, selectedBorderColor,fill,selectedFillColor);
                     comp.addUndo(comp.rectComp.shapes.size() - 1,ShapesEnum.Shapes.RECTANGLE);
                     break;
                 case "ELLIPSE":
@@ -188,6 +188,7 @@ public class MainWindow {
                 case "PLOT":
                     currentShape = ShapesEnum.Shapes.PLOT;
                     comp.plotComp.addNewObject(x1, y1, selectedBorderColor);
+                    comp.addUndo(comp.plotComp.plots.size() - 1, ShapesEnum.Shapes.PLOT);
                     break;
                 case "POLYGON":
                     currentShape = ShapesEnum.Shapes.POLYGON;
@@ -223,16 +224,14 @@ public class MainWindow {
                 default:
                     throw new FileInvalidArgumentException("Invalid argument in file.");
             }
+
         }
         // reset our stuff
         selectedFillColor = Color.BLACK;
         selectedBorderColor = Color.BLACK;
-        currentShape = ShapesEnum.Shapes.LINE;
+        currentShape = ShapesEnum.Shapes.ELLIPSE;
 
         comp.repaint(); // its too fast for repaints during file load
-
-        // clearing the draw objects appears to break everything
-        // as well as drawing lines and rectangles after file load
 
     }
 
