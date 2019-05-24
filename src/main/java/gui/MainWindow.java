@@ -35,15 +35,15 @@ public class MainWindow {
      */
 
     private void buildGUI() {
-        frame = new JFrame("Vector Plotting Tool");
-        frame.add(comp);
+        frame = new JFrame("Hello World");
+        frame.getContentPane().add(comp);
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.getContentPane().addMouseListener(new MyMouseAdapter());
         frame.getContentPane().addMouseMotionListener(new MyMouseAdapter());
         frame.getContentPane().addComponentListener(new ComponentAdapter() {
             @Override
                 public void componentResized(ComponentEvent e) {
-                    comp.setFrameSize(frame.getSize());
+                    comp.setFrameSize(frame.getContentPane().getSize());
             }
         });
         frame.addKeyListener(new MyKeyAdapter());

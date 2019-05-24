@@ -94,21 +94,58 @@ public class ComponentsClass extends JComponent {
         super.paintComponent(g);
         Graphics2D g2d = (Graphics2D) g.create();
         //polygons
-        for(PolygonComponent.Polygon poly : polyComp.polygon){
-            Path2D.Float polygon = polyComp.createScaledPolygon(poly.pointArray, frameSize);
-            if(poly.filled){
-                g2d.setColor(poly.fillColor);
-                g2d.fill(polygon);
+        for(int i = 0; i < undoList.size(); i++){
+            switch(undoList.get(i).component){
+                case PLOT:
+                    PlotComponent.Plot plot = plotComp.plots.get(undoList.get(i).index);
+                    g2d.setColor(plot.color);
+                    g2d.drawLine((int) (plot.x * frameSize.width), (int) (plot.y * frameSize.height), (int) (plot.x * frameSize.width), (int) (plot.y * frameSize.height));
+                    break;
+                case LINE:
+                    LineComponent.Line line = lineComp.lines.get(undoList.get(i).index);
+                    int[] linePoints = floatToPoint(line.x1, line.y1, line.x2, line.y2);
+                    g2d.setColor(line.color);
+                    g2d.drawLine(linePoints[0],linePoints[1],linePoints[2],linePoints[3]);
+                    break;
+                case RECTANGLE:
+                    ShapeComponent.Shape rect = rectComp.shapes.get(undoList.get(i).index);
+                    int[] rectPoints = floatToPoint(rect.x, rect.y, rect.width, rect.height);
+                    if(rect.filled) {
+                        g2d.setColor(rect.fillColor);
+                        g2d.fillRect(rectPoints[0],rectPoints[1],rectPoints[2],rectPoints[3]);
+                    }
+                    g2d.setColor(rect.borderColor);
+                    g2d.drawRect(rectPoints[0],rectPoints[1],rectPoints[2],rectPoints[3]);
+                    break;
+                case ELLIPSE:
+                    ShapeComponent.Shape ellipse = ellComp.shapes.get(undoList.get(i).index);
+                    int[] ellPoints = floatToPoint(ellipse.x, ellipse.y, ellipse.width, ellipse.height);
+                    if(ellipse.filled) {
+                        g2d.setColor(ellipse.fillColor);
+                        g2d.fillOval(ellPoints[0],ellPoints[1],ellPoints[2],ellPoints[3]);
+                    }
+                    g2d.setColor(ellipse.borderColor);
+                    g2d.drawOval(ellPoints[0],ellPoints[1],ellPoints[2],ellPoints[3]);
+                    break;
+                case POLYGON:
+                    PolygonComponent.Polygon poly = polyComp.polygon.get(undoList.get(i).index);
+                    Path2D.Float polygon = polyComp.createScaledPolygon(poly.pointArray, frameSize);
+                    if(poly.filled){
+                        g2d.setColor(poly.fillColor);
+                        g2d.fill(polygon);
+                    }
+                    g2d.setColor(poly.borderColor);
+                    g2d.draw(polygon);
+                    break;
             }
-            g2d.setColor(poly.borderColor);
-            g2d.draw(polygon);
         }
+        //polygon line indicator
         for(LineComponent.Line line : polyComp.drawnLines) {
             int[] points = floatToPoint(line.x1, line.y1, line.x2, line.y2);
             g2d.setColor(line.color);
             g2d.drawLine(points[0],points[1],points[2],points[3]);
         }
-        //rectangles
+        //rectangles dragged
         for (ShapeComponent.Shape rect : rectComp.drawnShapes) {
             int[] points = floatToPoint(rect.x, rect.y, rect.width, rect.height);
             if(rect.filled) {
@@ -118,37 +155,13 @@ public class ComponentsClass extends JComponent {
             g2d.setColor(rect.borderColor);
             g2d.drawRect(points[0],points[1],points[2],points[3]);
         }
-        for (ShapeComponent.Shape rect : rectComp.shapes) {
-            int[] points = floatToPoint(rect.x, rect.y, rect.width, rect.height);
-            if(rect.filled) {
-                g2d.setColor(rect.fillColor);
-                g2d.fillRect(points[0],points[1],points[2],points[3]);
-            }
-            g2d.setColor(rect.borderColor);
-            g2d.drawRect(points[0],points[1],points[2],points[3]);
-        }
-        //lines
-        for (LineComponent.Line line : lineComp.lines) {
-            int[] points = floatToPoint(line.x1, line.y1, line.x2, line.y2);
-            g2d.setColor(line.color);
-            g2d.drawLine(points[0],points[1],points[2],points[3]);
-        }
-
+        //lines dragged
         for (LineComponent.Line line : lineComp.drawnLines) {
             int[] points = floatToPoint(line.x1, line.y1, line.x2, line.y2);
             g2d.setColor(line.color);
             g2d.drawLine(points[0],points[1],points[2],points[3]);
         }
-        //ellipse
-        for (ShapeComponent.Shape ellipse : ellComp.shapes){
-            int[] points = floatToPoint(ellipse.x, ellipse.y, ellipse.width, ellipse.height);
-            if(ellipse.filled) {
-                g2d.setColor(ellipse.fillColor);
-                g2d.fillOval(points[0],points[1],points[2],points[3]);
-            }
-            g2d.setColor(ellipse.borderColor);
-            g2d.drawOval(points[0],points[1],points[2],points[3]);
-        }
+        //ellipses dragged
         for (ShapeComponent.Shape ellipse : ellComp.drawnShapes) {
             int[] points = floatToPoint(ellipse.x, ellipse.y, ellipse.width, ellipse.height);
             if(ellipse.filled) {
@@ -157,11 +170,6 @@ public class ComponentsClass extends JComponent {
             }
             g2d.setColor(ellipse.borderColor);
             g2d.drawOval(points[0],points[1],points[2],points[3]);
-        }
-        //plot
-        for (PlotComponent.Plot plot : plotComp.plots){
-            g2d.setColor(plot.color);
-            g2d.drawLine((int) (plot.x * frameSize.width), (int) (plot.y * frameSize.height), (int) (plot.x * frameSize.width), (int) (plot.y * frameSize.height));
         }
     }
 
