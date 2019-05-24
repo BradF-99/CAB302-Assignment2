@@ -152,7 +152,7 @@ public class MainWindow {
     private void fileRead() throws IOException, FileInvalidArgumentException {
 
         argsList.clear();
-        argsList = fileReader.readFile("src/test/resources/filehandler/example1.vec");
+        argsList = fileReader.readFile("src/test/resources/filehandler/example3.vec");
 
         boolean fill = false;
 
@@ -217,15 +217,10 @@ public class MainWindow {
                     comp.addUndo(comp.polyComp.polygon.size() - 1, ShapesEnum.Shapes.POLYGON);
                     break;
                 case "PEN":
-                    if(argument[1] == "OFF"){
-                        fill = false;
-                        break;
-                    } else {
-                        selectedBorderColor = Color.decode(argument[1]);
-                        break;
-                    }
+                    selectedBorderColor = Color.decode(argument[1]);
+                    break;
                 case "FILL":
-                    if(argument[1] == "OFF"){
+                    if(argument[1].equals("OFF")){
                         fill = false;
                         break;
                     } else {
