@@ -4,9 +4,16 @@ import main.java.components.*;
 import java.awt.*;
 import java.awt.event.*;
 import java.awt.geom.Point2D;
+import java.io.IOException;
 import java.util.LinkedList;
 
 import javax.swing.*;
+
+import java.util.List;
+import java.util.ArrayList;
+
+import main.java.exceptions.FileInvalidArgumentException;
+import main.java.filehandler.*;
 
 
 public class MainWindow {
@@ -14,13 +21,18 @@ public class MainWindow {
     ComponentsClass comp = new ComponentsClass(new Dimension(0,0));
     private java.awt.Point startPoint;
     private ShapesEnum.Shapes currentShape = ShapesEnum.Shapes.ELLIPSE;
-    private Color selectedBorderColor = Color.RED;
+    private Color selectedBorderColor = Color.BLACK;
     private Color selectedFillColor = Color.BLACK;
     private boolean filled = true;
+
+    private List<String[]> argsList = new ArrayList<>();
+    private FileRead fileReader = new FileRead();
+    private FileWrite fileWriter = new FileWrite();
+
     /**
      * This is just an example thread-safe GUI based off the example from the lecture.
      */
-    private void buildGUI() {
+    private void buildGUI() throws IOException, FileInvalidArgumentException {
         frame = new JFrame("Hello World");
         frame.add(comp);
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -33,7 +45,7 @@ public class MainWindow {
             }
         });
         frame.addKeyListener(new MyKeyAdapter());
-        frame.setPreferredSize(new Dimension(500, 250));
+        frame.setPreferredSize(new Dimension(500, 500));
         frame.setLocation(new Point(200, 200));
         frame.pack();
         frame.setVisible(true);
@@ -129,9 +141,119 @@ public class MainWindow {
         }
     }
 
+    /*
+    private java.awt.Point startPoint;
+    private ShapesEnum.Shapes currentShape = ShapesEnum.Shapes.ELLIPSE;
+    private Color selectedBorderColor = Color.RED;
+    private Color selectedFillColor = Color.BLACK;
+    private boolean filled = true;
+     */
+
+    private void fileRead() throws IOException, FileInvalidArgumentException {
+
+        argsList.clear();
+        argsList = fileReader.readFile("src/test/resources/filehandler/example1.vec");
+
+        boolean fill = false;
+
+        for (String[] argument : argsList){
+            System.out.println(argument[0]);
+
+            // have to initialise these or java has a massive cry
+            float x1 = 0.0f;
+            float y1 = 0.0f;
+            float x2 = 0.0f;
+            float y2 = 0.0f;
+
+
+            try {
+                x1 = Float.parseFloat(argument[1]);
+                y1 = Float.parseFloat(argument[2]);
+                x2 = Float.parseFloat(argument[3]);
+                y2 = Float.parseFloat(argument[4]);
+            } catch (NumberFormatException err) { // this will fail if the co-ord is not castable to float
+                // fail silently because it's going to be a colour command
+            } catch (IndexOutOfBoundsException err){
+                // fail silently - probably a plot
+            }
+
+            switch(argument[0].toUpperCase()){
+                case "LINE":
+                    currentShape = ShapesEnum.Shapes.LINE;
+                    comp.lineComp.addDrawObject(x1, y1, x2, y2, selectedBorderColor );
+                    comp.addUndo(comp.lineComp.lines.size() - 1, ShapesEnum.Shapes.LINE);
+                    break;
+                case "RECTANGLE":
+                    currentShape = ShapesEnum.Shapes.RECTANGLE;
+                    comp.rectComp.addDrawObject(x1, y1, x2, y2, selectedBorderColor,fill,selectedFillColor);
+                    comp.addUndo(comp.rectComp.shapes.size() - 1,ShapesEnum.Shapes.RECTANGLE);
+                    break;
+                case "ELLIPSE":
+                    currentShape = ShapesEnum.Shapes.ELLIPSE;
+                    comp.ellComp.addNewObject(x1, y1, x2, y2, selectedBorderColor,fill,selectedFillColor);
+                    comp.addUndo(comp.ellComp.shapes.size() - 1, ShapesEnum.Shapes.ELLIPSE);
+                    break;
+                case "PLOT":
+                    currentShape = ShapesEnum.Shapes.PLOT;
+                    comp.plotComp.addNewObject(x1, y1, selectedBorderColor);
+                    break;
+                case "POLYGON":
+                    currentShape = ShapesEnum.Shapes.POLYGON;
+                    List polyPoints = new ArrayList();
+
+                    // we cant use a foreach loop because our co-ordinates are in pairs.
+
+                    for(int i = 1; i < argument.length; i+= 2){ // we start at index 1 and increment in 2s
+                        float x = Float.parseFloat(argument[i]);
+                        float y = Float.parseFloat(argument[i+1]);
+                        Point2D.Float point = new Point2D.Float(x,y);
+                        polyPoints.add(point);
+                    }
+
+                    Object[] pointArray = polyPoints.toArray();
+                    comp.polyComp.addNewObject(pointArray,selectedBorderColor,fill,selectedFillColor);
+
+                    polyPoints.clear();
+                    comp.addUndo(comp.polyComp.polygon.size() - 1, ShapesEnum.Shapes.POLYGON);
+                    break;
+                case "PEN":
+                    if(argument[1] == "OFF"){
+                        fill = false;
+                        break;
+                    } else {
+                        selectedBorderColor = Color.decode(argument[1]);
+                        break;
+                    }
+                case "FILL":
+                    if(argument[1] == "OFF"){
+                        fill = false;
+                        break;
+                    } else {
+                        fill = true;
+                        selectedFillColor = Color.decode(argument[1]);
+                        break;
+                    }
+                default:
+                    throw new FileInvalidArgumentException("Invalid argument in file.");
+            }
+        }
+        // reset our stuff
+        selectedFillColor = Color.BLACK;
+        selectedBorderColor = Color.BLACK;
+        currentShape = ShapesEnum.Shapes.LINE;
+        comp.repaint(); // its too fast for repaints during file load 
+    }
+
     public void showGUI() {
         javax.swing.SwingUtilities.invokeLater(() -> {
-            buildGUI();
+            try {
+                buildGUI();
+                fileRead();
+            } catch (IOException e) {
+                e.printStackTrace();
+            } catch (FileInvalidArgumentException e) {
+                e.printStackTrace();
+            }
         });
     }
 }
