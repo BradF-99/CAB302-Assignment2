@@ -11,7 +11,7 @@ import java.util.regex.*; // used for hex colour validation
 import main.java.exceptions.*;
 
 public class FileRead {
-    private List argsList = new ArrayList(); // we store the args to pass back to gui in this list
+    private List<String[]> argsList = new ArrayList<String[]>(); // we store the args to pass back to gui in this list
 
     private final String[] shapeArgs = {"LINE","PLOT","RECTANGLE","ELLIPSE","POLYGON"};
     private final String[] colourArgs = {"PEN","FILL"};
