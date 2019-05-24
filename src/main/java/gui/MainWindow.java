@@ -1,13 +1,10 @@
 package main.java.gui;
 
-import javafx.embed.swing.JFXPanel;
 import main.java.components.*;
 import java.awt.*;
 import java.awt.event.*;
 import java.awt.geom.Point2D;
-import java.util.ArrayList;
 import java.util.LinkedList;
-import java.util.Map;
 
 import javax.swing.*;
 
@@ -78,6 +75,8 @@ public class MainWindow {
         frame.addComponentListener(new MyWindowListener()); //needed to set the divider by % of screen
         sideBar.addComponentListener(new MySideBarListener());
         drawingBoard.addMouseListener(new MyMouseAdapter());
+        drawingBoard.addMouseMotionListener(new MyMouseAdapter());
+        drawingBoard.addComponentListener(new MyWindowListener());
         frame.addKeyListener(new MyKeyAdapter());
 
         //add frame settings
@@ -97,7 +96,8 @@ public class MainWindow {
         private LinkedList<Point2D.Float> polyPoints = new LinkedList<>();
         @Override
         public void mousePressed(MouseEvent e) {
-            Point2D.Float point = new Point2D.Float((float) e.getPoint().x/frame.getSize().width, (float) e.getPoint().y / frame.getSize().height);
+            Dimension windowSize = new Dimension(drawingBoard.getSize());
+            Point2D.Float point = new Point2D.Float((float) e.getPoint().x/windowSize.width, (float) e.getPoint().y / windowSize.height);
             if(currentShape == ShapesEnum.Shapes.POLYGON) {
                 if (!started) {
                     startPoint = e.getPoint();
@@ -113,7 +113,7 @@ public class MainWindow {
                     comp.addUndo(comp.polyComp.polygon.size() - 1, ShapesEnum.Shapes.POLYGON);
                     started = false;
                 } else {
-                    comp.polyComp.addDrawObject(comp.pointToFloat(e.getPoint().x,frame.getSize().width), comp.pointToFloat(e.getPoint().y,frame.getSize().height),selectedBorderColor);
+                    comp.polyComp.addDrawObject(comp.pointToFloat(e.getPoint().x,windowSize.width), comp.pointToFloat(e.getPoint().y,windowSize.height),selectedBorderColor);
                     polyPoints.add(point);
                 }
             }else{
@@ -121,7 +121,7 @@ public class MainWindow {
                 startPoint = e.getPoint();
             }
             if(currentShape == ShapesEnum.Shapes.PLOT) {
-                comp.plotComp.addNewObject(comp.pointToFloat(e.getPoint().x,frame.getSize().width), comp.pointToFloat(e.getPoint().y,frame.getSize().height), selectedBorderColor);
+                comp.plotComp.addNewObject(comp.pointToFloat(e.getPoint().x,windowSize.width), comp.pointToFloat(e.getPoint().y,windowSize.height), selectedBorderColor);
                 comp.addUndo(comp.plotComp.plots.size() - 1, ShapesEnum.Shapes.PLOT);
             }
             comp.repaint();
@@ -129,19 +129,20 @@ public class MainWindow {
 
         @Override
         public void mouseReleased(MouseEvent e) {
+            Dimension windowSize = new Dimension(drawingBoard.getSize());
             if(currentShape == ShapesEnum.Shapes.LINE){
-                comp.lineComp.addNewObject(comp.pointToFloat(startPoint.x,frame.getSize().width),comp.pointToFloat(startPoint.y,frame.getSize().height),
-                        comp.pointToFloat(e.getPoint().x,frame.getSize().width),comp.pointToFloat(e.getPoint().y,frame.getSize().height),selectedBorderColor);
+                comp.lineComp.addNewObject(comp.pointToFloat(startPoint.x,windowSize.width),comp.pointToFloat(startPoint.y,windowSize.height),
+                        comp.pointToFloat(e.getPoint().x,windowSize.width),comp.pointToFloat(e.getPoint().y,windowSize.height),selectedBorderColor);
                 comp.lineComp.clearDrawObject();
                 comp.addUndo(comp.lineComp.lines.size() - 1, ShapesEnum.Shapes.LINE);
             }else if(currentShape == ShapesEnum.Shapes.RECTANGLE){
-                comp.rectComp.addNewObject(comp.pointToFloat(startPoint.x,frame.getSize().width),comp.pointToFloat(startPoint.y,frame.getSize().height)
-                        ,comp.pointToFloat(e.getPoint().x,frame.getSize().width),comp.pointToFloat(e.getPoint().y, frame.getSize().height),selectedBorderColor,filled,selectedFillColor);
+                comp.rectComp.addNewObject(comp.pointToFloat(startPoint.x,windowSize.width),comp.pointToFloat(startPoint.y,windowSize.height)
+                        ,comp.pointToFloat(e.getPoint().x,windowSize.width),comp.pointToFloat(e.getPoint().y, windowSize.height),selectedBorderColor,filled,selectedFillColor);
                 comp.rectComp.clearDrawObject();
                 comp.addUndo(comp.rectComp.shapes.size() - 1,ShapesEnum.Shapes.RECTANGLE);
             }else if(currentShape == ShapesEnum.Shapes.ELLIPSE){
-                comp.ellComp.addNewObject(comp.pointToFloat(startPoint.x,frame.getSize().width),comp.pointToFloat(startPoint.y,frame.getSize().height)
-                        ,comp.pointToFloat(e.getPoint().x,frame.getSize().width),comp.pointToFloat(e.getPoint().y, frame.getSize().height),selectedBorderColor,filled,selectedFillColor);
+                comp.ellComp.addNewObject(comp.pointToFloat(startPoint.x,windowSize.width),comp.pointToFloat(startPoint.y,windowSize.height)
+                        ,comp.pointToFloat(e.getPoint().x,windowSize.width),comp.pointToFloat(e.getPoint().y, windowSize.height),selectedBorderColor,filled,selectedFillColor);
                 comp.ellComp.clearDrawObject();
                 comp.addUndo(comp.ellComp.shapes.size() - 1, ShapesEnum.Shapes.ELLIPSE);
             }
@@ -150,18 +151,19 @@ public class MainWindow {
 
         @Override
         public void mouseDragged(MouseEvent e) {
+            Dimension windowSize = new Dimension(drawingBoard.getSize());
             if(currentShape == ShapesEnum.Shapes.LINE){
                 comp.lineComp.clearDrawObject();
-                comp.lineComp.addDrawObject(comp.pointToFloat(startPoint.x,frame.getSize().width),comp.pointToFloat(startPoint.y,frame.getSize().height),
-                        comp.pointToFloat(e.getPoint().x,frame.getSize().width),comp.pointToFloat(e.getPoint().y,frame.getSize().height),selectedBorderColor);
+                comp.lineComp.addDrawObject(comp.pointToFloat(startPoint.x,windowSize.width),comp.pointToFloat(startPoint.y,windowSize.height),
+                        comp.pointToFloat(e.getPoint().x,windowSize.width),comp.pointToFloat(e.getPoint().y,windowSize.height),selectedBorderColor);
             } else if(currentShape == ShapesEnum.Shapes.RECTANGLE){
                 comp.rectComp.clearDrawObject();
-                comp.rectComp.addDrawObject(comp.pointToFloat(startPoint.x,frame.getSize().width),comp.pointToFloat(startPoint.y,frame.getSize().height)
-                        ,comp.pointToFloat(e.getPoint().x,frame.getSize().width),comp.pointToFloat(e.getPoint().y, frame.getSize().height),selectedBorderColor,filled,selectedFillColor);
+                comp.rectComp.addDrawObject(comp.pointToFloat(startPoint.x,windowSize.width),comp.pointToFloat(startPoint.y,windowSize.height)
+                        ,comp.pointToFloat(e.getPoint().x,windowSize.width),comp.pointToFloat(e.getPoint().y, windowSize.height),selectedBorderColor,filled,selectedFillColor);
             } else if (currentShape == ShapesEnum.Shapes.ELLIPSE){
                 comp.ellComp.clearDrawObject();
-                comp.ellComp.addDrawObject(comp.pointToFloat(startPoint.x,frame.getSize().width),comp.pointToFloat(startPoint.y,frame.getSize().height)
-                        ,comp.pointToFloat(e.getPoint().x,frame.getSize().width),comp.pointToFloat(e.getPoint().y, frame.getSize().height),selectedBorderColor,filled,selectedFillColor);
+                comp.ellComp.addDrawObject(comp.pointToFloat(startPoint.x,windowSize.width),comp.pointToFloat(startPoint.y,windowSize.height)
+                        ,comp.pointToFloat(e.getPoint().x,windowSize.width),comp.pointToFloat(e.getPoint().y, windowSize.height),selectedBorderColor,filled,selectedFillColor);
             }
             comp.repaint();
         }
