@@ -28,12 +28,12 @@ public class MainWindow {
      */
     private void buildGUI() {
         //Create Core GUI Components
+        comp = new ComponentsClass(new Dimension(0,0));
         frame = new JFrame("Hello World");
         mainMenu = new JMenuBar();
         mainDisplay = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT);
         sideBar = new JPanel();
         drawingBoard = new JPanel();
-        comp = new ComponentsClass(new Dimension(0,0));
 
         //Create menu components
         JMenu fileDropdown = new JMenu("File Options"); //dropdown title
@@ -64,27 +64,28 @@ public class MainWindow {
         comp.setFrameSize(drawingBoard.getSize());
 
         //Add event handlers
-        fileDropdown.getMenuComponent(0).addMouseListener(new MyMenuMouseAdapter());
-        fileDropdown.getMenuComponent(1).addMouseListener(new MyMenuMouseAdapter());
-        additionalDropdown.getMenuComponent(0).addMouseListener(new MyMenuMouseAdapter());
-        sideBar.getComponents()[0].addMouseListener(new MyMenuMouseAdapter());
-        sideBar.getComponents()[1].addMouseListener(new MyMenuMouseAdapter());
-        sideBar.getComponents()[2].addMouseListener(new MyMenuMouseAdapter());
-        sideBar.getComponents()[3].addMouseListener(new MyMenuMouseAdapter());
-        sideBar.getComponents()[4].addMouseListener(new MyMenuMouseAdapter());
-        frame.addComponentListener(new MyWindowListener()); //needed to set the divider by % of screen
+        for (Component menuItem : fileDropdown.getMenuComponents()){
+            menuItem.addMouseListener(new MyMenuMouseAdapter());
+        }
+        for (Component menuItem : additionalDropdown.getMenuComponents()){
+            menuItem.addMouseListener(new MyMenuMouseAdapter());
+        }
+        for (Component btn : sideBar.getComponents()){
+            btn.addMouseListener(new MyMenuMouseAdapter());
+        }
         sideBar.addComponentListener(new MySideBarListener());
         drawingBoard.addMouseListener(new MyMouseAdapter());
         drawingBoard.addMouseMotionListener(new MyMouseAdapter());
-        drawingBoard.addComponentListener(new MyWindowListener());
-        frame.addKeyListener(new MyKeyAdapter());
+        drawingBoard.addKeyListener(new MyKeyAdapter());
+        frame.addComponentListener(new MyWindowListener());
 
-        //add frame settings
+        //add frame and mainDisplay settings
         frame.setJMenuBar(mainMenu);
         frame.add(mainDisplay);
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.setSize(700, 600);
         frame.setVisible(true);
+        mainDisplay.setEnabled(false); //Lock the divider from user input
     }
 
     /**
@@ -220,11 +221,8 @@ public class MainWindow {
     class MyKeyAdapter extends KeyAdapter {
         @Override
         public void keyReleased(KeyEvent e) {
-            if(e.isControlDown() && e.getKeyCode() == KeyEvent.VK_Z){
-                comp.Undo();
-            }
-            comp.repaint();
-            System.out.println(111);
+           System.out.println(e.getKeyChar());
+
         }
     }
 
@@ -270,7 +268,6 @@ public class MainWindow {
                 int currentHeight = button.getHeight();
                 button.setSize(newWidth, currentHeight);
             }
-            comp.setFrameSize(drawingBoard.getSize());
         }
     }
 
