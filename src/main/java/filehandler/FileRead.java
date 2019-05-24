@@ -48,7 +48,7 @@ public class FileRead {
      * @throws IOException  only occurs if the Scanner fails during read - the Scanner doesn't throw so we have to
      * @throws FileInvalidArgumentException FileInvalidArgumentException will only occur here if the file extension is not VEC
      */
-    public List readFile(String path) throws IOException, FileInvalidArgumentException {
+    public List<String[]> readFile(String path) throws IOException, FileInvalidArgumentException {
         FileInputStream fileIn = null;
         Scanner scanner = null;
 
