@@ -141,14 +141,6 @@ public class MainWindow {
         }
     }
 
-    /*
-    private java.awt.Point startPoint;
-    private ShapesEnum.Shapes currentShape = ShapesEnum.Shapes.ELLIPSE;
-    private Color selectedBorderColor = Color.RED;
-    private Color selectedFillColor = Color.BLACK;
-    private boolean filled = true;
-     */
-
     private void fileRead() throws IOException, FileInvalidArgumentException {
 
         argsList.clear();
