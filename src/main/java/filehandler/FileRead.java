@@ -1,5 +1,7 @@
 package main.java.filehandler;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.util.Scanner;
@@ -9,6 +11,8 @@ import java.util.regex.*; // used for hex colour validation
 import main.java.exceptions.*;
 
 public class FileRead {
+    private List argsList = new ArrayList(); // we store the args to pass back to gui in this list
+
     private final String[] shapeArgs = {"LINE","PLOT","RECTANGLE","ELLIPSE","POLYGON"};
     private final String[] colourArgs = {"PEN","FILL"};
 
@@ -32,17 +36,19 @@ public class FileRead {
      */
     public FileRead(){
         regexPattern = regexPattern.compile(colourRegex); // compile our regex (needed for colour validation)
+        argsList.clear(); // clear our list of arguments
     }
 
     /**
      * readFile - Main func for reading a file
      * Call this func with the path for a file, and it reads and validates it. That's about it really.
      *
-     * @param path path to the selected file to read
-     * @throws IOException only occurs if the Scanner fails during read - the Scanner doesn't throw so we have to
-     * @throws FileInvalidArgumentException will only occur here if the file extension is not VEC
+     * @param path to the selected file to read
+     * @return a List of arguments for the GUI to parse
+     * @throws IOException  only occurs if the Scanner fails during read - the Scanner doesn't throw so we have to
+     * @throws FileInvalidArgumentException FileInvalidArgumentException will only occur here if the file extension is not VEC
      */
-    public void readFile(String path) throws IOException, FileInvalidArgumentException {
+    public List readFile(String path) throws IOException, FileInvalidArgumentException {
         FileInputStream fileIn = null;
         Scanner scanner = null;
 
@@ -76,6 +82,7 @@ public class FileRead {
                 scanner.close(); // close our scanner also, garbage collection should clean this up for us (hopefully)
             }
         }
+        return argsList;
     }
 
     /**
@@ -105,6 +112,8 @@ public class FileRead {
                         for(int i = 1; i < lineSplit.length; i++){ // start from 1 because arg is at index 0
                             if(!validateCoords(lineSplit,i)){
                                 return false; // no point continuing if there is an invalid co-ord
+                            } else {
+                                argsList.add(lineSplit);
                             }
                         }
                         return true;
@@ -116,6 +125,8 @@ public class FileRead {
                         for(int i = 1; i < lineSplit.length; i++){ // start from 1 because arg is at index 0
                             if(!validateCoords(lineSplit,i)){
                                 return false; // no point continuing if there is an invalid co-ord
+                            } else {
+                                argsList.add(lineSplit);
                             }
                         }
                         return true;
@@ -127,6 +138,8 @@ public class FileRead {
                         for(int i = 1; i < lineSplit.length; i++){ // start from 1 because arg is at index 0
                             if(!validateCoords(lineSplit,i)){
                                 return false; // no point continuing if there is an invalid co-ord
+                            } else {
+                                argsList.add(lineSplit);
                             }
                         }
                         return true;
@@ -142,9 +155,11 @@ public class FileRead {
                 case "FILL":
                     regexMatcher = regexPattern.matcher(lineSplit[1]); // attempt to match hex colour to regex
                     if (regexMatcher.find()) {
+                        argsList.add(lineSplit);
                         return true;
                     } else {
                         if (lineSplit[1].equals("OFF")) {
+                            argsList.add(lineSplit);
                             return true;
                         } else {
                             throw new FileInvalidArgumentException("Invalid colour in file.");
