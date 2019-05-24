@@ -32,7 +32,7 @@ public class MainWindow {
     /**
      * This is just an example thread-safe GUI based off the example from the lecture.
      */
-    private void buildGUI() throws IOException, FileInvalidArgumentException {
+    private void buildGUI() {
         frame = new JFrame("Hello World");
         frame.add(comp);
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -149,8 +149,6 @@ public class MainWindow {
         boolean fill = false;
 
         for (String[] argument : argsList){
-            System.out.println(argument[0]);
-
             // have to initialise these or java has a massive cry
             float x1 = 0.0f;
             float y1 = 0.0f;
@@ -228,7 +226,12 @@ public class MainWindow {
         selectedFillColor = Color.BLACK;
         selectedBorderColor = Color.BLACK;
         currentShape = ShapesEnum.Shapes.LINE;
-        comp.repaint(); // its too fast for repaints during file load 
+
+        comp.repaint(); // its too fast for repaints during file load
+
+        // clearing the draw objects appears to break everything
+        // as well as drawing lines and rectangles after file load
+
     }
 
     public void showGUI() {
