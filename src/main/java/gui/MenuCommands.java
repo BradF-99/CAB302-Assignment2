@@ -33,7 +33,12 @@ public final class MenuCommands {
                 okListener, cancelListener);
         colorDialog.setVisible(true);
     }
-    public static void undoHistory(ComponentsClass comp){
+    public static void showUndoHistory(ComponentsClass comp, JPanel sideBar){
+        ComponentsClass.undoListHelper lastShape = comp.undoList.getLast();
+        String index = String.valueOf(lastShape.index);
+        String shape = String.valueOf(lastShape.component);
+        sideBar.add(new JCheckBox(index + ": " + shape));
+        sideBar.validate(); //Updates sidebar
     }
 
 

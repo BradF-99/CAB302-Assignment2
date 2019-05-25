@@ -61,6 +61,7 @@ public class MainWindow {
         //Create sideBar components
         mainDisplay.setLeftComponent(sideBar);
         sideBar.setLayout(new BoxLayout(sideBar, BoxLayout.PAGE_AXIS));
+        sideBar.add(new JLabel("History Bar"));
 
         //Create drawingBoard components
         mainDisplay.setRightComponent(drawingBoard);
@@ -151,6 +152,7 @@ public class MainWindow {
                 comp.addUndo(comp.ellComp.shapes.size() - 1, ShapesEnum.Shapes.ELLIPSE);
             }
             comp.repaint();
+            MenuCommands.showUndoHistory(comp, sideBar);
         }
 
         @Override
@@ -193,7 +195,7 @@ public class MainWindow {
                 MenuCommands.undo(comp);
             }
             else if (pressedComp == additionalOpt.getMenuComponent(1)){
-                MenuCommands.undoHistory(comp);
+                //MenuCommands.undoHistory(comp, sideBar);
             }
             else if (pressedComp == fileOpt.getMenuComponent(0)){
                 MenuCommands.saveFile(frame);
@@ -249,7 +251,7 @@ public class MainWindow {
                    MenuCommands.openFile(frame);
                }
                else if (pressedKey == KeyEvent.VK_H){
-                   MenuCommands.undoHistory(comp);
+                   //MenuCommands.undoHistory(comp, sideBar);
                }
            }
         }
@@ -271,7 +273,7 @@ public class MainWindow {
         }
 
         public void windowChangeActions(){
-            mainDisplay.setDividerLocation(0.09);
+            mainDisplay.setDividerLocation(0.11);
             comp.setFrameSize(drawingBoard.getSize());
         }
     }
