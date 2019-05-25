@@ -36,27 +36,29 @@ public class MainWindow {
         drawingBoard = new JPanel();
 
         //Create menu components
-        JMenu fileDropdown = new JMenu("File Options"); //dropdown title
-        JMenu additionalDropdown = new JMenu("Additional Commands");
+        String[] dropdownTitle = {"File Options", "Picture Commands", "Drawing Tools", "Colour Tools"};
         String[] fileCmds = {"Save file (ctrl+s)", "Open file (ctrl+o)"}; //List of options in dropdown
-        String[] additionalCmds = {"Undo (ctrl+r)", "Export BMP"};
+        String[] additionalCmds = {"Undo (ctrl+r)", "Undo History (ctrl+h)", "Export BMP"};
+        String[] drawingCmds = {"Plot", "Line", "Rectangle", "Ellipse", "Polygon", "Fill Colour", "Pen Colour"};
+        String[] colorCmds = {"Fill Colour", "Pen Colour"};
+        for (String title : dropdownTitle){
+            mainMenu.add(new JMenu(title));
+        }
         for (String cmd : fileCmds){
-            fileDropdown.add(cmd);
+            mainMenu.getMenu(0).add(new JMenuItem(cmd));
         }
         for(String cmd : additionalCmds){
-            additionalDropdown.add(cmd);
+            mainMenu.getMenu(1).add(new JMenuItem(cmd));
         }
-        mainMenu.add(fileDropdown);
-        mainMenu.add(additionalDropdown);
-
+        for (String cmd : drawingCmds){
+            mainMenu.getMenu(2).add(new JMenuItem(cmd));
+        }
+        for (String cmd : colorCmds){
+            mainMenu.getMenu(3).add(new JMenuItem(cmd));
+        }
         //Create sideBar components
         mainDisplay.setLeftComponent(sideBar);
         sideBar.setLayout(new BoxLayout(sideBar, BoxLayout.PAGE_AXIS));
-        String[] sideBarBtns = {"Plot", "Line", "Rectangle", "Ellipse", "Polygon", "Fill Colour", "Pen Colour"};
-        for (String btn : sideBarBtns){
-            sideBar.add(new JButton(btn));
-        }
-
 
         //Create drawingBoard components
         mainDisplay.setRightComponent(drawingBoard);
@@ -65,14 +67,12 @@ public class MainWindow {
         comp.setFrameSize(drawingBoard.getSize());
 
         //Add event handlers
-        for (Component menuItem : fileDropdown.getMenuComponents()){
-            menuItem.addMouseListener(new MyMenuMouseAdapter());
-        }
-        for (Component menuItem : additionalDropdown.getMenuComponents()){
-            menuItem.addMouseListener(new MyMenuMouseAdapter());
-        }
-        for (Component btn : sideBar.getComponents()){
-            btn.addMouseListener(new MyMenuMouseAdapter());
+        for (int index = 0; index < mainMenu.getMenuCount(); index++){
+            JMenu dropdown = mainMenu.getMenu(index);
+            for (Component dropdownCmd : dropdown.getMenuComponents()){
+                dropdownCmd.addMouseListener(new MyMenuMouseAdapter());
+                dropdownCmd.addKeyListener(new MyKeyAdapter());
+            }
         }
         sideBar.addComponentListener(new MySideBarListener());
         drawingBoard.addMouseListener(new MyMouseAdapter());
@@ -186,9 +186,13 @@ public class MainWindow {
             Component pressedComp = e.getComponent();
             JMenu fileOpt = mainMenu.getMenu(0);
             JMenu additionalOpt = mainMenu.getMenu(1);
-            Component[] sideBarButtons = sideBar.getComponents();
+            JMenu drawingOpt = mainMenu.getMenu(2);
+            JMenu colorOpt = mainMenu.getMenu(3);
             if (pressedComp == additionalOpt.getMenuComponent(0)){
                 MenuCommands.undo(comp);
+            }
+            else if (pressedComp == additionalOpt.getMenuComponent(1)){
+                MenuCommands.undoHistory(comp);
             }
             else if (pressedComp == fileOpt.getMenuComponent(0)){
                 MenuCommands.saveFile(frame);
@@ -196,25 +200,25 @@ public class MainWindow {
             else if (pressedComp == fileOpt.getMenuComponent(1)){
                 MenuCommands.openFile(frame);
             }
-            else if (pressedComp == sideBarButtons[0]){
+            else if (pressedComp == drawingOpt.getMenuComponent(0)){
                 currentShape = MenuCommands.changeShape(ShapesEnum.Shapes.PLOT);
             }
-            else if (pressedComp == sideBarButtons[1]){
+            else if (pressedComp == drawingOpt.getMenuComponent(1)){
                 currentShape = MenuCommands.changeShape(ShapesEnum.Shapes.LINE);
             }
-            else if (pressedComp == sideBarButtons[2]){
+            else if (pressedComp == drawingOpt.getMenuComponent(2)){
                 currentShape = MenuCommands.changeShape(ShapesEnum.Shapes.RECTANGLE);
             }
-            else if (pressedComp == sideBarButtons[3]){
+            else if (pressedComp == drawingOpt.getMenuComponent(3)){
                 currentShape = MenuCommands.changeShape(ShapesEnum.Shapes.ELLIPSE);
             }
-            else if (pressedComp == sideBarButtons[4]){
+            else if (pressedComp == drawingOpt.getMenuComponent(4)){
                 currentShape = MenuCommands.changeShape(ShapesEnum.Shapes.POLYGON);
             }
-            else if (pressedComp == sideBarButtons[5]){
+            else if (pressedComp == colorOpt.getMenuComponent(0)){
                 selectedFillColor = MenuCommands.changeColor(frame, selectedFillColor);
             }
-            else if (pressedComp == sideBarButtons[6]){
+            else if (pressedComp == colorOpt.getMenuComponent(1)){
                 selectedBorderColor = MenuCommands.changeColor(frame, selectedBorderColor);
             }
         }
@@ -242,6 +246,9 @@ public class MainWindow {
                }
                else if (pressedKey == KeyEvent.VK_O){
                    MenuCommands.openFile(frame);
+               }
+               else if (pressedKey == KeyEvent.VK_H){
+                   MenuCommands.undoHistory(comp);
                }
            }
         }

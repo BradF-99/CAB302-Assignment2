@@ -27,10 +27,14 @@ public final class MenuCommands {
     public static ShapesEnum.Shapes changeShape(ShapesEnum.Shapes newShape){
         return newShape;
     }
+
     public static Color changeColor(JFrame frame, Color currentColor){
         Color color = JColorChooser.showDialog(frame,"Select a color", currentColor);
         return color;
     }
+    public static void undoHistory(ComponentsClass comp){
+    }
+
 
 
 }
