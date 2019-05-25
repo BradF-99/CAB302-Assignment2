@@ -192,7 +192,7 @@ public class MainWindow {
             JMenu drawingOpt = mainMenu.getMenu(2);
             JMenu colorOpt = mainMenu.getMenu(3);
             if (pressedComp == additionalOpt.getMenuComponent(0)){
-                MenuCommands.undo(comp);
+                MenuCommands.undo(comp, sideBar);
             }
             else if (pressedComp == additionalOpt.getMenuComponent(1)){
                 //MenuCommands.undoHistory(comp, sideBar);
@@ -242,7 +242,7 @@ public class MainWindow {
            System.out.println(e.getKeyChar());
            if (e.isControlDown()){
                if (pressedKey == KeyEvent.VK_Z){
-                   MenuCommands.undo(comp);
+                   MenuCommands.undo(comp, sideBar);
                }
                else if (pressedKey == KeyEvent.VK_S){
                    MenuCommands.saveFile(frame);

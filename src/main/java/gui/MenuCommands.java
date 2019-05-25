@@ -12,9 +12,16 @@ import javax.swing.*;
  * such as selecting a different fill colour
  */
 public final class MenuCommands {
-    public static void undo(ComponentsClass comp){
+    public static void undo(ComponentsClass comp, JPanel sideBar){
         comp.Undo();
         comp.repaint();
+        int length = sideBar.getComponents().length - 1;
+        if (length > 0){
+            sideBar.remove(length);
+        }
+        sideBar.validate(); //doesn't seem to be working
+        sideBar.setVisible(false);
+        sideBar.setVisible(true);
     }
     public static void saveFile(JFrame frame){
         JFileChooser fileChooser = new JFileChooser();
@@ -40,8 +47,6 @@ public final class MenuCommands {
         sideBar.add(new JCheckBox(index + ": " + shape));
         sideBar.validate(); //Updates sidebar
     }
-
-
 
 
 }
