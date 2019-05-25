@@ -16,6 +16,7 @@ public class MainWindow {
     private JPanel sideBar;
     private JPanel drawingBoard;
     ComponentsClass comp;
+    private JColorChooser colorChooser;
     private java.awt.Point startPoint;
     private ShapesEnum.Shapes currentShape = ShapesEnum.Shapes.ELLIPSE;
     private Color selectedBorderColor = Color.RED;
@@ -34,12 +35,13 @@ public class MainWindow {
         mainDisplay = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT);
         sideBar = new JPanel();
         drawingBoard = new JPanel();
+        colorChooser = new JColorChooser();
 
         //Create menu components
         String[] dropdownTitle = {"File Options", "Picture Commands", "Drawing Tools", "Colour Tools"};
         String[] fileCmds = {"Save file (ctrl+s)", "Open file (ctrl+o)"}; //List of options in dropdown
-        String[] additionalCmds = {"Undo (ctrl+r)", "Undo History (ctrl+h)", "Export BMP"};
-        String[] drawingCmds = {"Plot", "Line", "Rectangle", "Ellipse", "Polygon", "Fill Colour", "Pen Colour"};
+        String[] additionalCmds = {"Undo (ctrl+z)", "Undo History (ctrl+h)", "Export BMP"};
+        String[] drawingCmds = {"Plot", "Line", "Rectangle", "Ellipse", "Polygon"};
         String[] colorCmds = {"Fill Colour", "Pen Colour"};
         for (String title : dropdownTitle){
             mainMenu.add(new JMenu(title));
@@ -87,7 +89,6 @@ public class MainWindow {
         frame.setSize(700, 600);
         frame.setFocusable(true);
         frame.setVisible(true);
-        mainDisplay.setEnabled(false); //Lock the divider from user input
     }
 
     /**
@@ -216,10 +217,10 @@ public class MainWindow {
                 currentShape = MenuCommands.changeShape(ShapesEnum.Shapes.POLYGON);
             }
             else if (pressedComp == colorOpt.getMenuComponent(0)){
-                selectedFillColor = MenuCommands.changeColor(frame, selectedFillColor);
+                MenuCommands.changeColor(frame, colorChooser, new ConfirmListenerFill(), new CancelListener());
             }
             else if (pressedComp == colorOpt.getMenuComponent(1)){
-                selectedBorderColor = MenuCommands.changeColor(frame, selectedBorderColor);
+                MenuCommands.changeColor(frame, colorChooser, new ConfirmListenerPen(), new CancelListener());
             }
         }
     }
@@ -270,7 +271,7 @@ public class MainWindow {
         }
 
         public void windowChangeActions(){
-            mainDisplay.setDividerLocation(0.14);
+            mainDisplay.setDividerLocation(0.09);
             comp.setFrameSize(drawingBoard.getSize());
         }
     }
@@ -299,6 +300,25 @@ public class MainWindow {
         }
     }
 
+    class ConfirmListenerFill implements ActionListener{
+        @Override
+        public void actionPerformed(ActionEvent actionEvent) {
+            selectedFillColor = colorChooser.getColor();
+        }
+    }
+
+    class ConfirmListenerPen implements ActionListener{
+        @Override
+        public void actionPerformed(ActionEvent actionEvent) {
+            selectedBorderColor = colorChooser.getColor();
+        }
+    }
+
+    class CancelListener implements ActionListener{
+        @Override
+        public void actionPerformed(ActionEvent actionEvent) {
+        }
+    }
 
 
     public void showGUI() {
