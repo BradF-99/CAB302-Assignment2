@@ -284,16 +284,13 @@ public class MainWindow {
      */
     class MySideBarListener extends ComponentAdapter {
         @Override
-        public void componentResized(ComponentEvent e) {
-            windowChangeActions();
-        }
+        public void componentResized(ComponentEvent e) { windowChangeActions(); }
 
         @Override
-        public void componentShown(ComponentEvent e) {
-            windowChangeActions();
-        }
+        public void componentShown(ComponentEvent e) { windowChangeActions(); }
 
         public void windowChangeActions() {
+            comp.setFrameSize(drawingBoard.getSize());
             int newWidth = sideBar.getWidth();
             for (Component button : sideBar.getComponents()) {
                 int currentHeight = button.getHeight();
