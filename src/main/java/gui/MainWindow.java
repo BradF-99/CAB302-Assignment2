@@ -219,10 +219,12 @@ public class MainWindow {
                 currentShape = MenuCommands.changeShape(ShapesEnum.Shapes.POLYGON);
             }
             else if (pressedComp == colorOpt.getMenuComponent(0)){
-                MenuCommands.changeColor(frame, colorChooser, new ConfirmListenerFill(), new CancelListener());
+                MenuCommands.changeColor(frame, colorChooser, new ConfirmListenerFill(), new CancelListener(),
+                        selectedFillColor);
             }
             else if (pressedComp == colorOpt.getMenuComponent(1)){
-                MenuCommands.changeColor(frame, colorChooser, new ConfirmListenerPen(), new CancelListener());
+                MenuCommands.changeColor(frame, colorChooser, new ConfirmListenerPen(), new CancelListener(),
+                        selectedBorderColor);
             }
         }
     }

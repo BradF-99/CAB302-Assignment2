@@ -35,10 +35,12 @@ public final class MenuCommands {
         return newShape;
     }
     public static void changeColor(JFrame frame, JColorChooser colorChooser, ActionListener okListener,
-                                   ActionListener cancelListener){
+                                   ActionListener cancelListener, Color currentColor){
+        colorChooser.setColor(currentColor);
         JDialog colorDialog = JColorChooser.createDialog(frame, "Choose a colour", true, colorChooser,
                 okListener, cancelListener);
         colorDialog.setVisible(true);
+
     }
     public static void showUndoHistory(ComponentsClass comp, JPanel sideBar){
         ComponentsClass.undoListHelper lastShape = comp.undoList.getLast();
