@@ -1,6 +1,6 @@
 package main.java.gui;
 
-import javafx.scene.input.KeyCode;
+//import javafx.scene.input.KeyCode; // seems to be breaking travis ci
 import main.java.components.*;
 import java.awt.*;
 import java.awt.event.*;
