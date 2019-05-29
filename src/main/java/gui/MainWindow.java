@@ -207,7 +207,7 @@ public class MainWindow {
             }
             else if (pressedComp == additionalOpt.getMenuComponent(2)){
                 undoHistoryActive = MenuCommands.editUndoHistory(frame, sideBar, drawingBoard, comp, new
-                                MyMouseAdapter(), new MyMouseAdapter(), undoHistoryActive);
+                                MyMouseAdapter(), new MyMouseAdapter(), undoHistoryStore, undoHistoryActive);
             }
             else if (pressedComp == fileOpt.getMenuComponent(0)){
                 MenuCommands.saveFile(frame);

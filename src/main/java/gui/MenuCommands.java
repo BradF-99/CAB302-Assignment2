@@ -89,7 +89,9 @@ public final class MenuCommands {
         return true;
     }
     public static boolean editUndoHistory(JFrame frame, JPanel sideBar, JPanel drawingBoard, ComponentsClass comp,
-                                      MouseMotionListener mml, MouseListener ml, boolean undoHistoryActive){
+                                      MouseMotionListener mml, MouseListener ml,
+                                          LinkedList<ComponentsClass.undoListHelper> undoHistoryStore,
+                                          boolean undoHistoryActive){
         if (undoHistoryActive){
             Object[] options = {"Save selected picture", "Return to undo history", "Deactivate undo history"};
             int responseInt = JOptionPane.showOptionDialog(frame,
@@ -103,6 +105,15 @@ public final class MenuCommands {
                     options[1]);
             if (responseInt == 2 || responseInt == 0){
                 if (responseInt == 0){
+                    ComponentsClass newComp = new ComponentsClass(new Dimension(0, 0));
+                    newComp = comp;
+                    for (int index = 0; index < undoHistoryStore.size(); index++){
+                        ComponentsClass.undoListHelper helper = undoHistoryStore.get(index);
+                        if (!(comp.undoList.contains(helper))){
+                            newComp.Undo(helper, index);
+                        }
+                    }
+                    comp = newComp;
                     for (int index = 0; index < sideBar.getComponents().length; index++){
                         sideBar.removeAll();
                     }
