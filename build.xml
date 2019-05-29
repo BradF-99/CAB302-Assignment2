@@ -14,6 +14,7 @@
         <pathelement path="out/main"/>
         <fileset dir="lib/ant">
             <include name="**/*.jar" />
+            <include name="**/*.zip" />
         </fileset>
 
     </path>
