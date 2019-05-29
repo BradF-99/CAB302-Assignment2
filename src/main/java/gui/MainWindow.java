@@ -22,6 +22,7 @@ public class MainWindow {
     private Color selectedBorderColor = Color.RED;
     private Color selectedFillColor = Color.BLACK;
     private boolean filled = true;
+    private boolean undoHistoryActive = false;
 
 
     /**
@@ -40,7 +41,8 @@ public class MainWindow {
         //Create menu components
         String[] dropdownTitle = {"File Options", "Picture Commands", "Drawing Tools", "Colour Tools"};
         String[] fileCmds = {"Save file (ctrl+s)", "Open file (ctrl+o)"}; //List of options in dropdown
-        String[] additionalCmds = {"Undo (ctrl+z)", "Undo History (ctrl+h)", "Export BMP"};
+        String[] additionalCmds = {"Undo (ctrl+z)", "Show Undo History (ctrl+h)", "Confirm Selected History (ctrl+r)",
+                "Export BMP"};
         String[] drawingCmds = {"Plot", "Line", "Rectangle", "Ellipse", "Polygon"};
         String[] colorCmds = {"Fill Colour", "Pen Colour"};
         for (String title : dropdownTitle){
@@ -152,7 +154,7 @@ public class MainWindow {
                 comp.addUndo(comp.ellComp.shapes.size() - 1, ShapesEnum.Shapes.ELLIPSE);
             }
             comp.repaint();
-            MenuCommands.showUndoHistory(comp, sideBar);
+            MenuCommands.addUndoHistory(comp, sideBar);
         }
 
         @Override
@@ -195,7 +197,11 @@ public class MainWindow {
                 MenuCommands.undo(comp, sideBar);
             }
             else if (pressedComp == additionalOpt.getMenuComponent(1)){
-                //MenuCommands.undoHistory(comp, sideBar);
+                undoHistoryActive = MenuCommands.showUndoHistory(frame, sideBar, drawingBoard);
+            }
+            else if (pressedComp == additionalOpt.getMenuComponent(2)){
+                undoHistoryActive = MenuCommands.editUndoHistory(frame, sideBar, drawingBoard, new MyMouseAdapter(),
+                        new MyMouseAdapter(), undoHistoryActive);
             }
             else if (pressedComp == fileOpt.getMenuComponent(0)){
                 MenuCommands.saveFile(frame);
@@ -253,7 +259,7 @@ public class MainWindow {
                    MenuCommands.openFile(frame);
                }
                else if (pressedKey == KeyEvent.VK_H){
-                   //MenuCommands.undoHistory(comp, sideBar);
+                   undoHistoryActive = MenuCommands.showUndoHistory(frame, sideBar, drawingBoard);
                }
            }
         }
