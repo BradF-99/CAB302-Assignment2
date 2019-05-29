@@ -103,7 +103,7 @@ public final class MenuCommands {
                 for (int index = 1; index < sideBar.getComponents().length; index++){
                     JCheckBox setChkbx = (JCheckBox) sideBar.getComponent(index);
                     setChkbx.setEnabled(false);
-                    setChkbx.setSelected(false);
+                    setChkbx.setSelected(true);
                 }
                 drawingBoard.addMouseMotionListener(mml);
                 drawingBoard.addMouseListener(ml);
