@@ -59,7 +59,7 @@ The solution includes the following features:
 		\hline
 	\end{tabular}
 \end{center}
-By the due date, we were able to complete 100\% of the essential requirements and 2 additional requirements - being Undo History, and Bitmap Export. 
+By the due date, we were able to complete all of the essential requirements and the required amount of two additional requirements - being Undo History, and Bitmap Export. 
 
 \newpage
 
@@ -68,7 +68,7 @@ By the due date, we were able to complete 100\% of the essential requirements an
 {\large Alex Butler}\\
 Alex implemented all of the Shape classes, as well as the Shape interface and enumerator. He also wrote the unit tests for testing each Shape class, and the first iteration of the GUI (mainly for testing purposes). 
 \\\\{\large Bradley Fuller}\\
-Bradley implemented the file handling classes, as well as the unit testing for said classes. He also wrote and configured the Apache Ant build script, and the TravisCI configuration for continuous integration and delivery to GitHub Releases.
+Bradley implemented the file handling and validation classes, as well as the unit testing for said classes. He also wrote and configured the Apache Ant build script, and the TravisCI configuration for continuous integration and delivery to GitHub Releases.
 \\\\{\large Joshua O'Riordan}\\
 Joshua implemented the final iteration of the GUI, including the general layout, buttons, menu bar and colour picker. He also wrote the Undo History and Bitmap Export functionality, as well as the unit tests for both.
 
@@ -76,12 +76,11 @@ Joshua implemented the final iteration of the GUI, including the general layout,
 
 \section{Software Development Practices}
 
-Add our development practices and cycles here. Describe how the team used Agile Development Processes. If you used test-driven development, describe this here. Otherwise, describe other relevant processes (e.g. iterative design-code-test stages).
+The team utilised Agile's philosophy of iterative and incremental changes, through the use of continuous integration and deployment. This was achieved through the use of TravisCI and GitHub Releases. Whenever a change was made in any branch of the repository, TravisCI would create a temporary Docker container with Ubuntu 16.04 and Oracle JDK 11. All dependencies are then downloaded - in our case, JUnit 5.5.0 and JavaFX, as well as Apache Ant 1.10.6. Ant is used for creating all build folders, compiling the solution, and then running all unit tests (which are stored in the src/tests/ directory). We would then receive a report (via email) of the testing and if any errors occurred. However, if the change was made in the "master" branch of the repository, TravisCI would run Ant's "dist" script, which packages the compiled Java classes in to a JAR file. This JAR file would then be given a version number (which during development was TravisCI's build number) and uploaded to GitHub Releases. Pull requests would also be tested against the "master" branch of the repository to ensure there would be no breaking changes.
 
-Both Agile and TDD style processes were used in the development of this project.
+Due to other units and other assessment deadlines, we were not able to follow Agile's sprint methodology and strict timing requirements exactly. However, each feature  of the solution was completed in sprints, each being in their own branch in the repository. Once these were complete, the branch would be merged in to master, and work on the next feature could begin. The only exception to this was the File Handling features, as they required the GUI to be fully implemented before they could be merged - however they were tested thoroughly beforehand without the use of a GUI, so the integration was very simple. We also had a kanban board of features that were to be implemented in the project, as well as an automated kanban board for bug triage and fixing.
 
-The team utilised Agile's philosophy of iterative and incremental changes, through the use of continuous integration and deployment. This was achieved through the use of TravisCI and GitHub Releases. Whenever a change was made in any branch of the repository, TravisCI would create a temporary Docker container with Ubuntu 16.04 and Oracle JDK 11. It would then download all required dependencies - in our case, JUnit 5.5.0 and JavaFX, as well as Apache Ant 1.10.6. Ant is used for creating all build folders, compiling the solution, and then running all unit tests (which are stored in the src/tests/ directory). We would then receive a report (via email) of the testing and if any errors occurred. However, if the change was made in the "master" branch of the repository, TravisCI would run Ant's "dist" script, which packages the compiled Java classes in to a JAR file. This JAR file would then be given a version number (which during development was TravisCI's build number) and uploaded to GitHub Releases. Pull requests would also be tested against the "master" branch of the repository to ensure there would be no breaking changes.
-
+Test-driven development was also used where possible, especially in the file read and write classes of the solution. The file reading class had over 20 tests of it's own, to make sure that exceptions were being thrown when they should have. Different test cases were used such as invalid commands, invalid co-ordinates, invalid colours, non-VEC file tests, incorrect file types etc.
 
 
 \newpage
