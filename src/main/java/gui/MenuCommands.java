@@ -5,6 +5,7 @@ import java.awt.*;
 import java.awt.event.*;
 import java.awt.geom.Point2D;
 import java.util.EventListener;
+import java.util.HashMap;
 import java.util.LinkedList;
 import javax.swing.*;
 
@@ -53,21 +54,36 @@ public final class MenuCommands {
         sideBar.add(newChkbx);
         sideBar.validate(); //Updates sidebar
     }
-    public static boolean showUndoHistory(JFrame frame, JPanel sideBar, JPanel drawingBoard){
-        JOptionPane.showMessageDialog(frame,
-                "Undo history is activated, this prevents you from adding new shapes, but allows you" +
-                        " to see any combination of previous shapes by ticking the corresponding sidebar item");
-        for (int index = 1; index < sideBar.getComponents().length; index++){ //skip label
-            JCheckBox setChkbx = (JCheckBox) sideBar.getComponent(index);
-            setChkbx.setEnabled(true);
-            setChkbx.setSelected(true);
+    public static boolean showUndoHistory(JFrame frame, JPanel sideBar, JPanel drawingBoard,
+                                          LinkedList<ComponentsClass.undoListHelper> compList,
+                                          LinkedList<ComponentsClass.undoListHelper> undoHistoryStore,
+                                          HashMap<Integer, Integer> undoHistoryMapping,
+                                          ItemListener il, boolean undoHistoryActive){
+        if (!(undoHistoryActive)){
+            undoHistoryStore = compList;
+            for (int index = 0; index < compList.size(); index++){
+                undoHistoryMapping.put(index, 1);
+            }
+            JOptionPane.showMessageDialog(frame,
+                    "Undo history is activated, this prevents you from adding new shapes, but allows you" +
+                            " to see any combination of previous shapes by ticking the corresponding sidebar item");
+            for (int index = 1; index < sideBar.getComponents().length; index++){ //skip label
+                JCheckBox setChkbx = (JCheckBox) sideBar.getComponent(index);
+                setChkbx.setEnabled(true);
+                setChkbx.setSelected(true);
+                setChkbx.addItemListener(il);
+            }
+            for (MouseListener ml : drawingBoard.getMouseListeners()){
+                drawingBoard.removeMouseListener(ml);
+            }
+            for (MouseMotionListener mml : drawingBoard.getMouseMotionListeners()){
+                drawingBoard.removeMouseMotionListener(mml);
+            }
         }
-        for (MouseListener ml : drawingBoard.getMouseListeners()){
-            drawingBoard.removeMouseListener(ml);
+        else{
+            JOptionPane.showMessageDialog(frame, "Undo history is already active");
         }
-        for (MouseMotionListener mml : drawingBoard.getMouseMotionListeners()){
-            drawingBoard.removeMouseMotionListener(mml);
-        }
+
         return true;
     }
     public static boolean editUndoHistory(JFrame frame, JPanel sideBar, JPanel drawingBoard,

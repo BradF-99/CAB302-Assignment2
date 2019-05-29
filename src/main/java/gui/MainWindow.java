@@ -5,6 +5,8 @@ import main.java.components.*;
 import java.awt.*;
 import java.awt.event.*;
 import java.awt.geom.Point2D;
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.LinkedList;
 import javax.swing.*;
 
@@ -16,6 +18,8 @@ public class MainWindow {
     private JPanel sideBar;
     private JPanel drawingBoard;
     ComponentsClass comp;
+    HashMap<Integer, Integer> undoHistoryMapping;
+    LinkedList<ComponentsClass.undoListHelper> undoHistoryStore;
     private JColorChooser colorChooser;
     private java.awt.Point startPoint;
     private ShapesEnum.Shapes currentShape = ShapesEnum.Shapes.ELLIPSE;
@@ -37,6 +41,8 @@ public class MainWindow {
         sideBar = new JPanel();
         drawingBoard = new JPanel();
         colorChooser = new JColorChooser();
+        undoHistoryMapping = new HashMap<>();
+        undoHistoryStore = comp.undoList;
 
         //Create menu components
         String[] dropdownTitle = {"File Options", "Picture Commands", "Drawing Tools", "Colour Tools"};
@@ -197,7 +203,8 @@ public class MainWindow {
                 MenuCommands.undo(comp, sideBar);
             }
             else if (pressedComp == additionalOpt.getMenuComponent(1)){
-                undoHistoryActive = MenuCommands.showUndoHistory(frame, sideBar, drawingBoard);
+                undoHistoryActive = MenuCommands.showUndoHistory(frame, sideBar, drawingBoard, comp.undoList,
+                        undoHistoryStore, undoHistoryMapping, new UndoHistorySelectingShapes(), undoHistoryActive);
             }
             else if (pressedComp == additionalOpt.getMenuComponent(2)){
                 undoHistoryActive = MenuCommands.editUndoHistory(frame, sideBar, drawingBoard, new MyMouseAdapter(),
@@ -259,7 +266,8 @@ public class MainWindow {
                    MenuCommands.openFile(frame);
                }
                else if (pressedKey == KeyEvent.VK_H){
-                   undoHistoryActive = MenuCommands.showUndoHistory(frame, sideBar, drawingBoard);
+                   undoHistoryActive = MenuCommands.showUndoHistory(frame, sideBar, drawingBoard, comp.undoList,
+                           undoHistoryStore, undoHistoryMapping, new UndoHistorySelectingShapes(), undoHistoryActive);
                }
            }
         }
@@ -324,6 +332,42 @@ public class MainWindow {
     class CancelListener implements ActionListener{
         @Override
         public void actionPerformed(ActionEvent actionEvent) {
+        }
+    }
+
+    class UndoHistorySelectingShapes implements ItemListener{
+        @Override
+        public void itemStateChanged(ItemEvent itemEvent) {
+            JCheckBox chkbx = (JCheckBox) itemEvent.getItem();
+            int chkbxIndex = 0;
+            for (int index = 1; index < sideBar.getComponents().length; index++) {
+                JCheckBox currentChkbx = (JCheckBox) sideBar.getComponent(index);
+                if (currentChkbx == chkbx) {
+                    chkbxIndex = index - 1;
+                    break;
+                }
+            }
+
+            if (chkbx.isSelected()){
+                undoHistoryMapping.put(chkbxIndex, 1);
+            }
+            else{
+                undoHistoryMapping.put(chkbxIndex, 0);
+            }
+            ArrayList<ComponentsClass.undoListHelper> currentShapesList = new ArrayList<>();
+            LinkedList<ComponentsClass.undoListHelper> currentShapesLinkedList = new LinkedList<>();
+            for (int key : undoHistoryMapping.keySet()){
+                if (undoHistoryMapping.get(key) == 1){
+                    currentShapesList.add(undoHistoryStore.get(key));
+                }
+            }
+            for (ComponentsClass.undoListHelper helper : currentShapesList){
+                currentShapesLinkedList.add(helper);
+            }
+            comp.undoList = currentShapesLinkedList;
+            comp.repaint();
+            System.out.println(undoHistoryMapping);
+            System.out.println(undoHistoryStore.size());
         }
     }
 
