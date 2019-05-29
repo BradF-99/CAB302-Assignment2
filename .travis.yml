@@ -1,7 +1,7 @@
 
 ## TravisCI Config for JDK11
 ## Written by Brad Fuller
-## v1.10.0 2019-05-29
+## v1.10.3 2019-05-29
 
 language: java
 jdk:
@@ -23,17 +23,16 @@ before_install:
   - wget -O opentest4j-1.1.1.jar --no-check-certificate https://search.maven.org/remotecontent?filepath=org/opentest4j/opentest4j/1.1.1/opentest4j-1.1.1.jar
   - wget -O ant-junitlauncher-1.10.6.jar --no-check-certificate https://search.maven.org/remotecontent?filepath=org/apache/ant/ant-junitlauncher/1.10.6/ant-junitlauncher-1.10.6.jar
   - wget -O openjfx-11.0.2_linux-x64_bin-sdk.zip --no-check-certificate https://download2.gluonhq.com/openjfx/11.0.2/openjfx-11.0.2_linux-x64_bin-sdk.zip
-  - unzip openjfx-11.0.2_linux-x64_bin-sdk.zip
   - cd ../..
   - wget --no-check-certificate http://us.mirrors.quenda.co/apache//ant/binaries/apache-ant-1.10.6-bin.tar.gz
   - tar -xzf apache-ant-1.10.6-bin.tar.gz
   - export PATH=`pwd`/apache-ant-1.10.6/bin:$PATH
 
 script:
-  - ant test -lib ./lib/ant
+  - ant test
 
 before_deploy:
-  - ant dist -lib ./lib/ant
+  - ant dist
   - ant clean
   - rm -rf ./lib/
   - cd bin/dist
