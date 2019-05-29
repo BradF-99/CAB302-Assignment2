@@ -1,7 +1,7 @@
 % CAB302 Assignment 2 Report 
 % Authors: Alex Butler, Brad Fuller & Joshua O'Riordan
 % LaTeX assistance: Vincent Nguyen
-% Version 1.1 2019-05-16
+% Version 1.2 2019-05-29
 
 % NOTE: May require building twice in order for Contents page to show correctly.
 
@@ -14,10 +14,11 @@
 \usepackage{amsfonts} % Essential - for math
 \usepackage{amsthm} % Essential - for math
 \usepackage{graphicx} % Essential - for inserting images
-\usepackage[none]{hyphenat} % I like this - removes hyphenated continues on new lines
+\usepackage{hyphenat} % I like this - removes hyphenated continues on new lines
 \usepackage{cancel} % I like this - allows use of \cancel{something}
 \graphicspath{ {images/} } % I like this - a different way for inserting images
 \usepackage{parskip} % I like this - removes first line indentation
+\usepackage{microtype} % Added for underfull fixing
 % Packages that I use.
 
 
@@ -29,27 +30,47 @@
 \author {Alex Butler,  Bradley Fuller \& Joshua O'Riordan}
 \maketitle
 
+\newpage
+
 \tableofcontents
 
 \newpage
 
 \section{Statement of Completeness}
 
-Add features below. 
+The solution includes the following features: 
 \begin{center}
 	\begin{tabular}{|c|c|}
-		\hline  \textbf{Feature 1} & Complete \\
-		\hline  \textbf{Feature 2} & Complete  \\
+		\hline  \textbf{Drawing - Line} & Complete - Tested Working \\
+		\hline  \textbf{Drawing - Plot} & Complete - Tested Working \\
+		\hline  \textbf{Drawing - Rectangle} & Complete - Tested Working \\
+		\hline  \textbf{Drawing - Ellipse} & Complete - Tested Working \\
+		\hline  \textbf{Drawing - Polygon} & Complete - Tested Working \\
+		\hline  \textbf{Drawing - Pen Colour} & Complete - Tested Working \\
+		\hline  \textbf{Drawing - Fill Colour} & Complete - Tested Working \\
+		\hline  \textbf{File Handling - Read} & Complete - Tested Working \\
+		\hline  \textbf{File Handling - Write} & Still to be implemented \\
+		\hline  \textbf{GUI - Layout} & Complete - Tested Working \\
+		\hline  \textbf{GUI - Buttons} & Complete - Tested Working \\
+		\hline  \textbf{GUI - Menu Bar} & Complete - Tested Working \\
+		\hline  \textbf{GUI - Colour Picker} & Complete - Tested Working \\
+		\hline  \textbf{Additional - Undo History} & Still to be implemented \\
+		\hline  \textbf{Additional - Bitmap Export} & Still to be implemented \\
 		\hline
 	\end{tabular}
 \end{center}
-By the due date, we were able to complete 0\% of the essential requirements and 0\% of the additional requirements. In addition, we added 0 requirements of our own.
+By the due date, we were able to complete 100\% of the essential requirements and 2 additional requirements - being Undo History, and Bitmap Export. 
 
 \newpage
 
 \section{Statement of Contribution}
 
-Describe what each member contributed to the project – report writing, code, creation of unit tests etc.
+{\large Alex Butler}\\
+Alex implemented all of the Shape classes, as well as the Shape interface and enumerator. He also wrote the unit tests for testing each Shape class, and the first iteration of the GUI (mainly for testing purposes). 
+\\\\{\large Bradley Fuller}\\
+Bradley implemented the file handling classes, as well as the unit testing for said classes. He also wrote and configured the Apache Ant build script, and the TravisCI configuration for continuous integration and delivery to GitHub Releases.
+\\\\{\large Joshua O'Riordan}\\
+Joshua implemented the final iteration of the GUI, including the general layout, buttons, menu bar and colour picker. He also wrote the Undo History and Bitmap Export functionality, as well as the unit tests for both.
 
 \newpage
 
