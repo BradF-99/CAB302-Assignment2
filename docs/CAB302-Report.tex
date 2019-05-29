@@ -82,6 +82,8 @@ Both Agile and TDD style processes were used in the development of this project.
 
 The team utilised Agile's philosophy of iterative and incremental changes, through the use of continuous integration and deployment. This was achieved through the use of TravisCI and GitHub Releases. Whenever a change was made in any branch of the repository, TravisCI would create a temporary Docker container with Ubuntu 16.04 and Oracle JDK 11. It would then download all required dependencies - in our case, JUnit 5.5.0 and JavaFX, as well as Apache Ant 1.10.6. Ant is used for creating all build folders, compiling the solution, and then running all unit tests (which are stored in the src/tests/ directory). We would then receive a report (via email) of the testing and if any errors occurred. However, if the change was made in the "master" branch of the repository, TravisCI would run Ant's "dist" script, which packages the compiled Java classes in to a JAR file. This JAR file would then be given a version number (which during development was TravisCI's build number) and uploaded to GitHub Releases. Pull requests would also be tested against the "master" branch of the repository to ensure there would be no breaking changes.
 
+
+
 \newpage
 
 \section{Software Architecture}
@@ -90,9 +92,15 @@ Add details about the classes that make up the project and how they interact.
 
 \newpage
 
-\section{Advanced OOP Practices}
-
-Add details about how advanced OOP practices were used to develop the project.
+\section{Usage of Advanced Object-Oriented Principles}
+{\large Abstraction}\\
+Some details about abstraction usage.
+\\\\{\large Encapsulation}\\
+Some details about encapsulation usage.
+\\\\{\large Inheritance}\\
+Some details about inheritance usage.
+\\\\{\large Polymorphism}\\
+Some details about polymorphism usage.
 
 \newpage
 
