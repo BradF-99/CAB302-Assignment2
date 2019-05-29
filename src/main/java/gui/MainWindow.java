@@ -69,7 +69,6 @@ public class MainWindow {
         //Create sideBar components
         mainDisplay.setLeftComponent(sideBar);
         sideBar.setLayout(new BoxLayout(sideBar, BoxLayout.PAGE_AXIS));
-        sideBar.add(new JLabel("History Bar"));
 
         //Create drawingBoard components
         mainDisplay.setRightComponent(drawingBoard);
@@ -207,8 +206,8 @@ public class MainWindow {
                         undoHistoryStore, undoHistoryMapping, new UndoHistorySelectingShapes(), undoHistoryActive);
             }
             else if (pressedComp == additionalOpt.getMenuComponent(2)){
-                undoHistoryActive = MenuCommands.editUndoHistory(frame, sideBar, drawingBoard, new MyMouseAdapter(),
-                        new MyMouseAdapter(), undoHistoryActive);
+                undoHistoryActive = MenuCommands.editUndoHistory(frame, sideBar, drawingBoard, comp, new
+                                MyMouseAdapter(), new MyMouseAdapter(), undoHistoryActive);
             }
             else if (pressedComp == fileOpt.getMenuComponent(0)){
                 MenuCommands.saveFile(frame);
@@ -340,14 +339,13 @@ public class MainWindow {
         public void itemStateChanged(ItemEvent itemEvent) {
             JCheckBox chkbx = (JCheckBox) itemEvent.getItem();
             int chkbxIndex = 0;
-            for (int index = 1; index < sideBar.getComponents().length; index++) {
+            for (int index = 0; index < sideBar.getComponents().length; index++) {
                 JCheckBox currentChkbx = (JCheckBox) sideBar.getComponent(index);
                 if (currentChkbx == chkbx) {
-                    chkbxIndex = index - 1;
+                    chkbxIndex = index;
                     break;
                 }
             }
-
             if (chkbx.isSelected()){
                 undoHistoryMapping.put(chkbxIndex, 1);
             }

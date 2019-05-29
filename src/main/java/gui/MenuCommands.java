@@ -18,7 +18,7 @@ public final class MenuCommands {
         comp.Undo();
         comp.repaint();
         int length = sideBar.getComponents().length - 1;
-        if (length > 0){
+        if (length > -1){
             sideBar.remove(length);
         }
         sideBar.validate(); //doesn't seem to be working
@@ -51,6 +51,7 @@ public final class MenuCommands {
         String shape = String.valueOf(lastShape.component);
         JCheckBox newChkbx = new JCheckBox(index + ": " + shape);
         newChkbx.setEnabled(false);
+        newChkbx.setSelected(true);
         sideBar.add(newChkbx);
         sideBar.validate(); //Updates sidebar
     }
@@ -61,13 +62,14 @@ public final class MenuCommands {
                                           ItemListener il, boolean undoHistoryActive){
         if (!(undoHistoryActive)){
             undoHistoryStore = compList;
+            undoHistoryMapping.clear();
             for (int index = 0; index < compList.size(); index++){
                 undoHistoryMapping.put(index, 1);
             }
             JOptionPane.showMessageDialog(frame,
                     "Undo history is activated, this prevents you from adding new shapes, but allows you" +
                             " to see any combination of previous shapes by ticking the corresponding sidebar item");
-            for (int index = 1; index < sideBar.getComponents().length; index++){ //skip label
+            for (int index = 0; index < sideBar.getComponents().length; index++){
                 JCheckBox setChkbx = (JCheckBox) sideBar.getComponent(index);
                 setChkbx.setEnabled(true);
                 setChkbx.setSelected(true);
@@ -86,7 +88,7 @@ public final class MenuCommands {
 
         return true;
     }
-    public static boolean editUndoHistory(JFrame frame, JPanel sideBar, JPanel drawingBoard,
+    public static boolean editUndoHistory(JFrame frame, JPanel sideBar, JPanel drawingBoard, ComponentsClass comp,
                                       MouseMotionListener mml, MouseListener ml, boolean undoHistoryActive){
         if (undoHistoryActive){
             Object[] options = {"Save selected picture", "Return to undo history", "Deactivate undo history"};
@@ -99,8 +101,23 @@ public final class MenuCommands {
                     null,
                     options,
                     options[1]);
-            if (responseInt == 2){
-                for (int index = 1; index < sideBar.getComponents().length; index++){
+            if (responseInt == 2 || responseInt == 0){
+                if (responseInt == 0){
+                    for (int index = 0; index < sideBar.getComponents().length; index++){
+                        sideBar.removeAll();
+                    }
+                    for (int index = 0; index < comp.undoList.size(); index++){
+                        ComponentsClass.undoListHelper currentShape = comp.undoList.get(index);
+                        currentShape.index = index;
+                        String i = String.valueOf(currentShape.index);
+                        String shape = String.valueOf(currentShape.component);
+                        JCheckBox newChkbx = new JCheckBox(i + ": " + shape);
+                        sideBar.add(newChkbx);
+                    }
+                    sideBar.setVisible(false);
+                    sideBar.setVisible(true);//Updates sidebar
+                }
+                for (int index = 0; index < sideBar.getComponents().length; index++){
                     JCheckBox setChkbx = (JCheckBox) sideBar.getComponent(index);
                     setChkbx.setEnabled(false);
                     setChkbx.setSelected(true);
