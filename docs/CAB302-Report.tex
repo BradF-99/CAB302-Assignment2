@@ -70,7 +70,7 @@ Alex implemented all of the Shape classes, as well as the Shape interface and en
 \\\\{\large Bradley Fuller}\\
 Bradley implemented the file handling and validation classes, as well as the unit testing for said classes. He also wrote and configured the Apache Ant build script, and the TravisCI configuration for continuous integration and delivery to GitHub Releases.
 \\\\{\large Joshua O'Riordan}\\
-Joshua implemented the final iteration of the GUI, including the general layout, buttons, menu bar and colour picker. He also wrote the Undo History and Bitmap Export functionality, as well as the unit tests for both.
+Joshua implemented the final iteration of the GUI, including the general layout, buttons, menu bar and colour picker. He also wrote the additional requirements functionality (being Undo History and Bitmap Export), as well as their respective unit tests.
 
 \newpage
 
@@ -87,7 +87,7 @@ Test-driven development was also used where possible, especially in the file rea
 
 \section{Software Architecture}
 
-Add details about the classes that make up the project and how they interact.
+As with every Java project, there is a Main class - in this instance, the Main class calls the MainScreen class in order to initialise the GUI. When initialised, the GUI class instantiates the ComponentsClass constructor, which in turn instantiates every Shape class and prepares them for drawing. As well as this, the ShapesEnum enumerator is constructed which includes a list of all shapes. This enumerator is used to aid in drawing shapes for the GUI. The FileRead and FileWrite classes are also instantiated as part of the GUI class - this is in order to read to and write from the Components constructor.
 
 \newpage
 
