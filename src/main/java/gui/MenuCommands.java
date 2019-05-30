@@ -9,6 +9,7 @@ import java.util.EventListener;
 import java.util.HashMap;
 import java.util.LinkedList;
 import javax.swing.*;
+import javax.swing.filechooser.FileNameExtensionFilter;
 
 /**
  * MenuCommands is a utility class which contains the actions corresponding to keyboard or graphical commands
@@ -33,6 +34,10 @@ public final class MenuCommands {
     public static String openFile(JFrame frame){
         JFileChooser fileChooser = new JFileChooser();
         fileChooser.setFileSelectionMode(JFileChooser.FILES_ONLY);
+        fileChooser.setDialogTitle("Open VEC File");
+        fileChooser.setAcceptAllFileFilterUsed(false);
+        FileNameExtensionFilter vecFilter = new FileNameExtensionFilter("VEC files", "vec");
+        fileChooser.addChoosableFileFilter(vecFilter);
         int status = fileChooser.showOpenDialog(frame);
         if (status == JFileChooser.APPROVE_OPTION) { // if the user has selected a file
             File selectedFile = fileChooser.getSelectedFile();
