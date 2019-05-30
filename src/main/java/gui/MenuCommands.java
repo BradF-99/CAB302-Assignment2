@@ -4,9 +4,13 @@ import main.java.components.*;
 import java.awt.*;
 import java.awt.event.*;
 import java.awt.geom.Point2D;
+import java.awt.image.BufferedImage;
+import java.io.File;
+import java.io.IOException;
 import java.util.EventListener;
 import java.util.HashMap;
 import java.util.LinkedList;
+import javax.imageio.ImageIO;
 import javax.swing.*;
 
 /**
@@ -32,6 +36,17 @@ public final class MenuCommands {
     public static void openFile(JFrame frame){
         JFileChooser fileChooser = new JFileChooser();
         fileChooser.showOpenDialog(frame);
+    }
+    public static void exportBMP(JPanel drawingBoard){
+        BufferedImage image = new BufferedImage(drawingBoard.getWidth(), drawingBoard.getHeight(), BufferedImage.TYPE_INT_RGB);
+        Graphics2D g = image.createGraphics();
+        drawingBoard.paint(g);
+        g.dispose();
+        try {
+            ImageIO.write(image, "bmp", new File("C:\\Users\\Comuser\\Documents\\bitmap.bmp"));
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
     public static ShapesEnum.Shapes changeShape(ShapesEnum.Shapes newShape){
         return newShape;

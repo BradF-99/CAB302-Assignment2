@@ -48,9 +48,8 @@ public class MainWindow {
 
         //Create menu components
         String[] dropdownTitle = {"File Options", "Picture Commands", "Drawing Tools", "Colour Tools"};
-        String[] fileCmds = {"Save file (ctrl+s)", "Open file (ctrl+o)"}; //List of options in dropdown
-        String[] additionalCmds = {"Undo (ctrl+z)", "Show Undo History (ctrl+h)", "Confirm Selected History (ctrl+r)",
-                "Export BMP"};
+        String[] fileCmds = {"Save File (ctrl+s)", "Open File (ctrl+o)", "Export BMP (ctrl+b)"}; //List of options in dropdown
+        String[] additionalCmds = {"Undo (ctrl+z)", "Show Undo History (ctrl+h)", "Confirm Selected History (ctrl+r)"};
         String[] drawingCmds = {"Plot", "Line", "Rectangle", "Ellipse", "Polygon"};
         String[] colorCmds = {"Fill Colour", "Pen Colour"};
         for (String title : dropdownTitle){
@@ -218,6 +217,9 @@ public class MainWindow {
             else if (pressedComp == fileOpt.getMenuComponent(1)){
                 MenuCommands.openFile(frame);
             }
+            else if (pressedComp == fileOpt.getMenuComponent(2)){
+                MenuCommands.exportBMP(drawingBoard);
+            }
             else if (pressedComp == drawingOpt.getMenuComponent(0)){
                 currentShape = MenuCommands.changeShape(ShapesEnum.Shapes.PLOT);
             }
@@ -257,20 +259,7 @@ public class MainWindow {
         public void keyPressed(KeyEvent e) {
            int pressedKey = e.getKeyCode();
            System.out.println(e.getKeyChar());
-           if (e.isControlDown()){
-               if (pressedKey == KeyEvent.VK_Z){
-                   MenuCommands.undo(comp, sideBar, sideBarScroll);
-               }
-               else if (pressedKey == KeyEvent.VK_S){
-                   MenuCommands.saveFile(frame);
-               }
-               else if (pressedKey == KeyEvent.VK_O){
-                   MenuCommands.openFile(frame);
-               }
-               else if (pressedKey == KeyEvent.VK_H){
-                   undoHistoryActive = MenuCommands.showUndoHistory(frame, sideBar, drawingBoard, comp.undoList,
-                           undoHistoryStore, undoHistoryMapping, new UndoHistorySelectingShapes(), undoHistoryActive);
-               }
+           if (e.isControlDown()){ //Will readd key bindings after finishing all menu commands
            }
         }
     }
