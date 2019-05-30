@@ -26,8 +26,10 @@ public final class MenuCommands {
         if (length > -1){
             sideBar.remove(length);
         }
-        sideBar.validate();
-        sideBarScroll.validate();
+        sideBar.setVisible(false);
+        sideBar.setVisible(true);
+        sideBarScroll.setVisible(false);
+        sideBarScroll.setVisible(true);
     }
     public static void saveFile(JFrame frame){
         JFileChooser fileChooser = new JFileChooser();
@@ -38,14 +40,52 @@ public final class MenuCommands {
         fileChooser.showOpenDialog(frame);
     }
     public static void exportBMP(JPanel drawingBoard){
-        BufferedImage image = new BufferedImage(drawingBoard.getWidth(), drawingBoard.getHeight(), BufferedImage.TYPE_INT_RGB);
-        Graphics2D g = image.createGraphics();
-        drawingBoard.paint(g);
-        g.dispose();
+        Object[] options = {"Use drawing board's current dimensions", "Manually enter dimensions"};
+        int thresholdD = 6000;
+        Dimension bmpD = new Dimension(drawingBoard.getWidth(), drawingBoard.getHeight());
+        Dimension bmpScaleD = new Dimension();
+        int responseInt = JOptionPane.showOptionDialog(drawingBoard,
+                "Select if you would like to use the current dimensions or manually enter them",
+                "Bitmap Dimension Choice",
+                JOptionPane.YES_NO_OPTION,
+                JOptionPane.QUESTION_MESSAGE,
+                null,
+                options,
+                options[0]);
+        if (responseInt == 1){
+            Boolean validData = false;
+            String inputDimension = "";
+            while (validData == false){
+                String userInput = (String)JOptionPane.showInputDialog(drawingBoard, "Please enter your dimensions" +
+                        " in the format 123x123");
+                userInput = userInput.trim();
+                if (userInput.matches("\\d+x\\d+")){
+                    String[] userInputs = userInput.split("x");
+                    int width = Integer.valueOf(userInputs[0]);
+                    int height = Integer.valueOf(userInputs[1]);
+                    if (width < thresholdD && height < thresholdD){
+                        bmpScaleD.width = width;
+                        bmpScaleD.height = height;
+                        validData = true;
+                    }
+                    else{
+                        JOptionPane.showMessageDialog(drawingBoard, "Dimensions must be below the value " +
+                                thresholdD);
+                    }
+                }
+                else{
+                    JOptionPane.showMessageDialog(drawingBoard, "You must enter two sets of integers" +
+                            " combined by an 'x'");
+                }
+            }
+        }
+        BufferedImage bufferedImage = new BufferedImage(bmpD.width, bmpD.height, BufferedImage.TYPE_INT_RGB);
+        Graphics2D graphicImage = bufferedImage.createGraphics();
+        drawingBoard.paint(graphicImage);
+        graphicImage.dispose();
         try {
-            ImageIO.write(image, "bmp", new File("C:\\Users\\Comuser\\Documents\\bitmap.bmp"));
+            ImageIO.write(bufferedImage, "bmp", new File("C:\\Users\\Comuser\\Documents\\bitmap.bmp"));
         } catch (IOException e) {
-            e.printStackTrace();
         }
     }
     public static ShapesEnum.Shapes changeShape(ShapesEnum.Shapes newShape){
