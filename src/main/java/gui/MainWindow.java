@@ -390,7 +390,7 @@ public class MainWindow {
         if(path.isBlank() || path.isEmpty()){
             return; // user didn't select a file
         }
-
+        comp.clearAllObjects();
         argsList.clear();
         argsList = fileReader.readFile(path);
 
@@ -474,7 +474,7 @@ public class MainWindow {
         currentShape = ShapesEnum.Shapes.LINE;
 
         comp.repaint(); // its too fast for repaints during file load which makes me sad :(
-
+        argsList.clear();
     }
 
     public void showGUI() {
