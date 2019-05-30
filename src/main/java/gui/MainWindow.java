@@ -56,7 +56,7 @@ public class MainWindow {
 
         //Create menu components
         String[] dropdownTitle = {"File", "Picture Commands", "Drawing Tools", "Colour Tools"};
-        String[] fileCmds = {"Open (Ctrl + O)", "Save (Ctrl + S)"}; //List of options in dropdown
+        String[] fileCmds = {"New File","Open (Ctrl + O)", "Save (Ctrl + S)"}; //List of options in dropdown
         String[] additionalCmds = {"Undo (ctrl+z)", "Show Undo History (ctrl+h)", "Confirm Selected History (ctrl+r)",
                 "Export BMP"};
         String[] drawingCmds = {"Plot", "Line", "Rectangle", "Ellipse", "Polygon"};
@@ -220,6 +220,12 @@ public class MainWindow {
                                 MyMouseAdapter(), new MyMouseAdapter(), undoHistoryStore, undoHistoryActive);
             }
             else if (pressedComp == fileOpt.getMenuComponent(0)){
+                sideBar.removeAll();
+                comp.clearAllObjects();
+                argsList.clear();
+                comp.repaint();
+            }
+            else if (pressedComp == fileOpt.getMenuComponent(1)){
                 try {
                     fileRead(MenuCommands.openFile(frame));
                 } catch (IOException ex) {
@@ -228,7 +234,7 @@ public class MainWindow {
                     ex.printStackTrace();
                 }
             }
-            else if (pressedComp == fileOpt.getMenuComponent(1)){
+            else if (pressedComp == fileOpt.getMenuComponent(2)){
                 MenuCommands.saveFile(frame);
             }
             else if (pressedComp == drawingOpt.getMenuComponent(0)){
