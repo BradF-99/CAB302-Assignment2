@@ -389,6 +389,10 @@ public class MainWindow {
 
     private void fileRead(String path) throws IOException, FileInvalidArgumentException {
 
+        if(path.isBlank() || path.isEmpty()){
+            return; // user didn't select a file
+        }
+
         argsList.clear();
         argsList = fileReader.readFile(path);
 
