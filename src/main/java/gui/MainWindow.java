@@ -47,7 +47,7 @@ public class MainWindow {
     private void buildGUI() {
         //Create Core GUI Components
         comp = new ComponentsClass(new Dimension(0,0));
-        frame = new JFrame("Hello World");
+        frame = new JFrame("Vector Design Tool");
         mainMenu = new JMenuBar();
         mainDisplay = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT);
         sideBar = new JPanel();
@@ -473,7 +473,7 @@ public class MainWindow {
         // reset our stuff
         selectedFillColor = Color.BLACK;
         selectedBorderColor = Color.BLACK;
-        currentShape = ShapesEnum.Shapes.ELLIPSE;
+        currentShape = ShapesEnum.Shapes.LINE;
 
         comp.repaint(); // its too fast for repaints during file load which makes me sad :(
 
