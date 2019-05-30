@@ -67,3 +67,4 @@ fabric.properties
 
 # Dependencies
 !lib/*.jar
+.idea/misc.xml
