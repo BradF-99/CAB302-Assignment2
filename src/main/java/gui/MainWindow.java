@@ -390,6 +390,7 @@ public class MainWindow {
         if(path.isBlank() || path.isEmpty()){
             return; // user didn't select a file
         }
+        sideBar.removeAll();
         comp.clearAllObjects();
         argsList.clear();
         argsList = fileReader.readFile(path);
