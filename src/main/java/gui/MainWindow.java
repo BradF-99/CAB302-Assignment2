@@ -1,6 +1,5 @@
 package main.java.gui;
 
-//import javafx.scene.input.KeyCode; // seems to be breaking travis ci
 import main.java.components.*;
 import java.awt.*;
 import java.awt.event.*;
@@ -12,7 +11,6 @@ import java.util.LinkedList;
 import javax.swing.*;
 
 import java.util.List;
-import java.util.ArrayList;
 
 import main.java.exceptions.FileInvalidArgumentException;
 import main.java.filehandler.*;
@@ -24,9 +22,9 @@ public class MainWindow {
     private JSplitPane mainDisplay;
     private JPanel sideBar;
     private JPanel drawingBoard;
-    ComponentsClass comp;
-    HashMap<Integer, Integer> undoHistoryMapping;
-    LinkedList<ComponentsClass.undoListHelper> undoHistoryStore;
+    private ComponentsClass comp;
+    private HashMap<Integer, Integer> undoHistoryMapping;
+    private LinkedList<ComponentsClass.undoListHelper> undoHistoryStore;
     private JColorChooser colorChooser;
     private java.awt.Point startPoint;
     private ShapesEnum.Shapes currentShape = ShapesEnum.Shapes.ELLIPSE;
@@ -57,8 +55,8 @@ public class MainWindow {
         undoHistoryStore = comp.undoList;
 
         //Create menu components
-        String[] dropdownTitle = {"File Options", "Picture Commands", "Drawing Tools", "Colour Tools"};
-        String[] fileCmds = {"Save file (ctrl+s)", "Open file (ctrl+o)"}; //List of options in dropdown
+        String[] dropdownTitle = {"File", "Picture Commands", "Drawing Tools", "Colour Tools"};
+        String[] fileCmds = {"Open (Ctrl + O)", "Save (Ctrl + S)"}; //List of options in dropdown
         String[] additionalCmds = {"Undo (ctrl+z)", "Show Undo History (ctrl+h)", "Confirm Selected History (ctrl+r)",
                 "Export BMP"};
         String[] drawingCmds = {"Plot", "Line", "Rectangle", "Ellipse", "Polygon"};
@@ -222,9 +220,6 @@ public class MainWindow {
                                 MyMouseAdapter(), new MyMouseAdapter(), undoHistoryStore, undoHistoryActive);
             }
             else if (pressedComp == fileOpt.getMenuComponent(0)){
-                MenuCommands.saveFile(frame);
-            }
-            else if (pressedComp == fileOpt.getMenuComponent(1)){
                 try {
                     fileRead(MenuCommands.openFile(frame));
                 } catch (IOException ex) {
@@ -232,6 +227,9 @@ public class MainWindow {
                 } catch (FileInvalidArgumentException ex) {
                     ex.printStackTrace();
                 }
+            }
+            else if (pressedComp == fileOpt.getMenuComponent(1)){
+                MenuCommands.saveFile(frame);
             }
             else if (pressedComp == drawingOpt.getMenuComponent(0)){
                 currentShape = MenuCommands.changeShape(ShapesEnum.Shapes.PLOT);
