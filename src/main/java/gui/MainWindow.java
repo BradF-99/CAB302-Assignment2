@@ -225,7 +225,13 @@ public class MainWindow {
                 MenuCommands.saveFile(frame);
             }
             else if (pressedComp == fileOpt.getMenuComponent(1)){
-                MenuCommands.openFile(frame);
+                try {
+                    fileRead(MenuCommands.openFile(frame));
+                } catch (IOException ex) {
+                    ex.printStackTrace();
+                } catch (FileInvalidArgumentException ex) {
+                    ex.printStackTrace();
+                }
             }
             else if (pressedComp == drawingOpt.getMenuComponent(0)){
                 currentShape = MenuCommands.changeShape(ShapesEnum.Shapes.PLOT);
@@ -381,10 +387,10 @@ public class MainWindow {
         }
     }
 
-    private void fileRead() throws IOException, FileInvalidArgumentException {
+    private void fileRead(String path) throws IOException, FileInvalidArgumentException {
 
         argsList.clear();
-        argsList = fileReader.readFile("src/test/resources/filehandler/example3.vec");
+        argsList = fileReader.readFile(path);
 
         boolean fill = false;
 
@@ -395,7 +401,6 @@ public class MainWindow {
             float x2 = 0.0f;
             float y2 = 0.0f;
 
-
             try {
                 x1 = Float.parseFloat(argument[1]);
                 y1 = Float.parseFloat(argument[2]);
@@ -405,9 +410,8 @@ public class MainWindow {
                 // fail silently because it's going to be a colour command
             } catch (IndexOutOfBoundsException err){
                 // fail silently - probably a plot
-            }
+            } // catch other exceptions?
             switch(argument[0].toUpperCase()){
-
                 case "LINE":
                     currentShape = ShapesEnum.Shapes.LINE;
                     comp.lineComp.addNewObject(x1, y1, x2, y2, selectedBorderColor );
@@ -431,9 +435,7 @@ public class MainWindow {
                 case "POLYGON":
                     currentShape = ShapesEnum.Shapes.POLYGON;
                     List polyPoints = new ArrayList();
-
                     // we cant use a foreach loop because our co-ordinates are in pairs.
-
                     for(int i = 1; i < argument.length; i+= 2){ // we start at index 1 and increment in 2s
                         float x = Float.parseFloat(argument[i]);
                         float y = Float.parseFloat(argument[i+1]);
@@ -469,20 +471,13 @@ public class MainWindow {
         selectedBorderColor = Color.BLACK;
         currentShape = ShapesEnum.Shapes.ELLIPSE;
 
-        comp.repaint(); // its too fast for repaints during file load
+        comp.repaint(); // its too fast for repaints during file load which makes me sad :(
 
     }
 
     public void showGUI() {
         javax.swing.SwingUtilities.invokeLater(() -> {
-            try {
-                buildGUI();
-                fileRead();
-            } catch (IOException e) {
-                e.printStackTrace();
-            } catch (FileInvalidArgumentException e) {
-                e.printStackTrace();
-            }
+            buildGUI();
         });
     }
 }

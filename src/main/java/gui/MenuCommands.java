@@ -4,6 +4,7 @@ import main.java.components.*;
 import java.awt.*;
 import java.awt.event.*;
 import java.awt.geom.Point2D;
+import java.io.File;
 import java.util.EventListener;
 import java.util.HashMap;
 import java.util.LinkedList;
@@ -29,9 +30,15 @@ public final class MenuCommands {
         JFileChooser fileChooser = new JFileChooser();
         fileChooser.showSaveDialog(frame);
     }
-    public static void openFile(JFrame frame){
+    public static String openFile(JFrame frame){
         JFileChooser fileChooser = new JFileChooser();
-        fileChooser.showOpenDialog(frame);
+        fileChooser.setFileSelectionMode(JFileChooser.FILES_ONLY);
+        int status = fileChooser.showOpenDialog(frame);
+        if (status == JFileChooser.APPROVE_OPTION) { // if the user has selected a file
+            File selectedFile = fileChooser.getSelectedFile();
+            return selectedFile.getAbsolutePath();
+        }
+        return ""; // this has to be here or java errors
     }
     public static ShapesEnum.Shapes changeShape(ShapesEnum.Shapes newShape){
         return newShape;
