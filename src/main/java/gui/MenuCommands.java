@@ -14,16 +14,16 @@ import javax.swing.*;
  * such as selecting a different fill colour
  */
 public final class MenuCommands {
-    public static void undo(ComponentsClass comp, JPanel sideBar){
+
+    public static void undo(ComponentsClass comp, JPanel sideBar, JScrollPane sideBarScroll){
         comp.Undo();
         comp.repaint();
         int length = sideBar.getComponents().length - 1;
         if (length > -1){
             sideBar.remove(length);
         }
-        sideBar.validate(); //doesn't seem to be working
-        sideBar.setVisible(false);
-        sideBar.setVisible(true);
+        sideBar.validate();
+        sideBarScroll.validate();
     }
     public static void saveFile(JFrame frame){
         JFileChooser fileChooser = new JFileChooser();
@@ -45,7 +45,7 @@ public final class MenuCommands {
         colorDialog.setVisible(true);
 
     }
-    public static void addUndoHistory(ComponentsClass comp, JPanel sideBar){
+    public static void addUndoHistory(ComponentsClass comp, JPanel sideBar, JScrollPane sideBarScroll){
         ComponentsClass.undoListHelper lastShape = comp.undoList.getLast();
         String index = String.valueOf(lastShape.index);
         String shape = String.valueOf(lastShape.component);
@@ -53,7 +53,10 @@ public final class MenuCommands {
         newChkbx.setEnabled(false);
         newChkbx.setSelected(true);
         sideBar.add(newChkbx);
-        sideBar.validate(); //Updates sidebar
+        sideBar.setVisible(false);
+        sideBar.setVisible(true);
+        sideBarScroll.setVisible(false);
+        sideBarScroll.setVisible(true);
     }
     public static boolean showUndoHistory(JFrame frame, JPanel sideBar, JPanel drawingBoard,
                                           LinkedList<ComponentsClass.undoListHelper> compList,
@@ -105,28 +108,6 @@ public final class MenuCommands {
                     options[1]);
             if (responseInt == 2 || responseInt == 0){
                 if (responseInt == 0){
-                    ComponentsClass newComp = new ComponentsClass(new Dimension(0, 0));
-                    newComp = comp;
-                    for (int index = 0; index < undoHistoryStore.size(); index++){
-                        ComponentsClass.undoListHelper helper = undoHistoryStore.get(index);
-                        if (!(comp.undoList.contains(helper))){
-                            newComp.Undo(helper, index);
-                        }
-                    }
-                    comp = newComp;
-                    for (int index = 0; index < sideBar.getComponents().length; index++){
-                        sideBar.removeAll();
-                    }
-                    for (int index = 0; index < comp.undoList.size(); index++){
-                        ComponentsClass.undoListHelper currentShape = comp.undoList.get(index);
-                        currentShape.index = index;
-                        String i = String.valueOf(currentShape.index);
-                        String shape = String.valueOf(currentShape.component);
-                        JCheckBox newChkbx = new JCheckBox(i + ": " + shape);
-                        sideBar.add(newChkbx);
-                    }
-                    sideBar.setVisible(false);
-                    sideBar.setVisible(true);//Updates sidebar
                 }
                 for (int index = 0; index < sideBar.getComponents().length; index++){
                     JCheckBox setChkbx = (JCheckBox) sideBar.getComponent(index);
@@ -142,8 +123,6 @@ public final class MenuCommands {
             JOptionPane.showMessageDialog(frame, "Undo history is not active");
         }
         return undoHistoryActive;
-
-
     }
 
 

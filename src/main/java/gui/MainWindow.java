@@ -16,6 +16,7 @@ public class MainWindow {
     private JMenuBar mainMenu;
     private JSplitPane mainDisplay;
     private JPanel sideBar;
+    private JScrollPane sideBarScroll;
     private JPanel drawingBoard;
     ComponentsClass comp;
     HashMap<Integer, Integer> undoHistoryMapping;
@@ -39,6 +40,7 @@ public class MainWindow {
         mainMenu = new JMenuBar();
         mainDisplay = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT);
         sideBar = new JPanel();
+        sideBarScroll = new JScrollPane(sideBar);
         drawingBoard = new JPanel();
         colorChooser = new JColorChooser();
         undoHistoryMapping = new HashMap<>();
@@ -67,8 +69,10 @@ public class MainWindow {
             mainMenu.getMenu(3).add(new JMenuItem(cmd));
         }
         //Create sideBar components
-        mainDisplay.setLeftComponent(sideBar);
         sideBar.setLayout(new BoxLayout(sideBar, BoxLayout.PAGE_AXIS));
+        sideBarScroll.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
+        mainDisplay.setLeftComponent(sideBarScroll);
+
 
         //Create drawingBoard components
         mainDisplay.setRightComponent(drawingBoard);
@@ -84,7 +88,6 @@ public class MainWindow {
                 dropdownCmd.addKeyListener(new MyKeyAdapter());
             }
         }
-        sideBar.addComponentListener(new MySideBarListener());
         drawingBoard.addMouseListener(new MyMouseAdapter());
         drawingBoard.addMouseMotionListener(new MyMouseAdapter());
         frame.addKeyListener(new MyKeyAdapter());
@@ -159,7 +162,7 @@ public class MainWindow {
                 comp.addUndo(comp.ellComp.shapes.size() - 1, ShapesEnum.Shapes.ELLIPSE);
             }
             comp.repaint();
-            MenuCommands.addUndoHistory(comp, sideBar);
+            MenuCommands.addUndoHistory(comp, sideBar, sideBarScroll);
         }
 
         @Override
@@ -199,7 +202,7 @@ public class MainWindow {
             JMenu drawingOpt = mainMenu.getMenu(2);
             JMenu colorOpt = mainMenu.getMenu(3);
             if (pressedComp == additionalOpt.getMenuComponent(0)){
-                MenuCommands.undo(comp, sideBar);
+                MenuCommands.undo(comp, sideBar, sideBarScroll);
             }
             else if (pressedComp == additionalOpt.getMenuComponent(1)){
                 undoHistoryActive = MenuCommands.showUndoHistory(frame, sideBar, drawingBoard, comp.undoList,
@@ -256,7 +259,7 @@ public class MainWindow {
            System.out.println(e.getKeyChar());
            if (e.isControlDown()){
                if (pressedKey == KeyEvent.VK_Z){
-                   MenuCommands.undo(comp, sideBar);
+                   MenuCommands.undo(comp, sideBar, sideBarScroll);
                }
                else if (pressedKey == KeyEvent.VK_S){
                    MenuCommands.saveFile(frame);
@@ -288,7 +291,17 @@ public class MainWindow {
         }
 
         public void windowChangeActions(){
-            mainDisplay.setDividerLocation(0.11);
+            System.out.println(mainDisplay.getWidth());
+            if (mainDisplay.getWidth() > 1500){
+                mainDisplay.setDividerLocation(0.09);
+            }
+            else if (mainDisplay.getWidth() > 900){
+                mainDisplay.setDividerLocation(0.12);
+            }
+            else{
+                mainDisplay.setDividerLocation(0.19);
+            }
+
             comp.setFrameSize(drawingBoard.getSize());
         }
     }
@@ -297,22 +310,7 @@ public class MainWindow {
      * MySideBarListener checks the width of the sidebar, and sets the buttons to that width.
      * ComponentAdapter is extended as it already provides the componentResized method to be overloaded
      */
-    class MySideBarListener extends ComponentAdapter {
-        @Override
-        public void componentResized(ComponentEvent e) { windowChangeActions(); }
 
-        @Override
-        public void componentShown(ComponentEvent e) { windowChangeActions(); }
-
-        public void windowChangeActions() {
-            comp.setFrameSize(drawingBoard.getSize());
-            int newWidth = sideBar.getWidth();
-            for (Component button : sideBar.getComponents()) {
-                int currentHeight = button.getHeight();
-                button.setSize(newWidth, currentHeight);
-            }
-        }
-    }
 
     class ConfirmListenerFill implements ActionListener{
         @Override
@@ -354,6 +352,7 @@ public class MainWindow {
             }
             ArrayList<ComponentsClass.undoListHelper> currentShapesList = new ArrayList<>();
             LinkedList<ComponentsClass.undoListHelper> currentShapesLinkedList = new LinkedList<>();
+
             for (int key : undoHistoryMapping.keySet()){
                 if (undoHistoryMapping.get(key) == 1){
                     currentShapesList.add(undoHistoryStore.get(key));
@@ -364,8 +363,6 @@ public class MainWindow {
             }
             comp.undoList = currentShapesLinkedList;
             comp.repaint();
-            System.out.println(undoHistoryMapping);
-            System.out.println(undoHistoryStore.size());
         }
     }
 
