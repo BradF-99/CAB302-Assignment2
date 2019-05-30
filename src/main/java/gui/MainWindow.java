@@ -418,21 +418,25 @@ public class MainWindow {
                     currentShape = ShapesEnum.Shapes.LINE;
                     comp.lineComp.addNewObject(x1, y1, x2, y2, selectedBorderColor );
                     comp.addUndo(comp.lineComp.lines.size() - 1, ShapesEnum.Shapes.LINE);
+                    MenuCommands.addUndoHistory(comp, sideBar);
                     break;
                 case "RECTANGLE":
                     currentShape = ShapesEnum.Shapes.RECTANGLE;
                     comp.rectComp.addNewObject(x1, y1, x2, y2, selectedBorderColor,fill,selectedFillColor);
                     comp.addUndo(comp.rectComp.shapes.size() - 1,ShapesEnum.Shapes.RECTANGLE);
+                    MenuCommands.addUndoHistory(comp, sideBar);
                     break;
                 case "ELLIPSE":
                     currentShape = ShapesEnum.Shapes.ELLIPSE;
                     comp.ellComp.addNewObject(x1, y1, x2, y2, selectedBorderColor,fill,selectedFillColor);
                     comp.addUndo(comp.ellComp.shapes.size() - 1, ShapesEnum.Shapes.ELLIPSE);
+                    MenuCommands.addUndoHistory(comp, sideBar);
                     break;
                 case "PLOT":
                     currentShape = ShapesEnum.Shapes.PLOT;
                     comp.plotComp.addNewObject(x1, y1, selectedBorderColor);
                     comp.addUndo(comp.plotComp.plots.size() - 1, ShapesEnum.Shapes.PLOT);
+                    MenuCommands.addUndoHistory(comp, sideBar);
                     break;
                 case "POLYGON":
                     currentShape = ShapesEnum.Shapes.POLYGON;
@@ -450,6 +454,7 @@ public class MainWindow {
 
                     polyPoints.clear();
                     comp.addUndo(comp.polyComp.polygon.size() - 1, ShapesEnum.Shapes.POLYGON);
+                    MenuCommands.addUndoHistory(comp, sideBar);
                     break;
                 case "PEN":
                     selectedBorderColor = Color.decode(argument[1]);
@@ -466,7 +471,6 @@ public class MainWindow {
                 default:
                     throw new FileInvalidArgumentException("Invalid argument in file.");
             }
-
         }
         // reset our stuff
         selectedFillColor = Color.BLACK;
