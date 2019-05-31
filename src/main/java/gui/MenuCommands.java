@@ -162,8 +162,8 @@ public final class MenuCommands {
                     options,
                     options[1]);
             if (responseInt == 2 || responseInt == 0){
+                comp.undoList = undoHistoryStore;
                 if (responseInt == 0){
-                    comp.undoList = undoHistoryStore;
                     int numTimesToUndo = comp.undoList.size() - undoHistoryNum;
                     for (int index = 1; index < numTimesToUndo; index++){
                         comp.Undo();
@@ -179,11 +179,15 @@ public final class MenuCommands {
                 for (int index = 0; index < sideBar.getComponents().length; index++){
                     JCheckBox setChkbx = (JCheckBox) sideBar.getComponent(index);
                     setChkbx.setEnabled(false);
+                    if (index + 1 == sideBar.getComponents().length){
+                        setChkbx.setSelected(true);
+                    }
                     setChkbx.setSelected(false);
                 }
                 drawingBoard.addMouseMotionListener(mml);
                 drawingBoard.addMouseListener(ml);
                 undoHistoryActive = false;
+
             }
         }
         else{
