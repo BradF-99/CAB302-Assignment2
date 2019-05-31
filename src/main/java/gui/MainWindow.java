@@ -17,6 +17,7 @@ public class MainWindow {
     private JSplitPane mainDisplay;
     private JPanel sideBar;
     private JScrollPane sideBarScroll;
+    Component[] sideBarComps;
     private JPanel drawingBoard;
     ComponentsClass comp;
     HashMap<Integer, Integer> undoHistoryMapping;
@@ -41,6 +42,7 @@ public class MainWindow {
         mainDisplay = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT);
         sideBar = new JPanel();
         sideBarScroll = new JScrollPane(sideBar);
+        sideBarComps = new Component[]{sideBar, sideBarScroll};
         drawingBoard = new JPanel();
         colorChooser = new JColorChooser();
         undoHistoryMapping = new HashMap<>();
@@ -161,7 +163,8 @@ public class MainWindow {
                 comp.addUndo(comp.ellComp.shapes.size() - 1, ShapesEnum.Shapes.ELLIPSE);
             }
             comp.repaint();
-            MenuCommands.addUndoHistory(comp, sideBar, sideBarScroll);
+            MenuCommands.addUndoHistory(comp, sideBar);
+            MenuCommands.refreshComps(sideBarComps);
         }
 
         @Override
@@ -201,15 +204,16 @@ public class MainWindow {
             JMenu drawingOpt = mainMenu.getMenu(2);
             JMenu colorOpt = mainMenu.getMenu(3);
             if (pressedComp == additionalOpt.getMenuComponent(0)){
-                MenuCommands.undo(comp, sideBar, sideBarScroll);
+                MenuCommands.undo(comp, frame, sideBar, undoHistoryActive);
+                MenuCommands.refreshComps(sideBarComps);
             }
             else if (pressedComp == additionalOpt.getMenuComponent(1)){
-                undoHistoryActive = MenuCommands.showUndoHistory(frame, sideBar, drawingBoard, comp.undoList,
-                        undoHistoryStore, undoHistoryMapping, new UndoHistorySelectingShapes(), undoHistoryActive);
+                undoHistoryActive = MenuCommands.showUndoHistory(frame, sideBar, drawingBoard, new UndoHistorySelectingShapes(),
+                        undoHistoryActive);
             }
             else if (pressedComp == additionalOpt.getMenuComponent(2)){
-                undoHistoryActive = MenuCommands.editUndoHistory(frame, sideBar, drawingBoard, comp, new
-                                MyMouseAdapter(), new MyMouseAdapter(), undoHistoryStore, undoHistoryActive);
+                undoHistoryActive = MenuCommands.editUndoHistory(frame, sideBar, drawingBoard, new MyMouseAdapter(), new MyMouseAdapter(),
+                        undoHistoryActive);
             }
             else if (pressedComp == fileOpt.getMenuComponent(0)){
                 MenuCommands.saveFile(frame);
@@ -333,25 +337,7 @@ public class MainWindow {
                     break;
                 }
             }
-            if (chkbx.isSelected()){
-                undoHistoryMapping.put(chkbxIndex, 1);
-            }
-            else{
-                undoHistoryMapping.put(chkbxIndex, 0);
-            }
-            ArrayList<ComponentsClass.undoListHelper> currentShapesList = new ArrayList<>();
-            LinkedList<ComponentsClass.undoListHelper> currentShapesLinkedList = new LinkedList<>();
 
-            for (int key : undoHistoryMapping.keySet()){
-                if (undoHistoryMapping.get(key) == 1){
-                    currentShapesList.add(undoHistoryStore.get(key));
-                }
-            }
-            for (ComponentsClass.undoListHelper helper : currentShapesList){
-                currentShapesLinkedList.add(helper);
-            }
-            comp.undoList = currentShapesLinkedList;
-            comp.repaint();
         }
     }
 

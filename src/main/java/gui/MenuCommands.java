@@ -18,18 +18,26 @@ import javax.swing.*;
  * such as selecting a different fill colour
  */
 public final class MenuCommands {
-
-    public static void undo(ComponentsClass comp, JPanel sideBar, JScrollPane sideBarScroll){
-        comp.Undo();
-        comp.repaint();
-        int length = sideBar.getComponents().length - 1;
-        if (length > -1){
-            sideBar.remove(length);
+    public static void refreshComps(Component[] guiComps){
+        for (Component guiComp : guiComps){
+            guiComp.setVisible(false);
+            guiComp.setVisible(true);
         }
-        sideBar.setVisible(false);
-        sideBar.setVisible(true);
-        sideBarScroll.setVisible(false);
-        sideBarScroll.setVisible(true);
+    }
+
+    public static void undo(ComponentsClass comp, JFrame frame, JPanel sideBar, boolean undoHistoryActive){
+        if (!(undoHistoryActive)){
+            comp.Undo();
+            comp.repaint();
+            int length = sideBar.getComponents().length - 1;
+            if (length > -1){
+                sideBar.remove(length);
+            }
+        }
+        else{
+            JOptionPane.showMessageDialog(frame, "Undo history is active, use the history panel to undo");
+        }
+
     }
     public static void saveFile(JFrame frame){
         JFileChooser fileChooser = new JFileChooser();
@@ -100,7 +108,7 @@ public final class MenuCommands {
         colorDialog.setVisible(true);
 
     }
-    public static void addUndoHistory(ComponentsClass comp, JPanel sideBar, JScrollPane sideBarScroll){
+    public static void addUndoHistory(ComponentsClass comp, JPanel sideBar){
         ComponentsClass.undoListHelper lastShape = comp.undoList.getLast();
         String index = String.valueOf(lastShape.index);
         String shape = String.valueOf(lastShape.component);
@@ -108,25 +116,13 @@ public final class MenuCommands {
         newChkbx.setEnabled(false);
         newChkbx.setSelected(true);
         sideBar.add(newChkbx);
-        sideBar.setVisible(false);
-        sideBar.setVisible(true);
-        sideBarScroll.setVisible(false);
-        sideBarScroll.setVisible(true);
     }
     public static boolean showUndoHistory(JFrame frame, JPanel sideBar, JPanel drawingBoard,
-                                          LinkedList<ComponentsClass.undoListHelper> compList,
-                                          LinkedList<ComponentsClass.undoListHelper> undoHistoryStore,
-                                          HashMap<Integer, Integer> undoHistoryMapping,
                                           ItemListener il, boolean undoHistoryActive){
         if (!(undoHistoryActive)){
-            undoHistoryStore = compList;
-            undoHistoryMapping.clear();
-            for (int index = 0; index < compList.size(); index++){
-                undoHistoryMapping.put(index, 1);
-            }
             JOptionPane.showMessageDialog(frame,
                     "Undo history is activated, this prevents you from adding new shapes, but allows you" +
-                            " to see any combination of previous shapes by ticking the corresponding sidebar item");
+                            " to see all previous shapes before the selected shape");
             for (int index = 0; index < sideBar.getComponents().length; index++){
                 JCheckBox setChkbx = (JCheckBox) sideBar.getComponent(index);
                 setChkbx.setEnabled(true);
@@ -146,10 +142,8 @@ public final class MenuCommands {
 
         return true;
     }
-    public static boolean editUndoHistory(JFrame frame, JPanel sideBar, JPanel drawingBoard, ComponentsClass comp,
-                                      MouseMotionListener mml, MouseListener ml,
-                                          LinkedList<ComponentsClass.undoListHelper> undoHistoryStore,
-                                          boolean undoHistoryActive){
+    public static boolean editUndoHistory(JFrame frame, JPanel sideBar, JPanel drawingBoard,
+                                      MouseMotionListener mml, MouseListener ml, boolean undoHistoryActive){
         if (undoHistoryActive){
             Object[] options = {"Save selected picture", "Return to undo history", "Deactivate undo history"};
             int responseInt = JOptionPane.showOptionDialog(frame,
