@@ -20,8 +20,6 @@ public class MainWindow {
     Component[] sideBarComps;
     private JPanel drawingBoard;
     ComponentsClass comp;
-    HashMap<Integer, Integer> undoHistoryMapping;
-    LinkedList<ComponentsClass.undoListHelper> undoHistoryStore;
     private JColorChooser colorChooser;
     private java.awt.Point startPoint;
     private ShapesEnum.Shapes currentShape = ShapesEnum.Shapes.ELLIPSE;
@@ -29,7 +27,8 @@ public class MainWindow {
     private Color selectedFillColor = Color.BLACK;
     private boolean filled = true;
     private boolean undoHistoryActive = false;
-
+    private LinkedList<ComponentsClass.undoListHelper> undoHistoryStore;
+    private int undoHistoryNum;
 
     /**
      * This is just an example thread-safe GUI based off the example from the lecture.
@@ -45,8 +44,8 @@ public class MainWindow {
         sideBarComps = new Component[]{sideBar, sideBarScroll};
         drawingBoard = new JPanel();
         colorChooser = new JColorChooser();
-        undoHistoryMapping = new HashMap<>();
         undoHistoryStore = comp.undoList;
+        undoHistoryNum = 0;
 
         //Create menu components
         String[] dropdownTitle = {"File Options", "Picture Commands", "Drawing Tools", "Colour Tools"};
@@ -208,12 +207,15 @@ public class MainWindow {
                 MenuCommands.refreshComps(sideBarComps);
             }
             else if (pressedComp == additionalOpt.getMenuComponent(1)){
-                undoHistoryActive = MenuCommands.showUndoHistory(frame, sideBar, drawingBoard, new UndoHistorySelectingShapes(),
-                        undoHistoryActive);
+                undoHistoryActive = MenuCommands.showUndoHistory(frame, sideBar, drawingBoard,
+                        new UndoHistorySelectingShapes(), undoHistoryActive);
+                undoHistoryStore = MenuCommands.saveUndoList(comp);
+
             }
             else if (pressedComp == additionalOpt.getMenuComponent(2)){
-                undoHistoryActive = MenuCommands.editUndoHistory(frame, sideBar, drawingBoard, new MyMouseAdapter(), new MyMouseAdapter(),
-                        undoHistoryActive);
+                undoHistoryActive = MenuCommands.editUndoHistory(frame, sideBar, drawingBoard, comp,
+                        new MyMouseAdapter(), new MyMouseAdapter(), undoHistoryStore, undoHistoryNum, undoHistoryActive);
+                MenuCommands.refreshComps(sideBarComps);
             }
             else if (pressedComp == fileOpt.getMenuComponent(0)){
                 MenuCommands.saveFile(frame);
@@ -328,15 +330,30 @@ public class MainWindow {
     class UndoHistorySelectingShapes implements ItemListener{
         @Override
         public void itemStateChanged(ItemEvent itemEvent) {
+            comp.undoList = undoHistoryStore;
             JCheckBox chkbx = (JCheckBox) itemEvent.getItem();
-            int chkbxIndex = 0;
-            for (int index = 0; index < sideBar.getComponents().length; index++) {
+            Component[] chkbxs = sideBar.getComponents();
+            undoHistoryNum = 0;
+            for (int index = 0; index < chkbxs.length; index++) {
                 JCheckBox currentChkbx = (JCheckBox) sideBar.getComponent(index);
                 if (currentChkbx == chkbx) {
-                    chkbxIndex = index;
+                    undoHistoryNum = index;
                     break;
                 }
             }
+            LinkedList<ComponentsClass.undoListHelper> displayShapes = new LinkedList<>();
+            int count = 0;
+            for (ComponentsClass.undoListHelper helper : comp.undoList){
+                if (count <= undoHistoryNum){
+                    displayShapes.add(helper);
+                    count += 1;
+                }
+                else{
+                    break;
+                }
+            }
+            comp.undoList = displayShapes;
+            comp.repaint();
 
         }
     }
