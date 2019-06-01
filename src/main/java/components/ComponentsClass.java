@@ -129,9 +129,10 @@ public class ComponentsClass extends JComponent {
     protected void paintComponent(Graphics g) {
         super.paintComponent(g);
         Graphics2D g2d = (Graphics2D) g.create();
-        //polygons
+        //All drawn already drawn shapes are drawn first so that the dragged images are not underlapped.
         for(int i = 0; i < undoList.size(); i++){
             switch(undoList.get(i).component){
+                //in each case it grabs the shape from the correct list by using the index in undoList
                 case PLOT:
                     PlotComponent.Plot plot = plotComp.plots.get(undoList.get(i).index);
                     g2d.setColor(plot.color);
