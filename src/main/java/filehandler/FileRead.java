@@ -44,7 +44,8 @@ public class FileRead {
 
     /**
      * readFile - Main func for reading a file
-     * Call this func with the path for a file, and it reads and validates it. That's about it really.
+     * Call this func with the path for a file, and it reads and validates it. We user a Scanner as it is much more
+     * efficient than loading the whole file in to memory.
      *
      * @param path to the selected file to read
      * @return a List of arguments for the GUI to parse
