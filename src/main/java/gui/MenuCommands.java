@@ -95,8 +95,13 @@ public final class MenuCommands {
         Graphics2D graphicImage = bufferedImage.createGraphics();
         drawingBoard.paint(graphicImage);
         graphicImage.dispose();
+        Image scaledImage = bufferedImage.getScaledInstance(bmpScaleD.width, bmpScaleD.height, Image.SCALE_SMOOTH);
+        BufferedImage scaledBufferedImage = new BufferedImage(bmpScaleD.width, bmpScaleD.height, BufferedImage.TYPE_INT_RGB);
+        Graphics2D scaledGraphicImage = scaledBufferedImage.createGraphics();
+        scaledGraphicImage.drawImage(scaledImage, 0, 0, null);
+        scaledGraphicImage.dispose();
         try {
-            ImageIO.write(bufferedImage, "bmp", new File("C:\\Users\\Comuser\\Documents\\bitmap.bmp"));
+            ImageIO.write(scaledBufferedImage, "bmp", new File("C:\\Users\\Comuser\\Documents\\bitmap.bmp"));
         } catch (IOException e) {
         }
     }
