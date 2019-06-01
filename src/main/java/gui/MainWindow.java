@@ -21,10 +21,13 @@ public class MainWindow {
     private JMenuBar mainMenu;
     private JSplitPane mainDisplay;
     private JPanel sideBar;
+    private JScrollPane sideBarScroll;
+    Component[] sideBarComps;
     private JPanel drawingBoard;
     private ComponentsClass comp;
     private HashMap<Integer, Integer> undoHistoryMapping;
     private LinkedList<ComponentsClass.undoListHelper> undoHistoryStore;
+    ComponentsClass comp;
     private JColorChooser colorChooser;
     private java.awt.Point startPoint;
     private ShapesEnum.Shapes currentShape = ShapesEnum.Shapes.ELLIPSE;
@@ -36,6 +39,8 @@ public class MainWindow {
     private List<String[]> argsList = new ArrayList<>();
     private FileRead fileReader = new FileRead();
     private FileWrite fileWriter = new FileWrite();
+    private LinkedList<ComponentsClass.undoListHelper> undoHistoryStore;
+    private int undoHistoryNum;
 
     /**
      * buildGUI()
@@ -49,10 +54,12 @@ public class MainWindow {
         mainMenu = new JMenuBar();
         mainDisplay = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT);
         sideBar = new JPanel();
+        sideBarScroll = new JScrollPane(sideBar);
+        sideBarComps = new Component[]{sideBar, sideBarScroll};
         drawingBoard = new JPanel();
         colorChooser = new JColorChooser();
-        undoHistoryMapping = new HashMap<>();
         undoHistoryStore = comp.undoList;
+        undoHistoryNum = 0;
 
         //Create menu components
         String[] dropdownTitle = {"File", "Picture Commands", "Drawing Tools", "Colour Tools"};
@@ -77,8 +84,10 @@ public class MainWindow {
             mainMenu.getMenu(3).add(new JMenuItem(cmd));
         }
         //Create sideBar components
-        mainDisplay.setLeftComponent(sideBar);
         sideBar.setLayout(new BoxLayout(sideBar, BoxLayout.PAGE_AXIS));
+        sideBarScroll.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
+        mainDisplay.setLeftComponent(sideBarScroll);
+
 
         //Create drawingBoard components
         mainDisplay.setRightComponent(drawingBoard);
@@ -94,7 +103,6 @@ public class MainWindow {
                 dropdownCmd.addKeyListener(new MyKeyAdapter());
             }
         }
-        sideBar.addComponentListener(new MySideBarListener());
         drawingBoard.addMouseListener(new MyMouseAdapter());
         drawingBoard.addMouseMotionListener(new MyMouseAdapter());
         frame.addKeyListener(new MyKeyAdapter());
@@ -170,6 +178,7 @@ public class MainWindow {
             }
             comp.repaint();
             MenuCommands.addUndoHistory(comp, sideBar);
+            MenuCommands.refreshComps(sideBarComps);
         }
 
         @Override
@@ -209,15 +218,19 @@ public class MainWindow {
             JMenu drawingOpt = mainMenu.getMenu(2);
             JMenu colorOpt = mainMenu.getMenu(3);
             if (pressedComp == additionalOpt.getMenuComponent(0)){
-                MenuCommands.undo(comp, sideBar);
+                MenuCommands.undo(comp, frame, sideBar, undoHistoryActive);
+                MenuCommands.refreshComps(sideBarComps);
             }
             else if (pressedComp == additionalOpt.getMenuComponent(1)){
-                undoHistoryActive = MenuCommands.showUndoHistory(frame, sideBar, drawingBoard, comp.undoList,
-                        undoHistoryStore, undoHistoryMapping, new UndoHistorySelectingShapes(), undoHistoryActive);
+                undoHistoryActive = MenuCommands.showUndoHistory(frame, sideBar, drawingBoard,
+                        new UndoHistorySelectingShapes(), undoHistoryActive);
+                undoHistoryStore = MenuCommands.saveUndoList(comp);
+
             }
             else if (pressedComp == additionalOpt.getMenuComponent(2)){
-                undoHistoryActive = MenuCommands.editUndoHistory(frame, sideBar, drawingBoard, comp, new
-                                MyMouseAdapter(), new MyMouseAdapter(), undoHistoryStore, undoHistoryActive);
+                undoHistoryActive = MenuCommands.editUndoHistory(frame, sideBar, drawingBoard, comp,
+                        new MyMouseAdapter(), new MyMouseAdapter(), undoHistoryStore, undoHistoryNum, undoHistoryActive);
+                MenuCommands.refreshComps(sideBarComps);
             }
             else if (pressedComp == fileOpt.getMenuComponent(0)){
                 sideBar.removeAll();
@@ -236,6 +249,9 @@ public class MainWindow {
             }
             else if (pressedComp == fileOpt.getMenuComponent(2)){
                 MenuCommands.saveFile(frame);
+            }
+            else if (pressedComp == fileOpt.getMenuComponent(2)){
+                MenuCommands.exportBMP(drawingBoard);
             }
             else if (pressedComp == drawingOpt.getMenuComponent(0)){
                 currentShape = MenuCommands.changeShape(ShapesEnum.Shapes.PLOT);
@@ -276,20 +292,7 @@ public class MainWindow {
         public void keyPressed(KeyEvent e) {
            int pressedKey = e.getKeyCode();
            System.out.println(e.getKeyChar());
-           if (e.isControlDown()){
-               if (pressedKey == KeyEvent.VK_Z){
-                   MenuCommands.undo(comp, sideBar);
-               }
-               else if (pressedKey == KeyEvent.VK_S){
-                   MenuCommands.saveFile(frame);
-               }
-               else if (pressedKey == KeyEvent.VK_O){
-                   MenuCommands.openFile(frame);
-               }
-               else if (pressedKey == KeyEvent.VK_H){
-                   undoHistoryActive = MenuCommands.showUndoHistory(frame, sideBar, drawingBoard, comp.undoList,
-                           undoHistoryStore, undoHistoryMapping, new UndoHistorySelectingShapes(), undoHistoryActive);
-               }
+           if (e.isControlDown()){ //Will readd key bindings after finishing all menu commands
            }
         }
     }
@@ -310,7 +313,17 @@ public class MainWindow {
         }
 
         public void windowChangeActions(){
-            mainDisplay.setDividerLocation(0.11);
+            System.out.println(mainDisplay.getWidth());
+            if (mainDisplay.getWidth() > 1500){
+                mainDisplay.setDividerLocation(0.09);
+            }
+            else if (mainDisplay.getWidth() > 900){
+                mainDisplay.setDividerLocation(0.12);
+            }
+            else{
+                mainDisplay.setDividerLocation(0.19);
+            }
+
             comp.setFrameSize(drawingBoard.getSize());
         }
     }
@@ -319,22 +332,7 @@ public class MainWindow {
      * MySideBarListener checks the width of the sidebar, and sets the buttons to that width.
      * ComponentAdapter is extended as it already provides the componentResized method to be overloaded
      */
-    class MySideBarListener extends ComponentAdapter {
-        @Override
-        public void componentResized(ComponentEvent e) { windowChangeActions(); }
 
-        @Override
-        public void componentShown(ComponentEvent e) { windowChangeActions(); }
-
-        public void windowChangeActions() {
-            comp.setFrameSize(drawingBoard.getSize());
-            int newWidth = sideBar.getWidth();
-            for (Component button : sideBar.getComponents()) {
-                int currentHeight = button.getHeight();
-                button.setSize(newWidth, currentHeight);
-            }
-        }
-    }
 
     class ConfirmListenerFill implements ActionListener{
         @Override
@@ -359,35 +357,31 @@ public class MainWindow {
     class UndoHistorySelectingShapes implements ItemListener{
         @Override
         public void itemStateChanged(ItemEvent itemEvent) {
+            comp.undoList = undoHistoryStore;
             JCheckBox chkbx = (JCheckBox) itemEvent.getItem();
-            int chkbxIndex = 0;
-            for (int index = 0; index < sideBar.getComponents().length; index++) {
+            Component[] chkbxs = sideBar.getComponents();
+            undoHistoryNum = 0;
+            for (int index = 0; index < chkbxs.length; index++) {
                 JCheckBox currentChkbx = (JCheckBox) sideBar.getComponent(index);
                 if (currentChkbx == chkbx) {
-                    chkbxIndex = index;
+                    undoHistoryNum = index;
                     break;
                 }
             }
-            if (chkbx.isSelected()){
-                undoHistoryMapping.put(chkbxIndex, 1);
-            }
-            else{
-                undoHistoryMapping.put(chkbxIndex, 0);
-            }
-            ArrayList<ComponentsClass.undoListHelper> currentShapesList = new ArrayList<>();
-            LinkedList<ComponentsClass.undoListHelper> currentShapesLinkedList = new LinkedList<>();
-            for (int key : undoHistoryMapping.keySet()){
-                if (undoHistoryMapping.get(key) == 1){
-                    currentShapesList.add(undoHistoryStore.get(key));
+            LinkedList<ComponentsClass.undoListHelper> displayShapes = new LinkedList<>();
+            int count = 0;
+            for (ComponentsClass.undoListHelper helper : comp.undoList){
+                if (count <= undoHistoryNum){
+                    displayShapes.add(helper);
+                    count += 1;
+                }
+                else{
+                    break;
                 }
             }
-            for (ComponentsClass.undoListHelper helper : currentShapesList){
-                currentShapesLinkedList.add(helper);
-            }
-            comp.undoList = currentShapesLinkedList;
+            comp.undoList = displayShapes;
             comp.repaint();
-            System.out.println(undoHistoryMapping);
-            System.out.println(undoHistoryStore.size());
+
         }
     }
 

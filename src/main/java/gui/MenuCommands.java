@@ -4,10 +4,13 @@ import main.java.components.*;
 import java.awt.*;
 import java.awt.event.*;
 import java.awt.geom.Point2D;
+import java.awt.image.BufferedImage;
 import java.io.File;
+import java.io.IOException;
 import java.util.EventListener;
 import java.util.HashMap;
 import java.util.LinkedList;
+import javax.imageio.ImageIO;
 import javax.swing.*;
 import javax.swing.filechooser.FileNameExtensionFilter;
 
@@ -16,16 +19,30 @@ import javax.swing.filechooser.FileNameExtensionFilter;
  * such as selecting a different fill colour
  */
 public final class MenuCommands {
-    public static void undo(ComponentsClass comp, JPanel sideBar){
-        comp.Undo();
-        comp.repaint();
-        int length = sideBar.getComponents().length - 1;
-        if (length > -1){
-            sideBar.remove(length);
+    public static void refreshComps(Component[] guiComps){
+        for (Component guiComp : guiComps){
+            guiComp.setVisible(false);
+            guiComp.setVisible(true);
         }
-        sideBar.validate(); //doesn't seem to be working
-        sideBar.setVisible(false);
-        sideBar.setVisible(true);
+    }
+
+    public static LinkedList<ComponentsClass.undoListHelper> saveUndoList(ComponentsClass comp){
+        return comp.undoList;
+    }
+
+    public static void undo(ComponentsClass comp, JFrame frame, JPanel sideBar, boolean undoHistoryActive){
+        if (!(undoHistoryActive)){
+            comp.Undo();
+            comp.repaint();
+            int length = sideBar.getComponents().length - 1;
+            if (length > -1){
+                sideBar.remove(length);
+            }
+        }
+        else{
+            JOptionPane.showMessageDialog(frame, "Undo history is active, use the history panel to undo");
+        }
+
     }
     public static void saveFile(JFrame frame){
         JFileChooser fileChooser = new JFileChooser();
@@ -45,6 +62,55 @@ public final class MenuCommands {
         }
         return ""; // this has to be here or java errors
     }
+    public static void exportBMP(JPanel drawingBoard){
+        Object[] options = {"Use drawing board's current dimensions", "Manually enter dimensions"};
+        int thresholdD = 6000;
+        Dimension bmpD = new Dimension(drawingBoard.getWidth(), drawingBoard.getHeight());
+        Dimension bmpScaleD = new Dimension();
+        int responseInt = JOptionPane.showOptionDialog(drawingBoard,
+                "Select if you would like to use the current dimensions or manually enter them",
+                "Bitmap Dimension Choice",
+                JOptionPane.YES_NO_OPTION,
+                JOptionPane.QUESTION_MESSAGE,
+                null,
+                options,
+                options[0]);
+        if (responseInt == 1){
+            Boolean validData = false;
+            String inputDimension = "";
+            while (validData == false){
+                String userInput = (String)JOptionPane.showInputDialog(drawingBoard, "Please enter your dimensions" +
+                        " in the format 123x123");
+                userInput = userInput.trim();
+                if (userInput.matches("\\d+x\\d+")){
+                    String[] userInputs = userInput.split("x");
+                    int width = Integer.valueOf(userInputs[0]);
+                    int height = Integer.valueOf(userInputs[1]);
+                    if (width < thresholdD && height < thresholdD){
+                        bmpScaleD.width = width;
+                        bmpScaleD.height = height;
+                        validData = true;
+                    }
+                    else{
+                        JOptionPane.showMessageDialog(drawingBoard, "Dimensions must be below the value " +
+                                thresholdD);
+                    }
+                }
+                else{
+                    JOptionPane.showMessageDialog(drawingBoard, "You must enter two sets of integers" +
+                            " combined by an 'x'");
+                }
+            }
+        }
+        BufferedImage bufferedImage = new BufferedImage(bmpD.width, bmpD.height, BufferedImage.TYPE_INT_RGB);
+        Graphics2D graphicImage = bufferedImage.createGraphics();
+        drawingBoard.paint(graphicImage);
+        graphicImage.dispose();
+        try {
+            ImageIO.write(bufferedImage, "bmp", new File("C:\\Users\\Comuser\\Documents\\bitmap.bmp"));
+        } catch (IOException e) {
+        }
+    }
     public static ShapesEnum.Shapes changeShape(ShapesEnum.Shapes newShape){
         return newShape;
     }
@@ -63,28 +129,19 @@ public final class MenuCommands {
         String shape = String.valueOf(lastShape.component);
         JCheckBox newChkbx = new JCheckBox(index + ": " + shape);
         newChkbx.setEnabled(false);
-        newChkbx.setSelected(true);
+        newChkbx.setSelected(false);
         sideBar.add(newChkbx);
-        sideBar.validate(); //Updates sidebar
     }
     public static boolean showUndoHistory(JFrame frame, JPanel sideBar, JPanel drawingBoard,
-                                          LinkedList<ComponentsClass.undoListHelper> compList,
-                                          LinkedList<ComponentsClass.undoListHelper> undoHistoryStore,
-                                          HashMap<Integer, Integer> undoHistoryMapping,
                                           ItemListener il, boolean undoHistoryActive){
         if (!(undoHistoryActive)){
-            undoHistoryStore = compList;
-            undoHistoryMapping.clear();
-            for (int index = 0; index < compList.size(); index++){
-                undoHistoryMapping.put(index, 1);
-            }
             JOptionPane.showMessageDialog(frame,
                     "Undo history is activated, this prevents you from adding new shapes, but allows you" +
-                            " to see any combination of previous shapes by ticking the corresponding sidebar item");
+                            " to see all previous shapes before the selected shape");
             for (int index = 0; index < sideBar.getComponents().length; index++){
                 JCheckBox setChkbx = (JCheckBox) sideBar.getComponent(index);
                 setChkbx.setEnabled(true);
-                setChkbx.setSelected(true);
+                setChkbx.setSelected(false);
                 setChkbx.addItemListener(il);
             }
             for (MouseListener ml : drawingBoard.getMouseListeners()){
@@ -103,7 +160,7 @@ public final class MenuCommands {
     public static boolean editUndoHistory(JFrame frame, JPanel sideBar, JPanel drawingBoard, ComponentsClass comp,
                                       MouseMotionListener mml, MouseListener ml,
                                           LinkedList<ComponentsClass.undoListHelper> undoHistoryStore,
-                                          boolean undoHistoryActive){
+                                          int undoHistoryNum, boolean undoHistoryActive){
         if (undoHistoryActive){
             Object[] options = {"Save selected picture", "Return to undo history", "Deactivate undo history"};
             int responseInt = JOptionPane.showOptionDialog(frame,
@@ -116,46 +173,38 @@ public final class MenuCommands {
                     options,
                     options[1]);
             if (responseInt == 2 || responseInt == 0){
+                comp.undoList = undoHistoryStore;
                 if (responseInt == 0){
-                    ComponentsClass newComp = new ComponentsClass(new Dimension(0, 0));
-                    newComp = comp;
-                    for (int index = 0; index < undoHistoryStore.size(); index++){
-                        ComponentsClass.undoListHelper helper = undoHistoryStore.get(index);
-                        if (!(comp.undoList.contains(helper))){
-                            newComp.Undo(helper, index);
-                        }
+                    int numTimesToUndo = comp.undoList.size() - undoHistoryNum;
+                    for (int index = 1; index < numTimesToUndo; index++){
+                        comp.Undo();
                     }
-                    comp = newComp;
-                    for (int index = 0; index < sideBar.getComponents().length; index++){
-                        sideBar.removeAll();
-                    }
-                    for (int index = 0; index < comp.undoList.size(); index++){
-                        ComponentsClass.undoListHelper currentShape = comp.undoList.get(index);
-                        currentShape.index = index;
-                        String i = String.valueOf(currentShape.index);
-                        String shape = String.valueOf(currentShape.component);
-                        JCheckBox newChkbx = new JCheckBox(i + ": " + shape);
+                    sideBar.removeAll();
+                    for (ComponentsClass.undoListHelper helper : comp.undoList){
+                        String index = String.valueOf(helper.index);
+                        String shape = String.valueOf(helper.component);
+                        JCheckBox newChkbx = new JCheckBox(index + ": " + shape);
                         sideBar.add(newChkbx);
                     }
-                    sideBar.setVisible(false);
-                    sideBar.setVisible(true);//Updates sidebar
                 }
                 for (int index = 0; index < sideBar.getComponents().length; index++){
                     JCheckBox setChkbx = (JCheckBox) sideBar.getComponent(index);
                     setChkbx.setEnabled(false);
-                    setChkbx.setSelected(true);
+                    if (index + 1 == sideBar.getComponents().length){
+                        setChkbx.setSelected(true);
+                    }
+                    setChkbx.setSelected(false);
                 }
                 drawingBoard.addMouseMotionListener(mml);
                 drawingBoard.addMouseListener(ml);
                 undoHistoryActive = false;
+
             }
         }
         else{
             JOptionPane.showMessageDialog(frame, "Undo history is not active");
         }
         return undoHistoryActive;
-
-
     }
 
 
