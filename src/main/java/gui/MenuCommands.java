@@ -67,13 +67,22 @@ public final class MenuCommands {
     }
     /**
      * saveFile instantiates a new JFileChooser and then uses this to open a save dialogue, allowing for the
-     * saving of VEC files. The dialoge is displayed over the parent frame of the GUI.
+     * saving of VEC files. The dialogue is displayed over the parent frame of the GUI.
      *
      * @param frame A JFrame which serves as the parent of all other components.
      */
-    public static void saveFile(JFrame frame){
+    public static String saveFile(JFrame frame){
         JFileChooser fileChooser = new JFileChooser();
-        fileChooser.showSaveDialog(frame);
+        fileChooser.setDialogTitle("Save VEC File");
+        fileChooser.setAcceptAllFileFilterUsed(false);
+        FileNameExtensionFilter vecFilter = new FileNameExtensionFilter("VEC files", "vec");
+        fileChooser.addChoosableFileFilter(vecFilter);
+        int status = fileChooser.showSaveDialog(frame);
+        if (status == JFileChooser.APPROVE_OPTION) { // if the user has selected a file
+            File selectedFile = fileChooser.getSelectedFile();
+            return selectedFile.getAbsolutePath();
+        }
+        return ""; // if the user selects nothing
     }
     /**
      * openFile instantiates a new JFileChooser and then uses this to open an open dialogue, allowing for the
@@ -93,7 +102,7 @@ public final class MenuCommands {
             File selectedFile = fileChooser.getSelectedFile();
             return selectedFile.getAbsolutePath();
         }
-        return ""; // this has to be here or java errors
+        return ""; // if the user selects nothing
     }
 
     /**
