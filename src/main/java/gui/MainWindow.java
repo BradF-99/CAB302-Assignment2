@@ -31,20 +31,21 @@ public class MainWindow {
     Component[] sideBarComps;
     private JPanel drawingBoard;
     private ComponentsClass comp;
-    private HashMap<Integer, Integer> undoHistoryMapping;
     private LinkedList<ComponentsClass.undoListHelper> undoHistoryStore;
-    private int undoHistoryNum;
     private JColorChooser colorChooser;
     private java.awt.Point startPoint;
     private ShapesEnum.Shapes currentShape = ShapesEnum.Shapes.ELLIPSE;
     private Color selectedBorderColor = Color.BLACK;
     private Color selectedFillColor = Color.BLACK;
-    private boolean filled = true;
+    private boolean filled = false;
+    private int undoHistoryNum;
     private boolean undoHistoryActive = false;
-
+    private boolean undoPolygon = false;
     private List<String[]> argsList = new ArrayList<>();
     private FileRead fileReader = new FileRead();
     private FileWrite fileWriter = new FileWrite();
+    private boolean started = false;
+    private LinkedList<Point2D.Float> polyPoints = new LinkedList<>();
 
 
     /**
@@ -69,11 +70,10 @@ public class MainWindow {
 
         //Create menu components
         String[] dropdownTitle = {"File", "Picture Commands", "Drawing Tools", "Colour Tools"};
-        String[] fileCmds = {"New File","Open (Ctrl + O)", "Save (Ctrl + S)"}; //List of options in dropdown
-        String[] additionalCmds = {"Undo (ctrl+z)", "Show Undo History (ctrl+h)", "Confirm Selected History (ctrl+r)",
-                "Export BMP"};
-        String[] drawingCmds = {"Plot", "Line", "Rectangle", "Ellipse", "Polygon"};
-        String[] colorCmds = {"Fill Colour", "Pen Colour"};
+        String[] fileCmds = {"New File","Open (Ctrl + O)", "Save (Ctrl + S)", "Export BMP (ctrl+b)"}; //List of options in dropdown
+        String[] additionalCmds = {"Undo (ctrl+z)", "Show Undo History (ctrl+h)", "Confirm Selected History (ctrl+r)"};
+        String[] drawingCmds = {"Plot", "Line", "Rectangle", "Ellipse", "Polygon", "Clear Polygon"};
+        String[] colorCmds = {"Fill Colour", "Pen Colour", "Enable Fill"};
         for (String title : dropdownTitle){
             mainMenu.add(new JMenu(title));
         }
@@ -128,8 +128,6 @@ public class MainWindow {
      * must call comp.repaint() to ensure that all the components are drawn correctly.
      */
     class MyMouseAdapter extends MouseAdapter {
-        private boolean started = false;
-        private LinkedList<Point2D.Float> polyPoints = new LinkedList<>();
         @Override
         public void mousePressed(MouseEvent e) {
             Dimension windowSize = new Dimension(drawingBoard.getSize());
@@ -147,6 +145,8 @@ public class MainWindow {
                     polyPoints.clear();
                     comp.polyComp.clearDrawObject();
                     comp.addUndo(comp.polyComp.polygon.size() - 1, ShapesEnum.Shapes.POLYGON);
+                    MenuCommands.addUndoHistory(comp, sideBar, btnGroup);
+                    MenuCommands.refreshComps(sideBarComps);
                     started = false;
                 } else {
                     comp.polyComp.addDrawObject(comp.pointToFloat(e.getPoint().x,windowSize.width), comp.pointToFloat(e.getPoint().y,windowSize.height),selectedBorderColor);
@@ -159,6 +159,8 @@ public class MainWindow {
             if(currentShape == ShapesEnum.Shapes.PLOT) {
                 comp.plotComp.addNewObject(comp.pointToFloat(e.getPoint().x,windowSize.width), comp.pointToFloat(e.getPoint().y,windowSize.height), selectedBorderColor);
                 comp.addUndo(comp.plotComp.plots.size() - 1, ShapesEnum.Shapes.PLOT);
+                MenuCommands.addUndoHistory(comp, sideBar, btnGroup);
+                MenuCommands.refreshComps(sideBarComps);
             }
             comp.repaint();
         }
@@ -171,20 +173,24 @@ public class MainWindow {
                         comp.pointToFloat(e.getPoint().x,windowSize.width),comp.pointToFloat(e.getPoint().y,windowSize.height),selectedBorderColor);
                 comp.lineComp.clearDrawObject();
                 comp.addUndo(comp.lineComp.lines.size() - 1, ShapesEnum.Shapes.LINE);
+                MenuCommands.addUndoHistory(comp, sideBar, btnGroup);
+                MenuCommands.refreshComps(sideBarComps);
             }else if(currentShape == ShapesEnum.Shapes.RECTANGLE){
                 comp.rectComp.addNewObject(comp.pointToFloat(startPoint.x,windowSize.width),comp.pointToFloat(startPoint.y,windowSize.height)
                         ,comp.pointToFloat(e.getPoint().x,windowSize.width),comp.pointToFloat(e.getPoint().y, windowSize.height),selectedBorderColor,filled,selectedFillColor);
                 comp.rectComp.clearDrawObject();
                 comp.addUndo(comp.rectComp.shapes.size() - 1,ShapesEnum.Shapes.RECTANGLE);
+                MenuCommands.addUndoHistory(comp, sideBar, btnGroup);
+                MenuCommands.refreshComps(sideBarComps);
             }else if(currentShape == ShapesEnum.Shapes.ELLIPSE){
                 comp.ellComp.addNewObject(comp.pointToFloat(startPoint.x,windowSize.width),comp.pointToFloat(startPoint.y,windowSize.height)
                         ,comp.pointToFloat(e.getPoint().x,windowSize.width),comp.pointToFloat(e.getPoint().y, windowSize.height),selectedBorderColor,filled,selectedFillColor);
                 comp.ellComp.clearDrawObject();
                 comp.addUndo(comp.ellComp.shapes.size() - 1, ShapesEnum.Shapes.ELLIPSE);
+                MenuCommands.addUndoHistory(comp, sideBar, btnGroup);
+                MenuCommands.refreshComps(sideBarComps);
             }
             comp.repaint();
-            MenuCommands.addUndoHistory(comp, sideBar, btnGroup);
-            MenuCommands.refreshComps(sideBarComps);
         }
 
         @Override
@@ -239,9 +245,6 @@ public class MainWindow {
                         new MyMouseAdapter(), new MyMouseAdapter(), undoHistoryStore, undoHistoryNum, undoHistoryActive);
                 MenuCommands.refreshComps(sideBarComps);
             }
-            else if (pressedComp == additionalOpt.getMenuComponent(3)){
-                MenuCommands.exportBMP(drawingBoard);
-            }
             else if (pressedComp == fileOpt.getMenuComponent(0)){
                 sideBar.removeAll();
                 comp.clearAllObjects();
@@ -258,7 +261,10 @@ public class MainWindow {
                 }
             }
             else if (pressedComp == fileOpt.getMenuComponent(2)){
-                MenuCommands.saveFile(frame);
+                MenuCommands.saveFile(frame, undoHistoryActive);
+            }
+            else if (pressedComp == fileOpt.getMenuComponent(3)){
+                MenuCommands.exportBMP(drawingBoard, undoHistoryActive);
             }
             else if (pressedComp == drawingOpt.getMenuComponent(0)){
                 currentShape = MenuCommands.changeShape(ShapesEnum.Shapes.PLOT);
@@ -275,6 +281,9 @@ public class MainWindow {
             else if (pressedComp == drawingOpt.getMenuComponent(4)){
                 currentShape = MenuCommands.changeShape(ShapesEnum.Shapes.POLYGON);
             }
+            else if (pressedComp == drawingOpt.getMenuComponent(5)){
+                started = MenuCommands.clearPolygon(started, polyPoints, comp, frame);
+            }
             else if (pressedComp == colorOpt.getMenuComponent(0)){
                 MenuCommands.changeColor(frame, colorChooser, new ConfirmListenerFill(), new CancelListener(),
                         selectedFillColor);
@@ -282,6 +291,9 @@ public class MainWindow {
             else if (pressedComp == colorOpt.getMenuComponent(1)){
                 MenuCommands.changeColor(frame, colorChooser, new ConfirmListenerPen(), new CancelListener(),
                         selectedBorderColor);
+            }
+            else if (pressedComp == colorOpt.getMenuComponent(2)){
+                filled = MenuCommands.enableFill(filled);
             }
         }
     }
@@ -301,13 +313,13 @@ public class MainWindow {
            System.out.println(e.getKeyChar());
            if (e.isControlDown()){
                if (pressedKey == KeyEvent.VK_S){
-                   MenuCommands.saveFile(frame);
+                   MenuCommands.saveFile(frame, undoHistoryActive);
                }
                else if (pressedKey == KeyEvent.VK_O){
                    MenuCommands.openFile(frame);
                }
                else if (pressedKey == KeyEvent.VK_B){
-                   MenuCommands.exportBMP(drawingBoard);
+                   MenuCommands.exportBMP(drawingBoard, undoHistoryActive);
                }
                else if (pressedKey == KeyEvent.VK_Z){
                    MenuCommands.undo(comp, frame, sideBar, undoHistoryActive);
@@ -545,11 +557,13 @@ public class MainWindow {
         // reset our stuff
         selectedFillColor = Color.BLACK;
         selectedBorderColor = Color.BLACK;
+        filled = false;
         currentShape = ShapesEnum.Shapes.LINE;
 
         MenuCommands.refreshComps(sideBarComps);
         comp.repaint(); // its too fast for repaints during file load which makes me sad :(
         argsList.clear();
+        System.out.println(undo)
     }
 
     /**
