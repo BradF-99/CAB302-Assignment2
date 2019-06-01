@@ -5,6 +5,7 @@ import main.java.components.*;
 import java.awt.*;
 import java.awt.event.*;
 import java.awt.geom.Point2D;
+import java.security.Key;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedList;
@@ -272,7 +273,30 @@ public class MainWindow {
         public void keyPressed(KeyEvent e) {
            int pressedKey = e.getKeyCode();
            System.out.println(e.getKeyChar());
-           if (e.isControlDown()){ //Will readd key bindings after finishing all menu commands
+           if (e.isControlDown()){
+               if (pressedKey == KeyEvent.VK_S){
+                   MenuCommands.saveFile(frame);
+               }
+               else if (pressedKey == KeyEvent.VK_O){
+                   MenuCommands.openFile(frame);
+               }
+               else if (pressedKey == KeyEvent.VK_B){
+                   MenuCommands.exportBMP(drawingBoard);
+               }
+               else if (pressedKey == KeyEvent.VK_Z){
+                   MenuCommands.undo(comp, frame, sideBar, undoHistoryActive);
+                   MenuCommands.refreshComps(sideBarComps);
+               }
+               else if (pressedKey == KeyEvent.VK_H){
+                   undoHistoryActive = MenuCommands.showUndoHistory(frame, sideBar, drawingBoard,
+                           new UndoHistorySelectingShapes(), undoHistoryActive);
+                   undoHistoryStore = MenuCommands.saveUndoList(comp);
+               }
+               else if (pressedKey == KeyEvent.VK_R){
+                   undoHistoryActive = MenuCommands.editUndoHistory(frame, sideBar, drawingBoard, btnGroup, comp,
+                           new MyMouseAdapter(), new MyMouseAdapter(), undoHistoryStore, undoHistoryNum, undoHistoryActive);
+                   MenuCommands.refreshComps(sideBarComps);
+               }
            }
         }
     }
@@ -377,6 +401,7 @@ public class MainWindow {
             JRadioButton btn = (JRadioButton) itemEvent.getItem();
             Component[] btns = sideBar.getComponents();
             undoHistoryNum = undoHistoryStore.size() - 1;
+            frame.requestFocus(); //used to ensure that frame's keyboard listener still works
             if (btn.isSelected()){
                 for (int index = 0; index < btns.length; index++) {
                     JRadioButton currentBtn = (JRadioButton) sideBar.getComponent(index);
