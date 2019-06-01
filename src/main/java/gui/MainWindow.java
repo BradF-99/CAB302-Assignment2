@@ -27,7 +27,7 @@ public class MainWindow {
     private ComponentsClass comp;
     private HashMap<Integer, Integer> undoHistoryMapping;
     private LinkedList<ComponentsClass.undoListHelper> undoHistoryStore;
-    ComponentsClass comp;
+    private int undoHistoryNum;
     private JColorChooser colorChooser;
     private java.awt.Point startPoint;
     private ShapesEnum.Shapes currentShape = ShapesEnum.Shapes.ELLIPSE;
@@ -39,8 +39,7 @@ public class MainWindow {
     private List<String[]> argsList = new ArrayList<>();
     private FileRead fileReader = new FileRead();
     private FileWrite fileWriter = new FileWrite();
-    private LinkedList<ComponentsClass.undoListHelper> undoHistoryStore;
-    private int undoHistoryNum;
+
 
     /**
      * buildGUI()
@@ -420,24 +419,28 @@ public class MainWindow {
                     comp.lineComp.addNewObject(x1, y1, x2, y2, selectedBorderColor );
                     comp.addUndo(comp.lineComp.lines.size() - 1, ShapesEnum.Shapes.LINE);
                     MenuCommands.addUndoHistory(comp, sideBar);
+                    MenuCommands.refreshComps(sideBarComps);
                     break;
                 case "RECTANGLE":
                     currentShape = ShapesEnum.Shapes.RECTANGLE;
                     comp.rectComp.addNewObject(x1, y1, x2, y2, selectedBorderColor,fill,selectedFillColor);
                     comp.addUndo(comp.rectComp.shapes.size() - 1,ShapesEnum.Shapes.RECTANGLE);
                     MenuCommands.addUndoHistory(comp, sideBar);
+                    MenuCommands.refreshComps(sideBarComps);
                     break;
                 case "ELLIPSE":
                     currentShape = ShapesEnum.Shapes.ELLIPSE;
                     comp.ellComp.addNewObject(x1, y1, x2, y2, selectedBorderColor,fill,selectedFillColor);
                     comp.addUndo(comp.ellComp.shapes.size() - 1, ShapesEnum.Shapes.ELLIPSE);
                     MenuCommands.addUndoHistory(comp, sideBar);
+                    MenuCommands.refreshComps(sideBarComps);
                     break;
                 case "PLOT":
                     currentShape = ShapesEnum.Shapes.PLOT;
                     comp.plotComp.addNewObject(x1, y1, selectedBorderColor);
                     comp.addUndo(comp.plotComp.plots.size() - 1, ShapesEnum.Shapes.PLOT);
                     MenuCommands.addUndoHistory(comp, sideBar);
+                    MenuCommands.refreshComps(sideBarComps);
                     break;
                 case "POLYGON":
                     currentShape = ShapesEnum.Shapes.POLYGON;
@@ -456,6 +459,7 @@ public class MainWindow {
                     polyPoints.clear();
                     comp.addUndo(comp.polyComp.polygon.size() - 1, ShapesEnum.Shapes.POLYGON);
                     MenuCommands.addUndoHistory(comp, sideBar);
+                    MenuCommands.refreshComps(sideBarComps);
                     break;
                 case "PEN":
                     selectedBorderColor = Color.decode(argument[1]);
