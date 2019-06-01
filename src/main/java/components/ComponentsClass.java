@@ -48,6 +48,19 @@ public class ComponentsClass extends JComponent {
         undoList.add(new undoListHelper(index, shape));
     }
 
+
+    /**
+     * Removes all the shapes from te components and the undoList
+     */
+    public void clearAllObjects() {
+        lineComp.clearObjects();
+        ellComp.clearObjects();
+        rectComp.clearObjects();
+        polyComp.clearObjects();
+        plotComp.clearObjects();
+        undoList.clear();
+    }
+
     /**
      * Gets and sets frameSize (called by the frameresize event)
      * @param frameSize Dimension of the frame
