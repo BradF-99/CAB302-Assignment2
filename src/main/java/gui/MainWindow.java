@@ -16,12 +16,17 @@ import main.java.exceptions.FileInvalidArgumentException;
 import main.java.filehandler.*;
 
 
+/**
+ * MainWindow constitues the GUI, and as such contains all of the graphical and event handler configurations and
+ * declarations.
+ */
 public class MainWindow {
     private JFrame frame;
     private JMenuBar mainMenu;
     private JSplitPane mainDisplay;
     private JPanel sideBar;
     private JScrollPane sideBarScroll;
+    private ButtonGroup btnGroup;
     Component[] sideBarComps;
     private JPanel drawingBoard;
     private ComponentsClass comp;
@@ -42,18 +47,19 @@ public class MainWindow {
 
 
     /**
-     * buildGUI()
-     * Does what it says on the tin!
+     * buildGUI instantiates all of the components of the GUI, configures their graphical settings and adds event
+     * listeners.
      */
 
     private void buildGUI() {
         //Create Core GUI Components
         comp = new ComponentsClass(new Dimension(0,0));
-        frame = new JFrame("Vector Design Tool");
+        frame = new JFrame("Drawing Program");
         mainMenu = new JMenuBar();
         mainDisplay = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT);
         sideBar = new JPanel();
         sideBarScroll = new JScrollPane(sideBar);
+        btnGroup = new ButtonGroup();
         sideBarComps = new Component[]{sideBar, sideBarScroll};
         drawingBoard = new JPanel();
         colorChooser = new JColorChooser();
@@ -176,7 +182,7 @@ public class MainWindow {
                 comp.addUndo(comp.ellComp.shapes.size() - 1, ShapesEnum.Shapes.ELLIPSE);
             }
             comp.repaint();
-            MenuCommands.addUndoHistory(comp, sideBar);
+            MenuCommands.addUndoHistory(comp, sideBar, btnGroup);
             MenuCommands.refreshComps(sideBarComps);
         }
 
@@ -207,6 +213,7 @@ public class MainWindow {
         /**
          * This eventListener checks for what button is pressed, and then calls
          * the appropriate static method from MenuCommands (e.g. Undo will call MenuCommands.undo()
+         *
          * @param e the MouseEvent, used to check what component was pressed
          */
         @Override
@@ -227,7 +234,7 @@ public class MainWindow {
 
             }
             else if (pressedComp == additionalOpt.getMenuComponent(2)){
-                undoHistoryActive = MenuCommands.editUndoHistory(frame, sideBar, drawingBoard, comp,
+                undoHistoryActive = MenuCommands.editUndoHistory(frame, sideBar, drawingBoard, btnGroup, comp,
                         new MyMouseAdapter(), new MyMouseAdapter(), undoHistoryStore, undoHistoryNum, undoHistoryActive);
                 MenuCommands.refreshComps(sideBarComps);
             }
@@ -301,18 +308,29 @@ public class MainWindow {
      * screen size. ComponentAdapter is extended as it already provides the componentResized method to be overloaded
      */
     class MyWindowListener extends ComponentAdapter{
+        /**
+         * componentResized calls windowChangeActions upon resize
+         * @param e Placeholder
+         */
         @Override
         public void componentResized(ComponentEvent e){
             windowChangeActions();
         }
-
+        /**
+         * componentShown calls windowChangeActions upon being shown
+         * @param e Placeholder
+         */
         @Override
         public void componentShown(ComponentEvent e){
             windowChangeActions();
         }
 
+        /**
+         * windowChangeActions sets the divider's location on the screen, using a series of widths to
+         * provide a dynamic and smooth appearance as the width shrinks or widens. It also ensures that the
+         * ComponentsClass object contained by the drawingBoard has the same dimensions as the drawingBoard
+         */
         public void windowChangeActions(){
-            System.out.println(mainDisplay.getWidth());
             if (mainDisplay.getWidth() > 1500){
                 mainDisplay.setDividerLocation(0.09);
             }
@@ -328,58 +346,85 @@ public class MainWindow {
     }
 
     /**
-     * MySideBarListener checks the width of the sidebar, and sets the buttons to that width.
-     * ComponentAdapter is extended as it already provides the componentResized method to be overloaded
+     * ConfirmListenerFill handles the processng if the user accepts a change of fill colour.
      */
-
-
     class ConfirmListenerFill implements ActionListener{
+        /**
+         * actionPerformed sets the private variable selectedFillColor to the colorChooser's current colour,
+         * as such setting the fill colour.
+         * @param actionEvent A placeholder
+         */
         @Override
         public void actionPerformed(ActionEvent actionEvent) {
             selectedFillColor = colorChooser.getColor();
         }
     }
 
+    /**
+     * ConfirmListenerPen handles the processng if the user accepts a change of pen colour.
+     */
     class ConfirmListenerPen implements ActionListener{
+        /**
+         * actionPerformed sets the private variable selectedBorderColor to the colorChooser's current colour,
+         * as such setting the pen colour.
+         * @param actionEvent A placeholder
+         */
         @Override
         public void actionPerformed(ActionEvent actionEvent) {
             selectedBorderColor = colorChooser.getColor();
         }
     }
 
+    /**
+     * CancelListener is a placeholder class used for MenuCommands.changeColor in the event that cancel logic is required.
+     */
     class CancelListener implements ActionListener{
         @Override
         public void actionPerformed(ActionEvent actionEvent) {
         }
     }
 
+    /**
+     * UndoHistorySelectingShapes is an ItemListener applied to every JRadioButton in the sideBar, and is responsible
+     * for allowing users to 'step back' through states of the program.
+     */
     class UndoHistorySelectingShapes implements ItemListener{
+        /**
+         * itemStateChanged finds the index of the selected radio button within the list of all radio buttons contained
+         * by the sideBar. It then creates a new LinkedList of undoListHelpers which will only contain those shapes at or
+         * below the selected index. The ComponentsClass object then has its undoList set to this list so as to only
+         * show the requested shapes. The object's undoList is reset to full on each call of this method by using the
+         * undoHistoryStore.
+         * @param itemEvent Used to check if the radio button is selected or not.
+         */
         @Override
         public void itemStateChanged(ItemEvent itemEvent) {
             comp.undoList = undoHistoryStore;
-            JCheckBox chkbx = (JCheckBox) itemEvent.getItem();
-            Component[] chkbxs = sideBar.getComponents();
-            undoHistoryNum = 0;
-            for (int index = 0; index < chkbxs.length; index++) {
-                JCheckBox currentChkbx = (JCheckBox) sideBar.getComponent(index);
-                if (currentChkbx == chkbx) {
-                    undoHistoryNum = index;
-                    break;
+            JRadioButton btn = (JRadioButton) itemEvent.getItem();
+            Component[] btns = sideBar.getComponents();
+            undoHistoryNum = undoHistoryStore.size() - 1;
+            if (btn.isSelected()){
+                for (int index = 0; index < btns.length; index++) {
+                    JRadioButton currentBtn = (JRadioButton) sideBar.getComponent(index);
+                    if (currentBtn == btn) {
+                        undoHistoryNum = index;
+                        break;
+                    }
                 }
+                LinkedList<ComponentsClass.undoListHelper> displayShapes = new LinkedList<>();
+                int count = 0;
+                for (ComponentsClass.undoListHelper helper : comp.undoList){
+                    if (count <= undoHistoryNum){
+                        displayShapes.add(helper);
+                        count += 1;
+                    }
+                    else{
+                        break;
+                    }
+                }
+                comp.undoList = displayShapes;
+                comp.repaint();
             }
-            LinkedList<ComponentsClass.undoListHelper> displayShapes = new LinkedList<>();
-            int count = 0;
-            for (ComponentsClass.undoListHelper helper : comp.undoList){
-                if (count <= undoHistoryNum){
-                    displayShapes.add(helper);
-                    count += 1;
-                }
-                else{
-                    break;
-                }
-            }
-            comp.undoList = displayShapes;
-            comp.repaint();
 
         }
     }
@@ -483,6 +528,9 @@ public class MainWindow {
         argsList.clear();
     }
 
+    /**
+     * showGUI runs the GUI until such time that the user closes the program.
+     */
     public void showGUI() {
         javax.swing.SwingUtilities.invokeLater(() -> {
             buildGUI();
