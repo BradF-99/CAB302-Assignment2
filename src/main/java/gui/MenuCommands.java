@@ -246,7 +246,7 @@ public final class MenuCommands {
                 setBtn.setEnabled(true);
                 setBtn.setSelected(false);
                 setBtn.addItemListener(il);
-                if (index + 1 == sideBar.getComponents().length){
+                if (index + 1 == sideBar.getComponents().length && index != 0){
                     setBtn.setSelected(true);
                 }
             }
