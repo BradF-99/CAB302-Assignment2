@@ -239,6 +239,9 @@ public class MainWindow {
                         new MyMouseAdapter(), new MyMouseAdapter(), undoHistoryStore, undoHistoryNum, undoHistoryActive);
                 MenuCommands.refreshComps(sideBarComps);
             }
+            else if (pressedComp == additionalOpt.getMenuComponent(3)){
+                MenuCommands.exportBMP(drawingBoard);
+            }
             else if (pressedComp == fileOpt.getMenuComponent(0)){
                 sideBar.removeAll();
                 comp.clearAllObjects();
@@ -256,9 +259,6 @@ public class MainWindow {
             }
             else if (pressedComp == fileOpt.getMenuComponent(2)){
                 MenuCommands.saveFile(frame);
-            }
-            else if (pressedComp == fileOpt.getMenuComponent(2)){
-                MenuCommands.exportBMP(drawingBoard);
             }
             else if (pressedComp == drawingOpt.getMenuComponent(0)){
                 currentShape = MenuCommands.changeShape(ShapesEnum.Shapes.PLOT);
@@ -456,9 +456,8 @@ public class MainWindow {
 
     private void fileRead(String path) throws IOException, FileInvalidArgumentException {
 
-        if(path.isBlank() || path.isEmpty()){
-            return; // user didn't select a file
-        }
+        if(path.isBlank() || path.isEmpty()) return; // user didn't select a file
+
         sideBar.removeAll();
         comp.clearAllObjects();
         argsList.clear();
