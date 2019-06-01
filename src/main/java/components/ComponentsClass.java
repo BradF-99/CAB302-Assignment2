@@ -95,6 +95,29 @@ public class ComponentsClass extends JComponent {
         }
     }
 
+    public void Undo(ComponentsClass.undoListHelper helper, Integer position){
+        if(undoList.size() != 0){
+            switch (helper.component){
+                case PLOT:
+                    plotComp.clearObject(helper.index);
+                    break;
+                case LINE:
+                    lineComp.clearObject(helper.index);
+                    break;
+                case RECTANGLE:
+                    rectComp.clearObject(helper.index);
+                    break;
+                case ELLIPSE:
+                    ellComp.clearObject(helper.index);
+                    break;
+                case POLYGON:
+                    polyComp.clearObject(helper.index);
+                    break;
+            }
+            undoList.remove(position);
+        }
+    }
+
     //List of drawn images
     public LinkedList<undoListHelper> undoList = new LinkedList<>();
 

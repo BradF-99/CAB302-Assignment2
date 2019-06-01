@@ -12,7 +12,11 @@
     <path id="test.classpath">
         <pathelement path="out/test"/>
         <pathelement path="out/main"/>
-        <fileset dir="lib/ant" includes="*.jar" />
+        <fileset dir="lib/ant">
+            <include name="**/*.jar" />
+            <include name="**/*.zip" />
+        </fileset>
+
     </path>
 
     <target name="build" description="clean build" depends="clean, test" />
