@@ -5,7 +5,7 @@
 [![Gitter](https://badges.gitter.im/CAB302-Group369/community.svg)](https://gitter.im/CAB302-Group369/community?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge)
 
 Assignment 2 (Vector Design Tool) for CAB302, Semester 1, 2019.   
-Built to Assignment Specification v1.0, current as of 2019-05-03.
+Built to Assignment Specification v1.0, current as of 2019-06-02.
 
 ## Authors
 
@@ -26,7 +26,7 @@ Built to Assignment Specification v1.0, current as of 2019-05-03.
 * JUnit Jupiter 5.5.0 and JUnit Jupiter 1.5.0 are used for unit testing.
     * For development purposes, these are located in the *lib* folder.
     * For TravisCI, all dependencies are downloaded during TravisCI's install phase and do not need to be included in the repository.
-* IntelliJ 2019.1.2 is used for development. 
+* IntelliJ 2019.1.3 is used for development. 
 * pdfTeX 3.14159265-2.6-1.40.19 (TeX Live 2018) is used for compiling supporting documentation.
 
 ## Notes

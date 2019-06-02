@@ -9,7 +9,7 @@ public class PolygonComponent{
 
     //inner polygon class
     public static class Polygon{
-        Object[] pointArray;
+        public Object[] pointArray;
         public Color borderColor;
         public boolean filled;
         public Color fillColor;

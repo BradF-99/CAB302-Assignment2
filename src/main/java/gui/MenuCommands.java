@@ -1,14 +1,15 @@
 package main.java.gui;
-//import javafx.scene.input.KeyCode;
 import main.java.components.*;
 import java.awt.*;
 import java.awt.event.*;
+import java.awt.geom.Point2D;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
 import java.util.LinkedList;
 import javax.imageio.ImageIO;
 import javax.swing.*;
+import javax.swing.filechooser.FileNameExtensionFilter;
 
 /**
  * MenuCommands is a utility class which contains the actions corresponding to keyboard or graphical commands
@@ -29,6 +30,21 @@ public final class MenuCommands {
     }
 
     /**
+     * newFile clears any working history, resetting the drawing panel to as if it had just been opened excluding
+     * selected shape and colours
+     * @param sideBar A JPanel which is used to store JRadioButtons for undo history functionality. These radio buttons
+     *                      each correspond to a particular shape
+     * @param comp A ComponentClass object, the 'canvas' on which drawing commands take place.
+     * @param argsList A list of String arrays, used for file writing.
+     */
+    public static void newFile(JPanel sideBar, ComponentsClass comp, java.util.List<String[]> argsList){
+        sideBar.removeAll();
+        comp.clearAllObjects();
+        argsList.clear();
+        comp.repaint();
+    }
+
+    /**
      * saveUndoList provides a single location for the returning of a ComponentsClass's undoList to another variable,
      * and for any processing that may have to be done when the undoList is saved.
      *
@@ -41,38 +57,66 @@ public final class MenuCommands {
 
     /**
      * undo removes a single shape that has been drawn, and clears the responding JRadioButton from the sideBar.
-     * Execution of this method is prevented if undo history is active, with a window alert appearing over the parent
-     * frame stating this if it is used whilst undo history is.
      *
      * @param comp A ComponentClass object, the 'canvas' on which drawing commands take place.
      * @param frame A JFrame which serves as the parent of all other components.
      * @param sideBar A JPanel which is used to store JRadioButtons for undo history functionality. These radio buttons
      *                each correspond to a particular shape
-     * @param undoHistoryActive A Boolean which is true iff undo history functionality is active.
      */
-    public static void undo(ComponentsClass comp, JFrame frame, JPanel sideBar, boolean undoHistoryActive){
+    public static void undo(ComponentsClass comp, JFrame frame, JPanel sideBar, Boolean undoHistoryActive){
         if (!(undoHistoryActive)){
             comp.Undo();
             comp.repaint();
             int length = sideBar.getComponents().length - 1;
-            if (length > -1){
+            if (length > -1) {
                 sideBar.remove(length);
             }
         }
         else{
-            JOptionPane.showMessageDialog(frame, "Undo history is active, use the history panel to undo");
+            JOptionPane.showMessageDialog(frame, "Undo is disabled whilst undo history is active");
         }
 
     }
     /**
      * saveFile instantiates a new JFileChooser and then uses this to open a save dialogue, allowing for the
-     * saving of VEC files. The dialoge is displayed over the parent frame of the GUI.
+     * saving of VEC files. The dialogue is displayed over the parent frame of the GUI.
      *
      * @param frame A JFrame which serves as the parent of all other components.
+     * @param undoHistoryActive A Boolean which is true if undo history is active, prevents saving if it is
      */
-    public static void saveFile(JFrame frame){
+    public static String saveFile(JFrame frame, Boolean undoHistoryActive){
+        if (undoHistoryActive){
+            JOptionPane.showMessageDialog(frame, "Undo History is active, please disable or save selected state");
+            return ""; //prevent execution of following code as undo history is active
+        }
         JFileChooser fileChooser = new JFileChooser();
-        fileChooser.showSaveDialog(frame);
+        fileChooser.setDialogTitle("Save VEC File");
+        fileChooser.setAcceptAllFileFilterUsed(false);
+        FileNameExtensionFilter vecFilter = new FileNameExtensionFilter("VEC files", "vec");
+        fileChooser.addChoosableFileFilter(vecFilter);
+        int status = fileChooser.showSaveDialog(frame);
+        if (status == JFileChooser.APPROVE_OPTION) { // if the user has selected a file
+            File selectedFile = fileChooser.getSelectedFile();
+            if(selectedFile.exists()){
+                Object[] options = {"Yes", "No", "Cancel"};
+                int responseInt = JOptionPane.showOptionDialog(frame,
+                        "This file already exists. Would you like to over-write it?",
+                        "File already exists",
+                        JOptionPane.YES_NO_OPTION,
+                        JOptionPane.QUESTION_MESSAGE,
+                        null,
+                        options,
+                        options[0]);
+                if(responseInt == 0) {
+                    selectedFile.delete();
+                    return selectedFile.getAbsolutePath();
+                }
+                else if (responseInt == 1 || responseInt == 2){
+                    return "";
+                }
+            } else return selectedFile.getAbsolutePath();
+        }
+        return ""; // if the user selects nothing
     }
     /**
      * openFile instantiates a new JFileChooser and then uses this to open an open dialogue, allowing for the
@@ -80,9 +124,19 @@ public final class MenuCommands {
      *
      * @param frame A JFrame which serves as the parent of all other components.
      */
-    public static void openFile(JFrame frame){
+    public static String openFile(JFrame frame){
         JFileChooser fileChooser = new JFileChooser();
-        fileChooser.showOpenDialog(frame);
+        fileChooser.setFileSelectionMode(JFileChooser.FILES_ONLY);
+        fileChooser.setDialogTitle("Open VEC File");
+        fileChooser.setAcceptAllFileFilterUsed(false);
+        FileNameExtensionFilter vecFilter = new FileNameExtensionFilter("VEC files", "vec");
+        fileChooser.addChoosableFileFilter(vecFilter);
+        int status = fileChooser.showOpenDialog(frame);
+        if (status == JFileChooser.APPROVE_OPTION) { // if the user has selected a file
+            File selectedFile = fileChooser.getSelectedFile();
+            return selectedFile.getAbsolutePath();
+        }
+        return ""; // if the user selects nothing
     }
 
     /**
@@ -93,16 +147,22 @@ public final class MenuCommands {
      *
      * @param drawingBoard The container for the ComponentsClass object which handles all drawing. Serves to set dimensions
      *                     and layout for the object.
+     * @param undoHistoryActive A boolean which is true if undo history is active, checked to prevent execution of
+     *                          saving.
      */
-    public static void exportBMP(JPanel drawingBoard){
+    public static void exportBMP(JPanel drawingBoard, Boolean undoHistoryActive){
+        if (undoHistoryActive){
+            JOptionPane.showMessageDialog(drawingBoard, "Undo History is active, please disable or save selected state");
+            return; //prevent execution of following code as undo history is active, used this style to make method more readable
+        }
         Object[] options = {"Use drawing board's current dimensions", "Manually enter dimensions"};
         int thresholdD = 6000;
         Dimension bmpD = new Dimension(drawingBoard.getWidth(), drawingBoard.getHeight());
-        Dimension bmpScaleD = new Dimension();
+        Dimension bmpScaleD = new Dimension(1, 1); //prevent any chance of unhandled exceptions
         boolean useUserDimensions = false;
-        String filePath = "C:\\Users\\Comuser\\Documents\\bitmap.bmp";
+        String filePath = "C:\\Users\\Comuser\\Documents\\bitmap.bmp"; //placeholder
         int responseInt = JOptionPane.showOptionDialog(drawingBoard,
-                "Select if you would like to use the current dimensions or manually enter them",
+                "Select if you would like to use the current dimensions or manually enter them for this Bitmap",
                 "Bitmap Dimension Choice",
                 JOptionPane.YES_NO_OPTION,
                 JOptionPane.QUESTION_MESSAGE,
@@ -111,24 +171,26 @@ public final class MenuCommands {
                 options[0]);
         if (responseInt == 1){
             Boolean validData = false;
-            String inputDimension = "";
             useUserDimensions = true;
             while (validData == false){
-                String userInput = (String)JOptionPane.showInputDialog(drawingBoard, "Please enter your dimensions" +
+                String userInput = JOptionPane.showInputDialog(drawingBoard, "Please enter your dimensions" +
                         " in the format 123x123");
+                if (userInput == null){
+                    return; //prevent further execution
+                }
                 userInput = userInput.trim();
                 if (userInput.matches("\\d+x\\d+")){
                     String[] userInputs = userInput.split("x");
                     int width = Integer.valueOf(userInputs[0]);
                     int height = Integer.valueOf(userInputs[1]);
-                    if (width < thresholdD && height < thresholdD){
+                    if (width < thresholdD && height < thresholdD && width > 0 && height > 0){
                         bmpScaleD.width = width;
                         bmpScaleD.height = height;
                         validData = true;
                     }
                     else{
                         JOptionPane.showMessageDialog(drawingBoard, "Dimensions must be below the value " +
-                                thresholdD);
+                                thresholdD + " and above 0");
                     }
                 }
                 else{
@@ -137,11 +199,32 @@ public final class MenuCommands {
                 }
             }
         }
+        //get the file location for saving the BMP
+        JFileChooser fileChooser = new JFileChooser();
+        fileChooser.setDialogTitle("Save BMP File");
+        fileChooser.setAcceptAllFileFilterUsed(false);
+        FileNameExtensionFilter bmpFilter = new FileNameExtensionFilter("BMP files", "bmp");
+        fileChooser.addChoosableFileFilter(bmpFilter);
+        int status = fileChooser.showSaveDialog(drawingBoard);
+        if (status == JFileChooser.APPROVE_OPTION) { // if the user has selected a file
+            File selectedFile = fileChooser.getSelectedFile();
+            filePath = selectedFile.getAbsolutePath();
+            //Add .bmp extension if not already present
+            if (!(filePath.matches(".*\\.bmp"))){
+                filePath += ".bmp";
+            }
+        }
+        else{
+            return; //cancel following execution
+        }
+        //Create image of the drawingBoard based on its current dimensions
         BufferedImage bufferedImage = new BufferedImage(bmpD.width, bmpD.height, BufferedImage.TYPE_INT_RGB);
         Graphics2D graphicImage = bufferedImage.createGraphics();
         drawingBoard.paint(graphicImage);
         graphicImage.dispose();
         BufferedImage bufferedImageToWrite = bufferedImage;
+        /*If the user submitted dimensions, create a scaled imaged of previously made image, using the user dimensions
+         for the scaling*/
         if (useUserDimensions){
             Image scaledImage = bufferedImage.getScaledInstance(bmpScaleD.width, bmpScaleD.height, Image.SCALE_SMOOTH);
             BufferedImage scaledBufferedImage = new BufferedImage(bmpScaleD.width, bmpScaleD.height, BufferedImage.TYPE_INT_RGB);
@@ -193,7 +276,7 @@ public final class MenuCommands {
      *
      * @param comp A ComponentClass object, the 'canvas' on which drawing commands take place.
      * @param sideBar A JPanel which is used to store JRadioButtons for undo history functionality. These radio buttons
-     *      *                each correspond to a particular shape.
+     *                      each correspond to a particular shape.
      * @param btnGroup A ButtonGroup, all radio buttons are added to this so that only one button can be selected.
      */
     public static void addUndoHistory(ComponentsClass comp, JPanel sideBar, ButtonGroup btnGroup){
@@ -235,7 +318,7 @@ public final class MenuCommands {
                 setBtn.setEnabled(true);
                 setBtn.setSelected(false);
                 setBtn.addItemListener(il);
-                if (index + 1 == sideBar.getComponents().length){
+                if (index + 1 == sideBar.getComponents().length && index != 0){
                     setBtn.setSelected(true);
                 }
             }
@@ -325,6 +408,74 @@ public final class MenuCommands {
         }
         return undoHistoryActive;
     }
+
+    /**
+     * enableFill determines if shapes will be drawn with a fill colour, or without any (no fill).
+     *
+     * @param filledSet A Boolean denoting if filling is currently enabled. If it is then it is true, otherwise it is false.
+     * @return true if filling is disabled (as such enabling it) or false if filling is disabled(as such disabling it).
+     */
+    public static Boolean enableFill(boolean filledSet){
+        return !(filledSet);
+    }
+
+    /**
+     * clearPolygon removes a set number of points from an uncomplete polygon, or all the points. It is separate to undo
+     * as the polygon is not a 'shape' until it is completed.
+     * @param started A Boolean which is true if there is an partial polygon in progress.
+     * @param polyPoints A LinkedList of Point2D.Float which has all the points of a the partial polygon.
+     * @param comp A ComponentsClass object, used as the canvas for all drawing.
+     * @param frame The JFrame which is the parent frame of all other components
+     * @return The started parameter, false if polyPoints is cleared, true if only some points are removed, and otherwise
+     * unchanged.
+     */
+    public static Boolean clearPolygon(boolean started, LinkedList<Point2D.Float> polyPoints, ComponentsClass comp,
+                                       JFrame frame) {
+        Object[] options = {"Yes, permanently erase the partial polygon", "No"};
+        if (!(started)) {
+            JOptionPane.showMessageDialog(frame, "There is no polygon in progress");
+        } else {
+            int responseInt = JOptionPane.showOptionDialog(frame,
+                    "Select if you would like to delete the current in progress polygon",
+                    "Select polygon clear option",
+                    JOptionPane.YES_NO_OPTION,
+                    JOptionPane.QUESTION_MESSAGE,
+                    null,
+                    options,
+                    options[0]);
+            if (responseInt == 0){
+                polyPoints.clear();
+                comp.polyComp.clearDrawObject();
+                started = false;
+                comp.repaint();
+            }
+        }
+        return started;
+    }
+
+    /**
+     * refreshEventListeners removes any event listeners present from the drawing board, and then readds them. This is
+     * intended to be used with commands such as New File which can be called whilst undo history is active, and makes
+     * sense to end undo history. The drawingBoard is cleared of listeners in case undo history is not active
+     * @param drawingBoard The container for the ComponentsClass object which handles all drawing. Serves to set dimensions
+     *                                 and layout for the object.
+     * @param ml A Mouse Listener, added after clearing old listeners.
+     * @param mml A Mouse Motion Listener, added after clearing old listeners.
+     * @return false, as undoHistory will be set to deactivated after this command is run.
+     */
+    public static Boolean refreshEventListeners(JPanel drawingBoard, MouseListener ml, MouseMotionListener mml){
+        for (MouseListener oldMl : drawingBoard.getMouseListeners()){
+            drawingBoard.removeMouseListener(oldMl);
+        }
+        for (MouseMotionListener oldMml : drawingBoard.getMouseMotionListeners()){
+            drawingBoard.removeMouseMotionListener(oldMml);
+        }
+        drawingBoard.addMouseListener(ml);
+        drawingBoard.addMouseMotionListener(mml);
+        return false;
+    }
+
+
 
 
 }
