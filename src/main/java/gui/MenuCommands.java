@@ -30,6 +30,21 @@ public final class MenuCommands {
     }
 
     /**
+     * newFile clears any working history, resetting the drawing panel to as if it had just been opened excluding
+     * selected shape and colours
+     * @param sideBar A JPanel which is used to store JRadioButtons for undo history functionality. These radio buttons
+     *                      each correspond to a particular shape
+     * @param comp A ComponentClass object, the 'canvas' on which drawing commands take place.
+     * @param argsList A list of String arrays, used for file writing.
+     */
+    public static void newFile(JPanel sideBar, ComponentsClass comp, java.util.List<String[]> argsList){
+        sideBar.removeAll();
+        comp.clearAllObjects();
+        argsList.clear();
+        comp.repaint();
+    }
+
+    /**
      * saveUndoList provides a single location for the returning of a ComponentsClass's undoList to another variable,
      * and for any processing that may have to be done when the undoList is saved.
      *
@@ -165,6 +180,24 @@ public final class MenuCommands {
                 }
             }
         }
+        //get the file location for saving the BMP
+        JFileChooser fileChooser = new JFileChooser();
+        fileChooser.setDialogTitle("Save BMP File");
+        fileChooser.setAcceptAllFileFilterUsed(false);
+        FileNameExtensionFilter bmpFilter = new FileNameExtensionFilter("BMP files", "bmp");
+        fileChooser.addChoosableFileFilter(bmpFilter);
+        int status = fileChooser.showSaveDialog(drawingBoard);
+        if (status == JFileChooser.APPROVE_OPTION) { // if the user has selected a file
+            File selectedFile = fileChooser.getSelectedFile();
+            filePath = selectedFile.getAbsolutePath();
+            //Add .bmp extension if not already present
+            if (!(filePath.matches(".*\\.bmp"))){
+                filePath += ".bmp";
+            }
+        }
+        else{
+            return; //cancel following execution
+        }
         //Create image of the drawingBoard based on its current dimensions
         BufferedImage bufferedImage = new BufferedImage(bmpD.width, bmpD.height, BufferedImage.TYPE_INT_RGB);
         Graphics2D graphicImage = bufferedImage.createGraphics();
@@ -224,7 +257,7 @@ public final class MenuCommands {
      *
      * @param comp A ComponentClass object, the 'canvas' on which drawing commands take place.
      * @param sideBar A JPanel which is used to store JRadioButtons for undo history functionality. These radio buttons
-     *      *                each correspond to a particular shape.
+     *                      each correspond to a particular shape.
      * @param btnGroup A ButtonGroup, all radio buttons are added to this so that only one button can be selected.
      */
     public static void addUndoHistory(ComponentsClass comp, JPanel sideBar, ButtonGroup btnGroup){
@@ -399,6 +432,28 @@ public final class MenuCommands {
             }
         }
         return started;
+    }
+
+    /**
+     * refreshEventListeners removes any event listeners present from the drawing board, and then readds them. This is
+     * intended to be used with commands such as New File which can be called whilst undo history is active, and makes
+     * sense to end undo history. The drawingBoard is cleared of listeners in case undo history is not active
+     * @param drawingBoard The container for the ComponentsClass object which handles all drawing. Serves to set dimensions
+     *                                 and layout for the object.
+     * @param ml A Mouse Listener, added after clearing old listeners.
+     * @param mml A Mouse Motion Listener, added after clearing old listeners.
+     * @return false, as undoHistory will be set to deactivated after this command is run.
+     */
+    public static Boolean refreshEventListeners(JPanel drawingBoard, MouseListener ml, MouseMotionListener mml){
+        for (MouseListener oldMl : drawingBoard.getMouseListeners()){
+            drawingBoard.removeMouseListener(oldMl);
+        }
+        for (MouseMotionListener oldMml : drawingBoard.getMouseMotionListeners()){
+            drawingBoard.removeMouseMotionListener(oldMml);
+        }
+        drawingBoard.addMouseListener(ml);
+        drawingBoard.addMouseMotionListener(mml);
+        return false;
     }
 
 
