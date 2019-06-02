@@ -152,6 +152,9 @@ public final class MenuCommands {
                 null,
                 options,
                 options[0]);
+        if (responseInt != 1 && responseInt != 0){
+            return; //Cancel execution if the exit cross is pressed
+        }
         if (responseInt == 1){
             Boolean validData = false;
             useUserDimensions = true;
