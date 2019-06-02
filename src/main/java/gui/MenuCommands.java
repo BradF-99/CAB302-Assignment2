@@ -123,6 +123,8 @@ public final class MenuCommands {
             } else {
                 return path;
             }
+        } else {
+            return "";
         }
         return ""; // if the user selects nothing
     }

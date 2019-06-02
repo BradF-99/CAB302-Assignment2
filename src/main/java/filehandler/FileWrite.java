@@ -21,6 +21,8 @@ public class FileWrite {
      * @throws IOException
      */
     public void writeFile(List<String> arguments, String filePath) throws IOException {
+        if(filePath.isEmpty()||filePath.isBlank()) return;
+
         BufferedWriter writer = new BufferedWriter(new FileWriter(filePath, false));
         for (String arg: arguments) {
             writer.write(arg);
