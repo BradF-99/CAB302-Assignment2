@@ -11,7 +11,7 @@ public class PolygonComponent{
      * Helper class for the polygon list.
      */
     public static class Polygon{
-        Object[] pointArray;
+        public Object[] pointArray;
         public Color borderColor;
         public boolean filled;
         public Color fillColor;
