@@ -561,8 +561,8 @@ public class MainWindow {
         selectedBorderColor = Color.BLACK;
         filled = false;
         currentShape = ShapesEnum.Shapes.LINE;
-
         MenuCommands.refreshComps(sideBarComps);
+        MenuCommands.refreshEventListeners(drawingBoard, new MyMouseAdapter(), new MyMouseAdapter())
         comp.repaint(); // its too fast for repaints during file load which makes me sad :(
         readArgsList.clear();
     }
