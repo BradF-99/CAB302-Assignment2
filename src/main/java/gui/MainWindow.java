@@ -4,9 +4,7 @@ import main.java.components.*;
 import java.awt.*;
 import java.awt.event.*;
 import java.awt.geom.Point2D;
-import java.security.Key;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.io.IOException;
 import java.util.LinkedList;
 import javax.swing.*;
@@ -41,7 +39,8 @@ public class MainWindow {
     private int undoHistoryNum;
     private boolean undoHistoryActive = false;
     private boolean undoPolygon = false;
-    private List<String[]> argsList = new ArrayList<>();
+    private List<String[]> readArgsList = new ArrayList<>();
+    private List<String> writeArgsList = new ArrayList<>();
     private FileRead fileReader = new FileRead();
     private FileWrite fileWriter = new FileWrite();
     private boolean started = false;
@@ -246,7 +245,7 @@ public class MainWindow {
                 MenuCommands.refreshComps(sideBarComps);
             }
             else if (pressedComp == fileOpt.getMenuComponent(0)){
-                MenuCommands.newFile(sideBar, comp, argsList);
+                MenuCommands.newFile(sideBar, comp, readArgsList);
                 undoHistoryActive = MenuCommands.refreshEventListeners(drawingBoard, new MyMouseAdapter(),
                         new MyMouseAdapter());
                 MenuCommands.refreshComps(sideBarComps);
@@ -261,7 +260,11 @@ public class MainWindow {
                 }
             }
             else if (pressedComp == fileOpt.getMenuComponent(2)){
-                MenuCommands.saveFile(frame, undoHistoryActive);
+                try {
+                    fileWrite(MenuCommands.saveFile(frame, undoHistoryActive));
+                } catch (IOException ex) {
+                    ex.printStackTrace();
+                }
             }
             else if (pressedComp == fileOpt.getMenuComponent(3)){
                 MenuCommands.exportBMP(drawingBoard, undoHistoryActive);
@@ -471,12 +474,12 @@ public class MainWindow {
 
         sideBar.removeAll();
         comp.clearAllObjects();
-        argsList.clear();
-        argsList = fileReader.readFile(path);
+        readArgsList.clear();
+        readArgsList = fileReader.readFile(path);
 
         boolean fill = false;
 
-        for (String[] argument : argsList){
+        for (String[] argument : readArgsList){
             // have to initialise these or java has a massive cry
             float x1 = 0.0f;
             float y1 = 0.0f;
@@ -561,17 +564,16 @@ public class MainWindow {
 
         MenuCommands.refreshComps(sideBarComps);
         comp.repaint(); // its too fast for repaints during file load which makes me sad :(
-        argsList.clear();
-        writeFile("");
+        readArgsList.clear();
     }
 
-    private void writeFile(String path) throws IOException {
+    private void fileWrite(String path) throws IOException {
         String arg = "";
         String colour = "";
         String penColour = "#000000";
         String fillColour = "OFF";
         boolean fillOn = false; // false by default
-        argsList.clear();
+        readArgsList.clear();
 
         for (int i = 0; i < comp.undoList.size(); i++) {
             arg = ""; // initialise arg every loop
@@ -687,8 +689,9 @@ public class MainWindow {
                 default:
                     break;
             }
-            //System.out.println(arg);
+            writeArgsList.add(arg);
         }
+        fileWriter.writeFile(writeArgsList,path);
     }
 
     /**
