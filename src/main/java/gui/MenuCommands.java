@@ -98,7 +98,12 @@ public final class MenuCommands {
         int status = fileChooser.showSaveDialog(frame);
         if (status == JFileChooser.APPROVE_OPTION) { // if the user has selected a file
             File selectedFile = fileChooser.getSelectedFile();
-            if(selectedFile.exists()){
+            path = selectedFile.getAbsolutePath();
+            if (!(path.matches(".*\\.vec"))){
+                path += ".vec";
+            }
+            File actualFile = new File(path); // used for checking overwrite
+            if(actualFile.exists()){
                 Object[] options = {"Yes", "No", "Cancel"};
                 int responseInt = JOptionPane.showOptionDialog(frame,
                         "This file already exists. Would you like to over-write it?",
@@ -109,24 +114,14 @@ public final class MenuCommands {
                         options,
                         options[0]);
                 if(responseInt == 0) {
-                    selectedFile.delete();
-                    path = selectedFile.getAbsolutePath();
-                    //Add .vec extension if not already present
-                    if (!(path.matches(".*\\.vec"))){
-                        path += ".vec";
-                        return path;
-                    }
+                    actualFile.delete();
+                    return path;
                 }
                 else if (responseInt == 1 || responseInt == 2){
                     return "";
                 }
             } else {
-                //Add .vec extension if not already present
-                path = selectedFile.getAbsolutePath();
-                if (!(path.matches(".*\\.vec"))){
-                    path += ".vec";
-                    return path;
-                }
+                return path;
             }
         }
         return ""; // if the user selects nothing
@@ -225,12 +220,34 @@ public final class MenuCommands {
         if (status == JFileChooser.APPROVE_OPTION) { // if the user has selected a file
             File selectedFile = fileChooser.getSelectedFile();
             filePath = selectedFile.getAbsolutePath();
+
             //Add .bmp extension if not already present
             if (!(filePath.matches(".*\\.bmp"))){
                 filePath += ".bmp";
             }
-        }
-        else{
+
+            File actualFile = new File(filePath); // used for checking overwrite
+            if(actualFile.exists()){
+                Object[] bmpOverWriteOptions = {"Yes", "No", "Cancel"};
+                int bmpResponseInt = JOptionPane.showOptionDialog(drawingBoard,
+                        "This file already exists. Would you like to over-write it?",
+                        "File already exists",
+                        JOptionPane.YES_NO_OPTION,
+                        JOptionPane.QUESTION_MESSAGE,
+                        null,
+                        bmpOverWriteOptions,
+                        bmpOverWriteOptions[0]);
+                if(bmpResponseInt == 0) {
+                    actualFile.delete();
+                }
+                else if (bmpResponseInt == 1 || bmpResponseInt == 2){
+                    return;
+                } else {
+                    return;
+                }
+            }
+
+        } else {
             return; //cancel following execution
         }
         //Create image of the drawingBoard based on its current dimensions
