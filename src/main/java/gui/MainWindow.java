@@ -246,10 +246,10 @@ public class MainWindow {
                 MenuCommands.refreshComps(sideBarComps);
             }
             else if (pressedComp == fileOpt.getMenuComponent(0)){
-                sideBar.removeAll();
-                comp.clearAllObjects();
-                argsList.clear();
-                comp.repaint();
+                MenuCommands.newFile(sideBar, comp, argsList);
+                undoHistoryActive = MenuCommands.refreshEventListeners(drawingBoard, new MyMouseAdapter(),
+                        new MyMouseAdapter());
+                MenuCommands.refreshComps(sideBarComps);
             }
             else if (pressedComp == fileOpt.getMenuComponent(1)){
                 try {
