@@ -19,9 +19,9 @@
 \graphicspath{ {images/} } % I like this - a different way for inserting images
 \usepackage{parskip} % I like this - removes first line indentation
 \usepackage{microtype} % Added for underfull fixing
-\usepackage{float}
-% Packages that I use.
-
+\usepackage{float} % Used for captions in User Manual
+\usepackage{hyperref} % Used for hyperlinks
+\usepackage{xcolor} % Used for font colour
 
 \begin{document} % Everything begins and ends with this
 
@@ -95,21 +95,21 @@ The main class here is the Components class (ComponentsClass). It provides the d
 There are only two classes in the file handling package - FileRead and FileWrite. FileWrite simply writes the ArrayList provided by the logic in the main window to a file using a BufferedWriter. This is because access to the canvas and ComponentClass is required, and is not reachable from the FileWrite package. The FileRead class is much more complex, as most of the validation is performed in this class. The main function, readFile, takes a file path as a string. It then uses a FileInputStream and a Scanner to parse through the file. This was chosen due to an advantage in performance and memory management, as the entire file is never loaded in to memory. Each line is thoroughly validated, checking for valid shapes, colours, co-ordinates and file types. If all checks pass, the line is loaded as a split array in to an ArrayList. Once the file has been completely loaded, the ArrayList is passed through to the MainWindow logic which then creates shape objects for each loaded shape. 
 
 \subsection{GUI}
-As with every Java project, there is a Main class - in this instance, the Main class calls the MainScreen class in order to initialise the GUI. The MainScreen class contains all of the graphical and event handler configurations and declarations. When initialised, the GUI class instantiates the ComponentsClass constructor, which in turn instantiates every Shape class and prepares them for drawing. The ShapesEnum enumerator is constructed which includes a list of all shapes. This enumerator is used to aid in drawing shapes for the GUI. Event handlers for mouse input and keyboard shortcuts are initialised in this class, in order for them to be accessible to the user. The FileRead and FileWrite classes are also instantiated as part of the GUI class - this is in order to read to and write from the Components constructor. There is some file logic in this class, however no file reading or writing actually takes place in this class at all.
+As with every Java project, there is a Main class - in this instance, the Main class calls the MainWindow class in order to initialise the GUI. The MainWindow class contains all of the graphical and event handler configurations and declarations. When initialised, the GUI class instantiates the ComponentsClass constructor, which in turn instantiates every Shape class and prepares them for drawing. The ShapesEnum enumerator is constructed which includes a list of all shapes. This enumerator is used to aid in drawing shapes for the GUI. Event handlers for mouse input and keyboard shortcuts are initialised in this class, in order for them to be accessible to the user. The FileRead and FileWrite classes are also instantiated as part of the GUI class - this is in order to read to and write from the Components constructor. There is some file logic in this class, however no file reading or writing actually takes place in this class at all. The other class in this package, MenuCommands, is a utility class which contains the actions corresponding to keyboard or graphical commands, such as selecting a different fill colour or a draw shape. It contains only static methods. It also includes logic for file loading and saving dialog boxes, as well as the BMP export and Undo History logic.
 
 \subsection{Miscellaneous}
-
+The Main class only exists to launch the GUI from MainWindow. All packages and classes, including test classes, are structured according to Maven's Standard Directory Layout, {\color{blue} \href{https://maven.apache.org/guides/introduction/introduction-to-the-standard-directory-layout.html}{which can be found here}}.
 \newpage
 
 \section{Usage of Advanced Object-Oriented Principles}
 \subsection{Abstraction}
 Some details about abstraction usage.
 \subsection{Encapsulation}
-As with most software projects that incorporate the use of object-oriented practice, encapsulation has been used to a large extent in the development of this solution.
+As with most software projects that incorporate the use of object-oriented practice, encapsulation has been used to a large extent in the development of this solution, especially with file handling. The FileRead class has a multitude of private functions that are only required for file validation, making it substantially easier to use the class elsewhere - for example, if an auto-loading feature was implemented, the only thing that needs to be passed to the class is the path to the file.
 \subsection{Inheritance}
 Some details about inheritance usage.
 \subsection{Polymorphism}
-Some details about polymorphism usage.
+As mentioned above, polymorphism has been used in this project, notably within the shape classes. 
 
 \newpage
 
