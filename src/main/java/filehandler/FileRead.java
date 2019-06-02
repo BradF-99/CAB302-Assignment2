@@ -114,10 +114,9 @@ public class FileRead {
                         for(int i = 1; i < lineSplit.length; i++){ // start from 1 because arg is at index 0
                             if(!validateCoords(lineSplit,i)){
                                 return false; // no point continuing if there is an invalid co-ord
-                            } else {
-                                argsList.add(lineSplit);
                             }
                         }
+                        argsList.add(lineSplit);
                         return true;
                     } else {
                         throw new FileInvalidArgumentException("Co-ordinates are invalid.");
