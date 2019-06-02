@@ -127,7 +127,7 @@ Some commands have keyboard shortcuts, such as Save File. These shortcuts are sh
 The options under file handle the saving, opening, clearing, and exporting of drawn shapes. The commands available in the dropdown are: New File, Open, Save, and Export BMP.
 
 \subsubsection{New File}
-New File clears the program of all history and drawn shapes. This wipes all memory of previous shapes and is irreversible. The following screenshots demonstrate what pressing New File does.
+New File clears the program of all history and drawn shapes. This wipes all memory of previous shapes and is irreversible. New File will also disable Undo History if it is already active. The following screenshots demonstrate what pressing New File does.
 
 \begin{figure}[hbtp]
 \caption{New Fill - before command}
@@ -142,7 +142,7 @@ New File clears the program of all history and drawn shapes. This wipes all memo
 \end{figure}
 
 \subsubsection{Open}
-Open allows you to load a VEC file. Loading a VEC file clears the current display of any working progress, and replaces it with that of selected VEC file. Searched file types are filtered by their extension, with the only files shown being those that have the .VEC extension.
+Open allows you to load a VEC file. Loading a VEC file clears the current display of any working progress, and replaces it with that of selected VEC file. Searched file types are filtered by their extension, with the only files shown being those that have the .VEC extension. As Open sets the program to an entirely new image, Undo History upon the loading of the file.
 
 \begin{figure}[hbtp]
 \caption{Open - example}
@@ -160,6 +160,26 @@ Save is disabled if Undo History is active. This ensures that what is saved is a
 \centering
 \includegraphics[scale=0.75]{"pictures/saveVEC".PNG}
 \end{figure}
+
+\subsubsection{Export BMP}
+Export BMP allows for the exporting of what is drawn on the display panel to a bitmap file. Upon pressing the command a window (as shown in Figure 6) is displayed.
+
+\begin{figure}[hbtp]
+\caption{BMP - Dimension Options}
+\centering
+\includegraphics[scale=0.75]{"pictures/bmpFirstWindow".PNG}
+\end{figure}
+
+The option on the left (Use drawing board's current dimensions) which is highlighted by default will use the drawing panel's dimensions (in pixels) for the Bitmap. These are the dimensions of the drawing board at the time the Export BMP functionality was called.
+
+The option on the right allows you to enter the width and height in pixels. If the right hand option (Manually enter dimensions) is pressed, a display such as below is shown.
+
+\begin{figure}[hbtp]
+\caption{BMP - User Dimensions}
+\centering
+\includegraphics[scale=0.75]{"pictures/bmpSecondWindow".PNG}
+\end{figure} 
+
 
 
 \end{document}
