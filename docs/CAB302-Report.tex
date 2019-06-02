@@ -1,7 +1,7 @@
 % CAB302 Assignment 2 Report 
 % Authors: Alex Butler, Brad Fuller & Joshua O'Riordan
 % LaTeX assistance: Vincent Nguyen
-% Version 1.2 2019-05-29
+% Version 1.2 2019-06-02
 
 % NOTE: May require building twice in order for Contents page to show correctly.
 
@@ -42,21 +42,21 @@
 The solution includes the following features: 
 \begin{center}
 	\begin{tabular}{|c|c|}
-		\hline  \textbf{Drawing - Line} & Complete - Tested Working \\
-		\hline  \textbf{Drawing - Plot} & Complete - Tested Working \\
-		\hline  \textbf{Drawing - Rectangle} & Complete - Tested Working \\
-		\hline  \textbf{Drawing - Ellipse} & Complete - Tested Working \\
-		\hline  \textbf{Drawing - Polygon} & Complete - Tested Working \\
-		\hline  \textbf{Drawing - Pen Colour} & Complete - Tested Working \\
-		\hline  \textbf{Drawing - Fill Colour} & Complete - Tested Working \\
-		\hline  \textbf{File Handling - Read} & Complete - Tested Working \\
-		\hline  \textbf{File Handling - Write} & Still to be implemented \\
-		\hline  \textbf{GUI - Layout} & Complete - Tested Working \\
-		\hline  \textbf{GUI - Buttons} & Complete - Tested Working \\
-		\hline  \textbf{GUI - Menu Bar} & Complete - Tested Working \\
-		\hline  \textbf{GUI - Colour Picker} & Complete - Tested Working \\
-		\hline  \textbf{Additional - Undo History} & Complete - Tested Working \\
-		\hline  \textbf{Additional - Bitmap Export} & Complete - Tested Working \\
+		\hline  \textbf{Drawing - Line} & Complete - Tested \& Working \\
+		\hline  \textbf{Drawing - Plot} & Complete - Tested \& Working \\
+		\hline  \textbf{Drawing - Rectangle} & Complete - Tested \& Working \\
+		\hline  \textbf{Drawing - Ellipse} & Complete - Tested \& Working \\
+		\hline  \textbf{Drawing - Polygon} & Complete - Tested \& Working \\
+		\hline  \textbf{Drawing - Pen Colour} & Complete - Tested \& Working \\
+		\hline  \textbf{Drawing - Fill Colour} & Complete - Tested \& Working \\
+		\hline  \textbf{File Handling - Read} & Complete - Tested \& Working \\
+		\hline  \textbf{File Handling - Write} & Complete - Tested \& Working \\
+		\hline  \textbf{GUI - Layout} & Complete - Tested \& Working \\
+		\hline  \textbf{GUI - Buttons} & Complete - Tested \& Working \\
+		\hline  \textbf{GUI - Menu Bar} & Complete - Tested \& Working \\
+		\hline  \textbf{GUI - Colour Picker} & Complete - Tested \& Working \\
+		\hline  \textbf{Additional - Undo History} & Complete - Tested \& Working \\
+		\hline  \textbf{Additional - Bitmap Export} & Complete - Tested \& Working \\
 		\hline
 	\end{tabular}
 \end{center}
@@ -66,12 +66,12 @@ By the due date, we were able to complete all of the essential requirements and 
 
 \section{Statement of Contribution}
 
-{\large Alex Butler}\\
+\subsection{Alex Butler}
 Alex implemented all of the Shape classes, as well as the Shape interface and enumerator. He also wrote the unit tests for testing each Shape class, and the first iteration of the GUI (mainly for testing purposes). 
-\\\\{\large Bradley Fuller}\\
-Bradley implemented the file handling and validation classes, as well as the unit testing for said classes. He also wrote and configured the Apache Ant build script, and the TravisCI configuration for continuous integration and delivery to GitHub Releases. He also wrote most of the report, excluding Section 6.
-\\\\{\large Joshua O'Riordan}\\
-Joshua implemented the final iteration of the GUI, including the general layout, buttons, menu bar and colour picker. He also wrote the additional requirements functionality (being Undo History and Bitmap Export), as well as their respective unit tests.
+\subsection{Bradley Fuller}
+Bradley implemented the file handling and validation classes, as well as the unit testing for said classes. He also wrote and configured the Apache Ant build script, and the TravisCI configuration for continuous integration and delivery to GitHub Releases. He also wrote most of the report, excluding Section 6, and did some general cleanup and changing of the solution.
+\subsection{Joshua O'Riordan}
+Joshua implemented the final iteration of the GUI, including the general layout, buttons, menu bar and colour picker. He also wrote the additional requirements functionality (being Undo History and Bitmap Export), as well as their respective unit tests. Joshua wrote the User Guide in it's entirety (Section 6 of this report).
 
 \newpage
 
@@ -79,27 +79,36 @@ Joshua implemented the final iteration of the GUI, including the general layout,
 
 The team utilised Agile's philosophy of iterative and incremental changes, through the use of continuous integration and deployment. This was achieved through the use of TravisCI and GitHub Releases. Whenever a change was made in any branch of the repository, TravisCI would create a temporary Docker container with Ubuntu 16.04 and Oracle JDK 11. All dependencies are then downloaded - in our case, JUnit 5.5.0 and JavaFX, as well as Apache Ant 1.10.6. Ant is used for creating all build folders, compiling the solution, and then running all unit tests (which are stored in the src/tests/ directory). We would then receive a report (via email) of the testing and if any errors occurred. However, if the change was made in the "master" branch of the repository, TravisCI would run Ant's "dist" script, which packages the compiled Java classes in to a JAR file. This JAR file would then be given a version number (which during development was TravisCI's build number) and uploaded to GitHub Releases. Pull requests would also be tested against the "master" branch of the repository to ensure there would be no breaking changes.
 
-Due to other units and other assessment deadlines, we were not able to follow Agile's sprint methodology and strict timing requirements exactly. However, each feature  of the solution was completed in sprints, each being in their own branch in the repository. Once these were complete, the branch would be merged in to master, and work on the next feature could begin. The only exception to this was the File Handling features, as they required the GUI to be fully implemented before they could be merged - however they were tested thoroughly beforehand without the use of a GUI, so the integration was very simple. We also had a kanban board of features that were to be implemented in the project, as well as an automated kanban board for bug triage and fixing.
+Due to other units, assessment deadlines, and other commitments, we were not able to follow Agile's sprint methodology and strict timing requirements exactly. However, each feature  of the solution was completed in sprints, each being in their own branch in the repository. Once these were complete, the branch would be merged in to master, and work on the next feature could begin. The only exception to this was the File Handling features, as they required the GUI to be fully implemented before they could be merged - however they were tested thoroughly beforehand without the use of a GUI, so the integration was very simple. We also had a kanban board of features that were to be implemented in the project, as well as an automated kanban board for bug triage and fixing.
 
-Test-driven development was also used where possible, especially in the file read and write classes of the solution. The file reading class had over 20 tests of it's own, to make sure that exceptions were being thrown when they should have. Different test cases were used such as invalid commands, invalid co-ordinates, invalid colours, non-VEC file tests, incorrect file types etc.
+Test-driven development was also used where possible, especially in the file read and write classes of the solution. The file reading class had over 20 tests of it's own, to make sure that exceptions were being thrown when they should have. Different test cases were used such as invalid commands, invalid co-ordinates, invalid colours, non-VEC file tests, incorrect file types etc. Even though it would have been possible, we decided against testing the GUI, mostly due to time constraints, and not getting much actual value from testing the GUI.
 
 
 \newpage
 
 \section{Software Architecture}
 
-As with every Java project, there is a Main class - in this instance, the Main class calls the MainScreen class in order to initialise the GUI. When initialised, the GUI class instantiates the ComponentsClass constructor, which in turn instantiates every Shape class and prepares them for drawing. As well as this, the ShapesEnum enumerator is constructed which includes a list of all shapes. This enumerator is used to aid in drawing shapes for the GUI. The FileRead and FileWrite classes are also instantiated as part of the GUI class - this is in order to read to and write from the Components constructor.
+\subsection{Components}
+The main class here is the Components class (ComponentsClass). It provides the drawing canvas and methods, as well as a shared set of functions that all shapes utilise in order to be drawn. In addition, it includes the Undo list and logic (not to be confused with Undo History) which is used extensively throughout the program. The Ellipse and Rectangle shapes are included in the ShapesComponent class, as each of these shapes only require two sets of co-ordinates to draw. The Line, Plot and Polygon shapes each have their own class as they have a different set of drawing requirements. The Component interface is only implemented by the ShapesComponent class in this iteration of the solution. It is included as future shapes may follow a similar format to the ShapesComponent class, but have slightly different calculations and/or features - in which case the Component class can be utilised. Finally, the ShapesEnum simply includes a list of all shapes.
+
+\subsection{File Handling}
+There are only two classes in the file handling package - FileRead and FileWrite. FileWrite simply writes the ArrayList provided by the logic in the main window to a file using a BufferedWriter. This is because access to the canvas and ComponentClass is required, and is not reachable from the FileWrite package. The FileRead class is much more complex, as most of the validation is performed in this class. The main function, readFile, takes a file path as a string. It then uses a FileInputStream and a Scanner to parse through the file. This was chosen due to an advantage in performance and memory management, as the entire file is never loaded in to memory. Each line is thoroughly validated, checking for valid shapes, colours, co-ordinates and file types. If all checks pass, the line is loaded as a split array in to an ArrayList. Once the file has been completely loaded, the ArrayList is passed through to the MainWindow logic which then creates shape objects for each loaded shape. 
+
+\subsection{GUI}
+As with every Java project, there is a Main class - in this instance, the Main class calls the MainScreen class in order to initialise the GUI. The MainScreen class contains all of the graphical and event handler configurations and declarations. When initialised, the GUI class instantiates the ComponentsClass constructor, which in turn instantiates every Shape class and prepares them for drawing. The ShapesEnum enumerator is constructed which includes a list of all shapes. This enumerator is used to aid in drawing shapes for the GUI. Event handlers for mouse input and keyboard shortcuts are initialised in this class, in order for them to be accessible to the user. The FileRead and FileWrite classes are also instantiated as part of the GUI class - this is in order to read to and write from the Components constructor. There is some file logic in this class, however no file reading or writing actually takes place in this class at all.
+
+\subsection{Miscellaneous}
 
 \newpage
 
 \section{Usage of Advanced Object-Oriented Principles}
-{\large Abstraction}\\
+\subsection{Abstraction}
 Some details about abstraction usage.
-\\\\{\large Encapsulation}\\
+\subsection{Encapsulation}
 As with most software projects that incorporate the use of object-oriented practice, encapsulation has been used to a large extent in the development of this solution.
-\\\\{\large Inheritance}\\
+\subsection{Inheritance}
 Some details about inheritance usage.
-\\\\{\large Polymorphism}\\
+\subsection{Polymorphism}
 Some details about polymorphism usage.
 
 \newpage
