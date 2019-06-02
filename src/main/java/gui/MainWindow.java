@@ -382,7 +382,7 @@ public class MainWindow {
     }
 
     /**
-     * ConfirmListenerFill handles the processng if the user accepts a change of fill colour.
+     * ConfirmListenerFill handles the processing if the user accepts a change of fill colour.
      */
     class ConfirmListenerFill implements ActionListener{
         /**
@@ -397,7 +397,7 @@ public class MainWindow {
     }
 
     /**
-     * ConfirmListenerPen handles the processng if the user accepts a change of pen colour.
+     * ConfirmListenerPen handles the processing if the user accepts a change of pen colour.
      */
     class ConfirmListenerPen implements ActionListener{
         /**

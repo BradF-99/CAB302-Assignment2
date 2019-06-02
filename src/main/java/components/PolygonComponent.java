@@ -7,9 +7,7 @@ import java.util.LinkedList;
 
 public class PolygonComponent{
 
-    /**
-     * Helper class for the polygon list.
-     */
+    //inner polygon class
     public static class Polygon{
         public Object[] pointArray;
         public Color borderColor;
@@ -49,8 +47,15 @@ public class PolygonComponent{
         polygon.add(new Polygon(pointArray,borderColor,filled,fillColor));
     }
 
+
+    /**
+     * Creates a Path2D.Float (polygon) based on the point array and the screen size.
+     *
+     * @param pointArray array of points making up the polygon
+     * @param screenSize size of the area being drawn to
+     * @return
+     */
     public static Path2D.Float createScaledPolygon(Object[] pointArray, Dimension screenSize){
-        //create new Path2D.Float to simulate the polygon
         Path2D.Float newPolygon = new Path2D.Float();
         for (int i = 0; i < pointArray.length; i++) {
             Point2D.Float point = ((Point2D.Float) pointArray[i]);
@@ -123,7 +128,7 @@ public class PolygonComponent{
      * @param starty y-co-ordinate of the start Point
      * @param x1 x- co-ordinate of the point that is to be checked against
      * @param y1 y- co-ordinate of the point that is to be checked against
-     * @return
+     * @return true if the point is close enough, false if it is not.
      */
     public boolean checkPoly(int startx, int starty, int x1, int y1){
         if((startx - x1 <= 5 && startx - x1 >= -5) && (starty - y1 <= 5 && starty - y1 >= -5)){

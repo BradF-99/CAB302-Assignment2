@@ -5,6 +5,7 @@ import java.util.LinkedList;
 
 public class ShapeComponent implements ComponentInterface {
 
+    //Inner shape class
     public static class Shape{
         public float x;
         public float y;
@@ -15,11 +16,12 @@ public class ShapeComponent implements ComponentInterface {
         public Color fillColor;
 
         /**
-         * Constructor for the Rectangle class
+         * Constructor for the shape class
          *
          * If the mouse is moved above or to the left of the starting position nothing would be drawn,
-         * if the mouse is above or left the Rectangle is now drawn from the current mouse position to the start position,
-         * if the mouse is below or right the Rectangle is drawn from the start position to the mouse.
+         * if the mouse is above or left the shape is now drawn from the current mouse position to the start position,
+         * if the mouse is below or right the shape is drawn from the start position to the mouse.
+         * if the mouse is below or right the shape is drawn from the start position to the mouse.
          *
          * @param x1 x-coordinate of first point
          * @param y1 y-coordinate of first point
@@ -29,7 +31,7 @@ public class ShapeComponent implements ComponentInterface {
          * @param filled true if object is filled
          * @param fillColor Color the object will be filled in
          */
-        //constructor for the rectangle class
+        //constructor for the shape class
         public Shape(Float x1, Float y1, Float x2, Float y2,Color borderColor, boolean filled, Color fillColor) {
             this.x = x2 < x1 ? x2 : x1;
             this.y = y2 < y1 ? y2 : y1;
@@ -41,13 +43,13 @@ public class ShapeComponent implements ComponentInterface {
         }
     }
 
-    //create a LinkedList of Rectangles
+    //create a LinkedList of shapes
     public final LinkedList<Shape> shapes = new LinkedList<>();
-    //LinkedList for the visual rectangle whilst mouse is pressed
+    //LinkedList for the visual shape whilst mouse is pressed
     public final LinkedList<Shape> drawnShapes = new LinkedList<>();
 
     /**
-     * Adds new ellipse to the list of rectangles
+     * Adds new ellipse to the list of shapes
      *
      * @param x1 x-coordinate of first point
      * @param y1 y-coordinate of first point
@@ -62,7 +64,7 @@ public class ShapeComponent implements ComponentInterface {
     }
 
     /**
-     * clears the list of rectangles
+     * clears the list of shapes
      */
     public void clearObjects(){
         this.shapes.clear();
@@ -76,7 +78,7 @@ public class ShapeComponent implements ComponentInterface {
         this.shapes.remove(index);
     }
     /**
-     * Adds new ellipse to the drawnlist of rectangles
+     * Adds new ellipse to the drawnlist of shapes
      *
      * @param x1 x-coordinate of first point
      * @param y1 y-coordinate of first point
@@ -91,7 +93,7 @@ public class ShapeComponent implements ComponentInterface {
     }
 
     /**
-     * clears the list of drawn rectangles
+     * clears the list of drawn shapes
      */
     public void clearDrawObject(){
         this.drawnShapes.clear();
