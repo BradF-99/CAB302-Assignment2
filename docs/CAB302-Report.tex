@@ -105,7 +105,61 @@ Some details about polymorphism usage.
 
 \section{Using the Software}
 
-Add documentation for using the software (presumably documentation written for the
-\\ designers). This needs to be comprehensive in describing all facets of the software.
+\subsection{Preamble}
+This guide is designed to detail and instruct in the usage of the VEC drawing program. Each section describes related functions, such as file handling or keyboard shortcuts.
+
+\subsection{Running the Program}
+Upon opening the program a display such as that pictured is shown. 
+
+\begin{figure}[hbtp]
+\caption{Blank display}
+\centering
+\includegraphics[scale=0.75]{"pictures/window open".PNG}
+\end{figure}
+
+
+The bar on the left hand side is a history bar, and the panel on the right is the location wherein you may draw shapes. Commands are situated in dropdown bars on the top of the program in the menu bar. 
+
+\subsection{Keyboard Shortcuts}
+Some commands have keyboard shortcuts, such as Save File. These shortcuts are shown in parentheses after the name of the command. In the case of Save File, pressing ctrl+s (ctrl and s at the same time) will open the dialogue to save the currently displayed picture. Using a keyboard shortcut is the exact same as pressing on the corresponding button.
+
+\subsection{File}
+The options under file handle the saving, opening, clearing, and exporting of drawn shapes. The commands available in the dropdown are: New File, Open, Save, and Export BMP.
+
+\subsubsection{New File}
+New File clears the program of all history and drawn shapes. This wipes all memory of previous shapes and is irreversible. The following screenshots demonstrate what pressing New File does.
+
+\begin{figure}[hbtp]
+\caption{New Fill - before command}
+\centering
+\includegraphics[scale=0.75]{"pictures/window to be new filed".PNG}
+\end{figure}
+
+\begin{figure}[hbtp]
+\caption{New Fill - after command}
+\centering
+\includegraphics[scale=0.75]{"pictures/window new filled".PNG}
+\end{figure}
+
+\subsubsection{Open}
+Open allows you to load a VEC file. Loading a VEC file clears the current display of any working progress, and replaces it with that of selected VEC file. Searched file types are filtered by their extension, with the only files shown being those that have the .VEC extension.
+
+\begin{figure}[hbtp]
+\caption{Open - example}
+\centering
+\includegraphics[scale=0.75]{"pictures/openVEC".PNG}
+\end{figure}
+
+\subsubsection{Save}
+Save is the opposite of Open, in that it allows for the current drawing to be saved to a VEC file. Save does not clear the program of previous shapes, allowing you to continuing working without having to open the newly saved file. Like Open, files are filtered so only VEC files are shown. 
+
+Save is disabled if Undo History is active. This ensures that what is saved is always identical to that as is being displayed on the drawing panel.
+
+\begin{figure}[hbtp]
+\caption{Save - example}
+\centering
+\includegraphics[scale=0.75]{"pictures/saveVEC".PNG}
+\end{figure}
+
 
 \end{document}
