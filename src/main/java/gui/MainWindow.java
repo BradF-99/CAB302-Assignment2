@@ -253,6 +253,9 @@ public class MainWindow {
             else if (pressedComp == fileOpt.getMenuComponent(1)){
                 try {
                     fileRead(MenuCommands.openFile(frame));
+                    undoHistoryActive = MenuCommands.refreshEventListeners(drawingBoard, new MyMouseAdapter(),
+                            new MyMouseAdapter()
+                    );
                 } catch (IOException ex) {
                     JOptionPane.showMessageDialog(frame, ex.getMessage());
                 } catch (FileInvalidArgumentException ex) {
@@ -316,10 +319,23 @@ public class MainWindow {
            System.out.println(e.getKeyChar());
            if (e.isControlDown()){
                if (pressedKey == KeyEvent.VK_S){
-                   MenuCommands.saveFile(frame, undoHistoryActive);
+                   try {
+                       fileWrite(MenuCommands.saveFile(frame, undoHistoryActive));
+                   } catch (IOException ex) {
+                       ex.printStackTrace();
+                   }
                }
                else if (pressedKey == KeyEvent.VK_O){
-                   MenuCommands.openFile(frame);
+                   try {
+                       fileRead(MenuCommands.openFile(frame));
+                       undoHistoryActive = MenuCommands.refreshEventListeners(drawingBoard, new MyMouseAdapter(),
+                               new MyMouseAdapter()
+                       );
+                   } catch (IOException ex) {
+                       JOptionPane.showMessageDialog(frame, ex.getMessage());
+                   } catch (FileInvalidArgumentException ex) {
+                       JOptionPane.showMessageDialog(frame, ex.getMessage());
+                   }
                }
                else if (pressedKey == KeyEvent.VK_B){
                    MenuCommands.exportBMP(drawingBoard, undoHistoryActive);
