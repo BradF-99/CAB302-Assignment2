@@ -1,7 +1,7 @@
 % CAB302 Assignment 2 Report 
 % Authors: Alex Butler, Brad Fuller & Joshua O'Riordan
 % LaTeX assistance: Vincent Nguyen
-% Version 1.2 2019-06-02
+% Version 1.0R 2019-06-02
 
 % NOTE: May require building twice in order for Contents page to show correctly.
 
@@ -107,9 +107,9 @@ Abstraction is utilised to a large extent throughout the project. For example, t
 \subsection{Encapsulation}
 As with most software projects that incorporate the use of object-oriented practice, encapsulation has been used to a large extent in the development of this solution. As mentioned earlier, the project has structured according to the Maven Standard Directory Layout, making it easy to modify for programmers who have not previously worked on the project. The File Handling classes in particular utilise encapsulation greatly, most notably the FileRead class. It has a multitude of private functions that are only required for file validation, making it substantially easier to use the class elsewhere - for example, if an auto-loading feature was implemented, the only thing that needs to be passed to the class is the path to the file, and the only object returned is an ArrayList of arguments or commands.
 \subsection{Inheritance}
-Inheritance is mainly used in the Shapes package. As mentioned previously, the Component interface is included for shapes that may be added in future iterations of the solution. In addition to this, the Component class can be utilised for it's methods and functions to create, draw and destroy shapes, without requiring much modification. The custom File exception also uses inheritance to some respect, by throwing the exception to it's superclass.
+Inheritance is mainly used in the Shapes package. As mentioned previously, the Component interface is included for shapes that may be added in future iterations of the solution. In addition to this, the Component class can be utilised for it's methods and functions to create, draw and destroy shapes, without requiring much modification. The custom File exception also uses inheritance to some respect, by throwing the exception to it's superclass. The custom Mouse Adapter extends from the MouseAdapter class - this is used to provide mouse handling and other mouse event functionality.
 \subsection{Polymorphism}
-As mentioned above, polymorphism has been used in this project, notably within the shape classes. Shapes inherit from the Component interface to ensure that each shape can be drawn the same way, and without making modifications to the main Component class. In addition, this ensures that each shape behaves how it is expected, especially when making modifications to the shape.
+As mentioned above, polymorphism has been used in this project, notably within the shape classes. Shapes inherit from the Component interface to ensure that each shape can be drawn the same way, and without making modifications to the main Component class. In addition, this ensures that each shape behaves how it is expected, especially when making modifications to the shape. In addition, method overriding was extensively used in the implementation of the event handlers in the GUI main class, overriding the mouse drag, click and release events. 
 
 \newpage
 
@@ -355,7 +355,5 @@ This simply toggles whether or not shapes are to be filled when drawn or not. By
 \centering
 \includegraphics[scale=0.75]{pictures/toggleSecondWindow.PNG}
 \end{figure}
-
-
 
 \end{document}
