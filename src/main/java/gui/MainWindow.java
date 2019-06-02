@@ -73,7 +73,7 @@ public class MainWindow {
         String[] fileCmds = {"New File","Open (Ctrl + O)", "Save (Ctrl + S)", "Export BMP (ctrl+b)"}; //List of options in dropdown
         String[] additionalCmds = {"Undo (ctrl+z)", "Show Undo History (ctrl+h)", "Confirm Selected History (ctrl+r)"};
         String[] drawingCmds = {"Plot", "Line", "Rectangle", "Ellipse", "Polygon", "Clear Polygon"};
-        String[] colorCmds = {"Fill Colour", "Pen Colour", "Enable Fill"};
+        String[] colorCmds = {"Fill Colour", "Pen Colour", "Toggle Fill"};
         for (String title : dropdownTitle){
             mainMenu.add(new JMenu(title));
         }

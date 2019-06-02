@@ -141,9 +141,9 @@ public final class MenuCommands {
         Object[] options = {"Use drawing board's current dimensions", "Manually enter dimensions"};
         int thresholdD = 6000;
         Dimension bmpD = new Dimension(drawingBoard.getWidth(), drawingBoard.getHeight());
-        Dimension bmpScaleD = new Dimension();
+        Dimension bmpScaleD = new Dimension(1, 1); //prevent any chance of unhandled exceptions
         boolean useUserDimensions = false;
-        String filePath = "C:\\Users\\Comuser\\Documents\\bitmap.bmp";
+        String filePath = "C:\\Users\\Comuser\\Documents\\bitmap.bmp"; //placeholder
         int responseInt = JOptionPane.showOptionDialog(drawingBoard,
                 "Select if you would like to use the current dimensions or manually enter them for this Bitmap",
                 "Bitmap Dimension Choice",
@@ -154,24 +154,26 @@ public final class MenuCommands {
                 options[0]);
         if (responseInt == 1){
             Boolean validData = false;
-            String inputDimension = "";
             useUserDimensions = true;
             while (validData == false){
-                String userInput = (String)JOptionPane.showInputDialog(drawingBoard, "Please enter your dimensions" +
+                String userInput = JOptionPane.showInputDialog(drawingBoard, "Please enter your dimensions" +
                         " in the format 123x123");
+                if (userInput == null){
+                    return; //prevent further execution
+                }
                 userInput = userInput.trim();
                 if (userInput.matches("\\d+x\\d+")){
                     String[] userInputs = userInput.split("x");
                     int width = Integer.valueOf(userInputs[0]);
                     int height = Integer.valueOf(userInputs[1]);
-                    if (width < thresholdD && height < thresholdD){
+                    if (width < thresholdD && height < thresholdD && width > 0 && height > 0){
                         bmpScaleD.width = width;
                         bmpScaleD.height = height;
                         validData = true;
                     }
                     else{
                         JOptionPane.showMessageDialog(drawingBoard, "Dimensions must be below the value " +
-                                thresholdD);
+                                thresholdD + " and above 0");
                     }
                 }
                 else{
