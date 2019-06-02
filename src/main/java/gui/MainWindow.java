@@ -467,7 +467,6 @@ public class MainWindow {
     }
 
     private void fileRead(String path) throws IOException, FileInvalidArgumentException {
-
         if(path.isBlank() || path.isEmpty()) return; // user didn't select a file
 
         sideBar.removeAll();
@@ -563,7 +562,55 @@ public class MainWindow {
         MenuCommands.refreshComps(sideBarComps);
         comp.repaint(); // its too fast for repaints during file load which makes me sad :(
         argsList.clear();
-        //System.out.println(undo)
+        writeFile("");
+    }
+
+    private void writeFile(String path) throws IOException {
+        String arg = "";
+        argsList.clear();
+
+        for (int i = 0; i < comp.undoList.size(); i++) {
+            switch (comp.undoList.get(i).component) {
+                case PLOT:
+                    PlotComponent.Plot plot = comp.plotComp.plots.get(comp.undoList.get(i).index);
+                    arg = "PLOT " + plot.x.toString() + " " + plot.y.toString();
+                    break;
+                case LINE:
+                    LineComponent.Line line = comp.lineComp.lines.get(comp.undoList.get(i).index);
+                    arg = "LINE "+  line.x1.toString() + " " +
+                                    line.y1.toString() + " " +
+                                    line.x2.toString() + " " +
+                                    line.y2.toString();
+                    break;
+                case RECTANGLE:
+                    ShapeComponent.Shape rect = comp.rectComp.shapes.get(comp.undoList.get(i).index);
+
+
+                    if (rect.filled) {
+                        // add fill on command
+                    } // else turn fill off
+
+                    break;
+                case ELLIPSE:
+                    ShapeComponent.Shape ellipse = comp.ellComp.shapes.get(comp.undoList.get(i).index);
+                    int[] ellPoints = comp.floatToPoint(ellipse.x, ellipse.y, ellipse.width, ellipse.height);
+                    if (ellipse.filled) {
+                        // add fill on command
+                    }
+
+                    break;
+                case POLYGON:
+                    PolygonComponent.Polygon poly = comp.polyComp.polygon.get(comp.undoList.get(i).index);
+                    if (poly.filled) {
+                        // add fill on command
+                    }
+
+                    break;
+                default:
+                    break;
+            }
+            System.out.println(arg);
+        }
     }
 
     /**
@@ -572,6 +619,7 @@ public class MainWindow {
     public void showGUI() {
         javax.swing.SwingUtilities.invokeLater(() -> {
             buildGUI();
+
         });
     }
 }
