@@ -5,7 +5,7 @@ import java.util.LinkedList;
 
 public class LineComponent {
 
-    //Line class
+    //inner line class
     public static class Line{
         public Float x1;
         public Float y1;
@@ -36,7 +36,7 @@ public class LineComponent {
     public final LinkedList<Line> drawnLines = new LinkedList<>();
 
     /**
-     * Adds new ellipse to the list of lines
+     * Adds new line to the list of lines
      *
      * @param x1 x-coordinate of first point
      * @param y1 y-coordinate of first point
@@ -44,13 +44,12 @@ public class LineComponent {
      * @param y2 y-coordinate of second point
      * @param color Color of the object
      */
-
     public void addNewObject(Float x1, Float y1, Float x2, Float y2, Color color){
         this.lines.add(new Line(x1,y1,x2,y2,color));
     }
 
     /**
-     * clears the list of ellipses
+     * clears the list of lines
      */
     public void clearObjects(){
         this.lines.clear();
@@ -65,7 +64,7 @@ public class LineComponent {
     }
 
     /**
-     * Adds new ellipse to the drawnlist of lines
+     * Adds new line to the drawnlist of lines
      *
      * @param x1 x-coordinate of first point
      * @param y1 y-coordinate of first point
