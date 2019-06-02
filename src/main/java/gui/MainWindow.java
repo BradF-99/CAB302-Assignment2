@@ -254,9 +254,9 @@ public class MainWindow {
                 try {
                     fileRead(MenuCommands.openFile(frame));
                 } catch (IOException ex) {
-                    ex.printStackTrace();
+                    JOptionPane.showMessageDialog(frame, ex.getMessage());
                 } catch (FileInvalidArgumentException ex) {
-                    ex.printStackTrace();
+                    JOptionPane.showMessageDialog(frame, ex.getMessage());
                 }
             }
             else if (pressedComp == fileOpt.getMenuComponent(2)){
