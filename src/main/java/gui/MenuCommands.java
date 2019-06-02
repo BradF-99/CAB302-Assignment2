@@ -85,6 +85,7 @@ public final class MenuCommands {
      * @param undoHistoryActive A Boolean which is true if undo history is active, prevents saving if it is
      */
     public static String saveFile(JFrame frame, Boolean undoHistoryActive){
+        String path = "";
         if (undoHistoryActive){
             JOptionPane.showMessageDialog(frame, "Undo History is active, please disable or save selected state");
             return ""; //prevent execution of following code as undo history is active
@@ -109,12 +110,24 @@ public final class MenuCommands {
                         options[0]);
                 if(responseInt == 0) {
                     selectedFile.delete();
-                    return selectedFile.getAbsolutePath();
+                    path = selectedFile.getAbsolutePath();
+                    //Add .vec extension if not already present
+                    if (!(path.matches(".*\\.vec"))){
+                        path += ".vec";
+                        return path;
+                    }
                 }
                 else if (responseInt == 1 || responseInt == 2){
                     return "";
                 }
-            } else return selectedFile.getAbsolutePath();
+            } else {
+                //Add .vec extension if not already present
+                path = selectedFile.getAbsolutePath();
+                if (!(path.matches(".*\\.vec"))){
+                    path += ".vec";
+                    return path;
+                }
+            }
         }
         return ""; // if the user selects nothing
     }
