@@ -71,7 +71,7 @@ Alex implemented all of the Shape classes, as well as the Shape interface and en
 \subsection{Bradley Fuller}
 Bradley implemented the file handling and validation classes, as well as the unit testing for said classes. He also wrote and configured the Apache Ant build script, and the TravisCI configuration for continuous integration and delivery to GitHub Releases. He also wrote most of the report, excluding Section 6, and did some general cleanup and changing of the solution.
 \subsection{Joshua O'Riordan}
-Joshua implemented the final iteration of the GUI, including the general layout, buttons, menu bar and colour picker. He also wrote the additional requirements functionality (being Undo History and Bitmap Export), as well as their respective unit tests. Joshua wrote the User Guide in it's entirety (Section 6 of this report).
+Joshua implemented the final iteration of the GUI, including the general layout, buttons, menu bar and colour picker. He also wrote the additional requirements functionality (being Undo History and Bitmap Export), as well as their respective unit tests. Joshua wrote the User Guide in its entirety (Section 6 of this document).
 
 \newpage
 
@@ -81,7 +81,7 @@ The team utilised Agile's philosophy of iterative and incremental changes, throu
 
 Due to other units, assessment deadlines, and other commitments, we were not able to follow Agile's sprint methodology and strict timing requirements exactly. However, each feature  of the solution was completed in sprints, each being in their own branch in the repository. Once these were complete, the branch would be merged in to master, and work on the next feature could begin. The only exception to this was the File Handling features, as they required the GUI to be fully implemented before they could be merged - however they were tested thoroughly beforehand without the use of a GUI, so the integration was very simple. We also had a kanban board of features that were to be implemented in the project, as well as an automated kanban board for bug triage and fixing.
 
-Test-driven development was also used where possible, especially in the file read and write classes of the solution. The file reading class had over 20 tests of it's own, to make sure that exceptions were being thrown when they should have. Different test cases were used such as invalid commands, invalid co-ordinates, invalid colours, non-VEC file tests, incorrect file types etc. Even though it would have been possible, we decided against testing the GUI, mostly due to time constraints, and not getting much actual value from testing the GUI.
+Test-driven development was also used where possible. The file reading class had over 20 tests of it's own, to make sure that exceptions were being thrown when they should have. Different test cases were used such as invalid commands, invalid co-ordinates, invalid colours, non-VEC file tests, incorrect file types etc. Even though it would have been possible, we decided against testing the GUI, mostly due to time constraints, and not getting much actual value from testing the GUI.
 
 
 \newpage
@@ -103,13 +103,13 @@ The Main class only exists to launch the GUI from MainWindow. All packages and c
 
 \section{Usage of Advanced Object-Oriented Principles}
 \subsection{Abstraction}
-Some details about abstraction usage.
+Abstraction is utilised to a large extent throughout the project. For example, the FileRead class performs multiple checks on each line to ensure validity of the file being loaded - however all checks are private and cannot be seen or used outside of the class.  The Shapes package also utilises abstraction with most shapes having their own class - however each shape is drawn by the ComponentsClass.
 \subsection{Encapsulation}
 As with most software projects that incorporate the use of object-oriented practice, encapsulation has been used to a large extent in the development of this solution. As mentioned earlier, the project has structured according to the Maven Standard Directory Layout, making it easy to modify for programmers who have not previously worked on the project. The File Handling classes in particular utilise encapsulation greatly, most notably the FileRead class. It has a multitude of private functions that are only required for file validation, making it substantially easier to use the class elsewhere - for example, if an auto-loading feature was implemented, the only thing that needs to be passed to the class is the path to the file, and the only object returned is an ArrayList of arguments or commands.
 \subsection{Inheritance}
 Inheritance is mainly used in the Shapes package. As mentioned previously, the Component interface is included for shapes that may be added in future iterations of the solution. In addition to this, the Component class can be utilised for it's methods and functions to create, draw and destroy shapes, without requiring much modification. The custom File exception also uses inheritance to some respect, by throwing the exception to it's superclass.
 \subsection{Polymorphism}
-As mentioned above, polymorphism has been used in this project, notably within the shape classes. 
+As mentioned above, polymorphism has been used in this project, notably within the shape classes. The ComponentsClass
 
 \newpage
 
