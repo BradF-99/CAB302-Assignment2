@@ -67,3 +67,5 @@ fabric.properties
 
 # Dependencies
 !lib/*.jar
+.idea/misc.xml
+CAB302-Assignment2.iml
