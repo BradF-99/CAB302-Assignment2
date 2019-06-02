@@ -219,6 +219,7 @@ public final class MenuCommands {
         try {
             ImageIO.write(bufferedImageToWrite, "bmp", new File(filePath));
         } catch (IOException e) {
+            JOptionPane.showMessageDialog(drawingBoard, "Error writing BMP to file. Please try again");
         }
     }
 

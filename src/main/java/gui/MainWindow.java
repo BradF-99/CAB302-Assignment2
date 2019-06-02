@@ -40,7 +40,6 @@ public class MainWindow {
     private boolean filled = false;
     private int undoHistoryNum;
     private boolean undoHistoryActive = false;
-    private boolean undoPolygon = false;
     private List<String[]> argsList = new ArrayList<>();
     private FileRead fileReader = new FileRead();
     private FileWrite fileWriter = new FileWrite();
@@ -255,9 +254,9 @@ public class MainWindow {
                 try {
                     fileRead(MenuCommands.openFile(frame));
                 } catch (IOException ex) {
-                    ex.printStackTrace();
+                    JOptionPane.showMessageDialog(frame, ex.getMessage());
                 } catch (FileInvalidArgumentException ex) {
-                    ex.printStackTrace();
+                    JOptionPane.showMessageDialog(frame, ex.getMessage());
                 }
             }
             else if (pressedComp == fileOpt.getMenuComponent(2)){
