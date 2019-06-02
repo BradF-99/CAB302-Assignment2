@@ -382,7 +382,7 @@ public class MainWindow {
     }
 
     /**
-     * ConfirmListenerFill handles the processng if the user accepts a change of fill colour.
+     * ConfirmListenerFill handles the processing if the user accepts a change of fill colour.
      */
     class ConfirmListenerFill implements ActionListener{
         /**
@@ -397,7 +397,7 @@ public class MainWindow {
     }
 
     /**
-     * ConfirmListenerPen handles the processng if the user accepts a change of pen colour.
+     * ConfirmListenerPen handles the processing if the user accepts a change of pen colour.
      */
     class ConfirmListenerPen implements ActionListener{
         /**
@@ -567,50 +567,140 @@ public class MainWindow {
 
     private void writeFile(String path) throws IOException {
         String arg = "";
+        String colour = "";
+        String penColour = "#000000";
+        String fillColour = "OFF";
+        boolean fillOn = false; // false by default
         argsList.clear();
 
         for (int i = 0; i < comp.undoList.size(); i++) {
+            arg = ""; // initialise arg every loop
             switch (comp.undoList.get(i).component) {
                 case PLOT:
                     PlotComponent.Plot plot = comp.plotComp.plots.get(comp.undoList.get(i).index);
-                    arg = "PLOT " + plot.x.toString() + " " + plot.y.toString();
+                    colour = rgbIntToHex(plot.color.getRGB());
+                    if (!penColour.equalsIgnoreCase(colour)) {
+                        penColour = colour;
+                        arg = "PEN " + penColour + "\n";
+                    }
+                    arg = arg + "PLOT " + plot.x.toString() + " " + plot.y.toString();
                     break;
                 case LINE:
                     LineComponent.Line line = comp.lineComp.lines.get(comp.undoList.get(i).index);
-                    arg = "LINE "+  line.x1.toString() + " " +
-                                    line.y1.toString() + " " +
-                                    line.x2.toString() + " " +
-                                    line.y2.toString();
+                    colour = rgbIntToHex(line.color.getRGB());
+                    if (!penColour.equalsIgnoreCase(colour)) {
+                        penColour = colour;
+                        arg = "PEN " + penColour + "\n";
+                    }
+                    arg = arg + "LINE " +
+                                line.x1.toString() + " " +
+                                line.y1.toString() + " " +
+                                line.x2.toString() + " " +
+                                line.y2.toString();
                     break;
                 case RECTANGLE:
                     ShapeComponent.Shape rect = comp.rectComp.shapes.get(comp.undoList.get(i).index);
+                    if(rect.filled){
+                        fillOn = true;
+                        colour = rgbIntToHex(rect.fillColor.getRGB());
+                        if (!fillColour.equalsIgnoreCase(colour)) { // dont need to make unnecessary fill commands
+                            fillColour = colour;
+                            arg = arg + "FILL " + fillColour + "\n";
+                        }
+                    } else {
+                        if(fillOn){
+                            fillOn = false;
+                            arg = arg + "FILL OFF\n";
+                        }
+                    }
 
+                    colour = rgbIntToHex(rect.borderColor.getRGB());
+                    if (!penColour.equalsIgnoreCase(colour)) {
+                        penColour = colour;
+                        arg = arg + "PEN " + penColour + "\n";
+                    }
 
-                    if (rect.filled) {
-                        // add fill on command
-                    } // else turn fill off
-
+                    arg = arg + "RECTANGLE "    + rect.x + " "
+                                                + rect.y + " "
+                                                + (rect.x+rect.width) + " "
+                                                + (rect.y+rect.height);
                     break;
                 case ELLIPSE:
                     ShapeComponent.Shape ellipse = comp.ellComp.shapes.get(comp.undoList.get(i).index);
-                    int[] ellPoints = comp.floatToPoint(ellipse.x, ellipse.y, ellipse.width, ellipse.height);
-                    if (ellipse.filled) {
-                        // add fill on command
+                    if(ellipse.filled){
+                        fillOn = true;
+                        colour = rgbIntToHex(ellipse.fillColor.getRGB());
+                        if (!fillColour.equalsIgnoreCase(colour)) { // dont need to make unnecessary fill commands
+                            fillColour = colour;
+                            arg = arg + "FILL " + fillColour + "\n";
+                        }
+                    } else {
+                        if(fillOn){
+                            fillOn = false;
+                            arg = arg + "FILL OFF\n";
+                        }
                     }
 
+                    colour = rgbIntToHex(ellipse.borderColor.getRGB());
+                    if (!penColour.equalsIgnoreCase(colour)) {
+                        penColour = colour;
+                        arg = arg + "PEN " + penColour + "\n";
+                    }
+
+                    arg = arg + "ELLIPSE "
+                            + ellipse.x + " "
+                            + ellipse.y + " "
+                            + (ellipse.x+ellipse.width) + " "
+                            + (ellipse.y+ellipse.height);
                     break;
                 case POLYGON:
+
                     PolygonComponent.Polygon poly = comp.polyComp.polygon.get(comp.undoList.get(i).index);
-                    if (poly.filled) {
-                        // add fill on command
+                    if(poly.filled){
+                        fillOn = true;
+                        colour = rgbIntToHex(poly.fillColor.getRGB());
+                        if (!fillColour.equalsIgnoreCase(colour)) {
+                            fillColour = colour;
+                            arg = arg + "FILL " + fillColour + "\n";
+                        }
+                    } else {
+                        if(fillOn){
+                            fillOn = false;
+                            arg = arg + "FILL OFF\n";
+                        }
+                    }
+
+                    colour = rgbIntToHex(poly.borderColor.getRGB());
+                    if (!penColour.equalsIgnoreCase(colour)) {
+                        penColour = colour;
+                        arg = arg + "PEN " + penColour + "\n";
+                    }
+
+                    arg = arg + "POLYGON";
+
+                    for (int j = 0; j < poly.pointArray.length; j++) { // nice and easy
+                        Point2D.Float point = ((Point2D.Float) poly.pointArray[j]);
+                        arg = arg + " " + point.x + " " + point.y;
                     }
 
                     break;
                 default:
                     break;
             }
-            System.out.println(arg);
+            //System.out.println(arg);
         }
+    }
+
+    /**
+     * rgbIntToHex converts the RGB integer value from Java's colour library in to a hex string.
+     * @param rgb integer representing the RGB value
+     * @return String of HEX colour (including # at the beginning)
+     */
+    private String rgbIntToHex(int rgb){
+        String fillColour = "#" + Integer.toHexString(rgb)
+                .substring(2)
+                .toUpperCase();
+        return fillColour;
     }
 
     /**

@@ -5,7 +5,7 @@ import java.util.LinkedList;
 
 public class PlotComponent {
 
-    //Line class
+    //Inner Plot Class
     public static class Plot{
         public Float x;
         public Float y;
