@@ -107,7 +107,7 @@ Some details about abstraction usage.
 \subsection{Encapsulation}
 As with most software projects that incorporate the use of object-oriented practice, encapsulation has been used to a large extent in the development of this solution. As mentioned earlier, the project has structured according to the Maven Standard Directory Layout, making it easy to modify for programmers who have not previously worked on the project. The File Handling classes in particular utilise encapsulation greatly, most notably the FileRead class. It has a multitude of private functions that are only required for file validation, making it substantially easier to use the class elsewhere - for example, if an auto-loading feature was implemented, the only thing that needs to be passed to the class is the path to the file, and the only object returned is an ArrayList of arguments or commands.
 \subsection{Inheritance}
-Some details about inheritance usage.
+Inheritance is mainly used in the Shapes package. As mentioned previously, the Component interface is included for shapes that may be added in future iterations of the solution. In addition to this, the Component class can be utilised for it's methods and functions to create, draw and destroy shapes, without requiring much modification. The custom File exception also uses inheritance to some respect, by throwing the exception to it's superclass.
 \subsection{Polymorphism}
 As mentioned above, polymorphism has been used in this project, notably within the shape classes. 
 
