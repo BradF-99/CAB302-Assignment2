@@ -109,7 +109,7 @@ As with most software projects that incorporate the use of object-oriented pract
 \subsection{Inheritance}
 Inheritance is mainly used in the Shapes package. As mentioned previously, the Component interface is included for shapes that may be added in future iterations of the solution. In addition to this, the Component class can be utilised for it's methods and functions to create, draw and destroy shapes, without requiring much modification. The custom File exception also uses inheritance to some respect, by throwing the exception to it's superclass.
 \subsection{Polymorphism}
-As mentioned above, polymorphism has been used in this project, notably within the shape classes. The ComponentsClass
+As mentioned above, polymorphism has been used in this project, notably within the shape classes. Shapes inherit from the Component interface to ensure that each shape can be drawn the same way, and without making modifications to the main Component class. In addition, this ensures that each shape behaves how it is expected, especially when making modifications to the shape.
 
 \newpage
 
