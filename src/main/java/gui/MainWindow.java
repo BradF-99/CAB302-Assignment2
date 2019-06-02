@@ -18,7 +18,7 @@ import main.java.filehandler.*;
 
 
 /**
- * MainWindow constitues the GUI, and as such contains all of the graphical and event handler configurations and
+ * MainWindow constitutes the GUI, and as such contains all of the graphical and event handler configurations and
  * declarations.
  */
 public class MainWindow {
@@ -563,7 +563,7 @@ public class MainWindow {
         MenuCommands.refreshComps(sideBarComps);
         comp.repaint(); // its too fast for repaints during file load which makes me sad :(
         argsList.clear();
-        System.out.println(undo)
+        //System.out.println(undo)
     }
 
     /**
