@@ -97,7 +97,24 @@ public final class MenuCommands {
         int status = fileChooser.showSaveDialog(frame);
         if (status == JFileChooser.APPROVE_OPTION) { // if the user has selected a file
             File selectedFile = fileChooser.getSelectedFile();
-            return selectedFile.getAbsolutePath();
+            if(selectedFile.exists()){
+                Object[] options = {"Yes", "No", "Cancel"};
+                int responseInt = JOptionPane.showOptionDialog(frame,
+                        "This file already exists. Would you like to over-write it?",
+                        "File already exists",
+                        JOptionPane.YES_NO_OPTION,
+                        JOptionPane.QUESTION_MESSAGE,
+                        null,
+                        options,
+                        options[0]);
+                if(responseInt == 0) {
+                    selectedFile.delete();
+                    return selectedFile.getAbsolutePath();
+                }
+                else if (responseInt == 1 || responseInt == 2){
+                    return "";
+                }
+            } else return selectedFile.getAbsolutePath();
         }
         return ""; // if the user selects nothing
     }
